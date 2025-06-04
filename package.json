@@ -1,0 +1,40 @@
+{
+  "name": "@taiyakihitotsu/foxp",
+  "version": "0.1.0",
+  "private": false,
+  "description": "foxp possess the type checker to enable pseudo depenent types in TypeScript.",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "npx tsc",
+    "build:watch": "npx tsc --watch",
+    "check": "npx tsc --noEmit",
+    "check:test": "npx tsc --noEmit --project tsconfig.test.json && vitest run",
+    "check:smith": "sh ./scripts/sandbox-smith.sh && sh ./scripts/check-smith.sh",
+    "format:smith": "npm --prefix submodules/condsmith run format:smith ../../src",
+    "run": "npx ts-node src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taiyakihitotsu/foxp.git"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.22",
+    "husky": "^9.1.7",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  },
+  "author": "taiyakihitotsu <taiyakihitotsu@proton.me> https://github.com/taiyakihitotsu",
+  "license": "3-clause BSD license",
+  "dependencies": {
+    "@taiyakihitotsu/cion": "^0.1.0"
+  }
+}

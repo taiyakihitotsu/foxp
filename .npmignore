@@ -1,0 +1,12 @@
+node_modules/
+.ignore
+test/
+submodules/
+src/
+script/
+.git
+.github
+.husky
+.gitignore
+.gitmodules
+tsconfig.json
