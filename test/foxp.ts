@@ -48,3 +48,21 @@ const valid_test0 = foxp.tid(valid0, testrec)
 const valid_test1 = foxp.tid(valid2, foxp.tid(valid0, foxp.tid(valid0, testrec)))
 // @ts-expect-error:
 const valid_test2 = foxp.tid(valid2, foxp.tid(valid1, foxp.tid(valid0, testrec)))
+
+// ---------
+// -- ro
+// ---------
+
+const rot = foxp.ro([0,1,2,[4,5]] as const)
+const trot: ut.Equal<typeof rot, readonly [0, 1, 2, readonly [4, 5]]> = true
+const rot2 = foxp.ro([0,1,2,[4,5],{a: 1, b: 2}] as const)
+const trot2: ut.Equal<typeof rot2, readonly [0, 1, 2, readonly [4, 5], {readonly a: 1, readonly b: 2}]> = true
+const rot3 = foxp.ro([0,1,2,[4,5, {y: 9, z: 19}], {a: 1, b: 2, c: [6, 7]}] as const)
+const trot3: ut.Equal<typeof rot3, readonly [0, 1, 2, readonly [4, 5, {readonly y: 9, readonly z: 19}], {readonly a: 1, readonly b: 2, readonly c: readonly [6, 7]}]> = true
+const mrot = foxp.ro({x: [0,1,2,[4,5]]} as const)
+const tmrot: ut.Equal<typeof mrot, {readonly x: readonly [0, 1, 2, readonly [4, 5]]}> = true
+const mrot2 = foxp.ro({x: [0,1,2,[4,5],{a: 1, b: 2}]} as const)
+const tmrot2: ut.Equal<typeof mrot2, {readonly x: readonly [0, 1, 2, readonly [4, 5], {readonly a: 1, readonly b: 2}]}> = true
+const mrot3 = foxp.ro({x: [0,1,2,[4,5, {y: 9, z: 19}], {a: 1, b: 2, c: [6, 7]}]} as const)
+const tmrot3: ut.Equal<typeof mrot3, {readonly x: readonly [0, 1, 2, readonly [4, 5, {readonly y: 9, readonly z: 19}], {readonly a: 1, readonly b: 2, readonly c: readonly [6, 7]}]}> = true
+

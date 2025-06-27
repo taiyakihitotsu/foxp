@@ -24,6 +24,13 @@ const test_vs3: test_vs3 = '[0 1 2 [3 4] 5]'
 const test_vs4a: test_vs4a = '{:six 6}'
 const test_vs4: Cion.Lisp<`[(take 5 ${test_vs4}) (map (last ${test_vs4}) [:six :seven])]`> = '[[0 1 2 [3 4] 5] [6 [7 8 9]]]'
 
+const test_rtou0: typeUtil.RtoS<{readonly a: 1, readonly b: 2}> extends '{:b 2 :a 1}' | '{:a 1 :b 2}' ? true : false = true 
+const test_rtou1: typeUtil.RtoS<{a: 1, readonly b: 2}> extends '{:b 2 :a 1}' | '{:a 1 :b 2}' ? true : false = true
+const test_rtou2: typeUtil.RtoS<{readonly a: [0, 1], readonly b: 2}> extends '{:b 2 :a [0 1]}' | '{:a [0 1] :b 2}' ? true : false = true
+const test_rtou3: typeUtil.RtoS<{readonly a: readonly [0, 1], readonly b: 2}> extends '{:b 2 :a [0 1]}' | '{:a [0 1] :b 2}' ? true : false = true
+const test_rtou4: typeUtil.RtoS<{readonly a: readonly [0, {readonly c: 2}], readonly b: 2}> extends '{:b 2 :a [0 {:c 2}]}' | '{:a [0 {:c 2}] :b 2}' ? true : false = true
+
+
 const testvtos0: typeUtil.VtoS<[readonly [1,2,3], '0', 5]> = '[[1 2 3] 0 5]' 
 const testvtos1: typeUtil.VtoS<[[1,2,3], '0', 5]> = '[[1 2 3] 0 5]' 
 const testvtos2: typeUtil.VtoS<[[1,[22,23],3], '0', 5]> = '[[1 [22 23] 3] 0 5]' 

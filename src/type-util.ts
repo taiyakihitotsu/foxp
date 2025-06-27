@@ -41,7 +41,7 @@ export type UnionKVStrToString<
     ? "}"
   : `${Start}:${L extends Primitive ? L : ''}${UnionKVStrToString<Exclude<T,L>, ' '>}`
 
-export type RecordToUnion<M> = {[K in keyof M]: `${K extends symbol ? '' : ''}${K extends symbol ? '' : K}${K extends symbol ? '' : ' '}${M[K] extends Primitive ? M[K] : M[K] extends unknown[] ? VectorString<M[K]> : M[K] extends Record<PropertyKey, unknown> ? UnionKVStrToString<RtoU<M[K]>> : ''}`}[keyof M]
+export type RecordToUnion<M> = {[K in keyof M]: `${K extends symbol ? '' : ''}${K extends symbol ? '' : K}${K extends symbol ? '' : ' '}${M[K] extends Primitive ? M[K] : M[K] extends unknown[] | readonly unknown[] ? VectorString<M[K]> : M[K] extends Record<PropertyKey, unknown> ? UnionKVStrToString<RtoU<M[K]>> : ''}`}[keyof M]
 export type RtoU<M> = RecordToUnion<M>
 
 // TS Object Const -> Sexpr String.

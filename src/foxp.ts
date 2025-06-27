@@ -48,7 +48,8 @@ export const tid = <
 ( _valid: T
 , value: U extends (Cion.Lisp<`(${T} ${U[c.SexprKey] extends string ? U[c.SexprKey] : never})`> extends 'true' ? U : never) ? U : never): U => value
 
-
+// readonly 
+export const ro: <U extends unknown[] | Record<PropertyKey, unknown>>(u: U) => ut.DeepReadonly<U> = (u) => u
 
 // ----------------------
 // -- typed apply fn
