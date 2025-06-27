@@ -108,13 +108,14 @@ Important: This doesn't automatically track type transitions of functions at the
  - `putVec` — wrap vectors
  - `putRecord` — wrap records
  - `putFn1` — wrap unary functions
- - `tid` — identity
+ - `tid` — identity with checking
  - `tap1` — apply unary function with checking
+ - `ro` — readonly for nested data.
  - `MergePreStr`, `MergePreTuple` — merge preconditions
 
 **Builtin Functions**: `foxp.bi`
  - Arithmetic : add, sub, mul, div
- - Data : assoc, assoc-in, update, update-in
+ - Data : assoc, assoc-in, update, update-in, get, get-in
  
 **Pre-conditiond**: `foxp.pre`
  - Eq, Vect, NotZero, Greater, Less, Interval, EmailRegex
