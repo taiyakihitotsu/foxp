@@ -48,20 +48,20 @@ export type div = ['number?', '(fn [n] (and (number? n) (not (zero? n))))']
 export type mod = ['number?', 'number?']
 export type inc = ['number?']
 export type dec = ['number?']
+export type get = `(fn [m] (some? (get (get m 0) (get m 1))))`
 
 export type gt  = ['number?', 'number?']
 export type lt  = ['number?', 'number?']
 export type gte = ['number?', 'number?']
 export type lte = ['number?', 'number?']
 
-export type collsome = '(fn [m] (some? (get (get m 0) (get m 1))))'
 export type _mGet = `(get-in (get m 0) (get m 1))`
 export type _msUnroll = `(get m 0) (get m 1) (get m 2)`
 
 export type assocLax = '(fn [m] (not (and (vector? (get m 0)) (keyword? (get m 1)))))'
-export type assoc = m.MergePreStr<collsome, m.MergePreStr<assocLax, '(fn [m] (= (type (get m 2)) (type (get (get m 0) (get m 1)))))'>>
+export type assoc = m.MergePreStr<get, m.MergePreStr<assocLax, '(fn [m] (= (type (get m 2)) (type (get (get m 0) (get m 1)))))'>>
 export type updateLax = m.MergePreStr<assocLax, '(fn [m] (fn? (get m 2)))'>
-export type update = m.MergePreStr<collsome, m.MergePreStr<updateLax, '(fn [m] (= (type (get (get m 0) (get m 1))) (type (get (update (get m 0) (get m 1) (get m 2)) (get m 1)))))'>>
+export type update = m.MergePreStr<get, m.MergePreStr<updateLax, '(fn [m] (= (type (get (get m 0) (get m 1))) (type (get (update (get m 0) (get m 1) (get m 2)) (get m 1)))))'>>
 export type assocInLax = `(fn [m] (and (some? ${_mGet}) (vector? (get m 1))))`
 export type assocInStrict = `(fn [m] (let [r (assoc-in (get m 0) (get m 1) (get m 2))] (= (type (get-in (get m 0) (get m 1))) (type (get-in r (get m 1))))))`
 export type assocIn = m.MergePreStr<assocInLax, assocInStrict>

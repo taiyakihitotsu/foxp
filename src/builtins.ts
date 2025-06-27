@@ -147,6 +147,18 @@ export const updateIn = <
 , k: Arg1 extends Ret1 ? Arg1 : never
 , v: Arg2 extends Ret2 ? Arg2 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: ReturnValue} => rfoxposs<SexprR, ReturnValue>(u.updateIn([m[c.ValueKey], k[c.ValueKey], v[c.ValueKey][c.FnKey]]))
 
+export const get = <
+  Pre extends string = pre.get
+>() =>
+< Arg0 extends FoxWith<Record<PropertyKey, unknown> | ut.Tuple, Arg0>
+, Arg1 extends FoxWith<string|number, Arg1>
+, SexprR extends Cion.Lisp<`(get ${FS<Arg0[c.SexprKey]>} ${FS<Arg1[c.SexprKey]>})`>
+, Check extends string = `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg1[c.SexprKey]>}])`
+, Ret0 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg0
+, Ret1 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg1
+, ReturnValue = compiler.Ltc<SexprR extends string ? SexprR : ''>>
+( m: Arg0 extends Ret0 ? Arg0 : never
+, k: Arg1 extends Ret1 ? Arg1 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: ReturnValue} => rfoxposs<SexprR, ReturnValue>(u.get([m[c.ValueKey], k[c.ValueKey]]))
 
 
 export * as builtins from './builtins'
