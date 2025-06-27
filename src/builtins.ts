@@ -160,5 +160,18 @@ export const get = <
 ( m: Arg0 extends Ret0 ? Arg0 : never
 , k: Arg1 extends Ret1 ? Arg1 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: ReturnValue} => rfoxposs<SexprR, ReturnValue>(u.get([m[c.ValueKey], k[c.ValueKey]]))
 
+export const getIn = <
+  Pre extends string = pre.getIn
+>() =>
+< Arg0 extends FoxWith<Record<PropertyKey, unknown> | ut.Tuple, Arg0>
+, Arg1 extends FoxWith<(string|number)[] | readonly (string|number)[], Arg1>
+, SexprR extends Cion.Lisp<`(get-in ${FS<Arg0[c.SexprKey]>} ${FS<Arg1[c.SexprKey]>})`>
+, Check extends string = `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg1[c.SexprKey]>}])`
+, Ret0 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg0
+, Ret1 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg1
+, ReturnValue = compiler.Ltc<SexprR extends string ? SexprR : ''>>
+( m: Arg0 extends Ret0 ? Arg0 : never
+, k: Arg1 extends Ret1 ? Arg1 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: ReturnValue} => rfoxposs<SexprR, ReturnValue>(u.getIn([m[c.ValueKey], k[c.ValueKey]]))
+
 
 export * as builtins from './builtins'
