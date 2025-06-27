@@ -59,7 +59,7 @@ try {
 
 const t2 =
   div2(foxp.putPrim(3)
-     , foxp.putPrim(-1)).value // => -1/3
+     , foxp.putPrim(-2)).value // => -3/2
 ```
 
 ### Defining your own precondition
