@@ -1,6 +1,6 @@
 {
   "name": "@taiyakihitotsu/foxp",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": false,
   "description": "foxp possess the type checker to enable pseudo depenent types in TypeScript.",
   "main": "dist/index.js",
