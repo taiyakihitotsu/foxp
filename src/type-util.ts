@@ -125,4 +125,12 @@ export type ForceTuple<
 
 export const ForceTuple = <S extends unknown[]>(s: (S extends (ForceTuple<S> extends never ? never : S) ? S : never)) => s
 
+export type DeepReadonly<
+  T> =
+{
+  readonly [K in keyof T]: DeepReadonly<T[K]>;
+}
+
+export type ForceReadRecord<R extends Record<PropertyKey, unknown>> = Equal<DeepReadonly<R>, R> extends true ? R : never
+
 export type * as typeUtil from './type-util'
