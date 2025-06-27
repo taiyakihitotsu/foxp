@@ -18,7 +18,8 @@
     "check:test": "npx tsc --noEmit --project tsconfig.test.json && vitest run",
     "check:smith": "sh ./scripts/sandbox-smith.sh && sh ./scripts/check-smith.sh",
     "format:smith": "npm --prefix submodules/condsmith run format:smith ../../src",
-    "run": "npx ts-node src/index.ts"
+    "run": "npx ts-node src/index.ts",
+    "precommit": "sh scripts/precommit.sh"
   },
   "repository": {
     "type": "git",
