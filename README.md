@@ -116,7 +116,7 @@ Important: This doesn't automatically track type transitions of functions at the
  - Arithmetic : add, sub, mul, div
  - Data : assoc, assoc-in, update, update-in
  
-**Pre-conditiond: `foxp.pre`
+**Pre-conditiond**: `foxp.pre`
  - Eq, Vect, NotZero, Greater, Less, Interval, EmailRegex
  - assocLax, assoc (for update/assoc-in/update-in too)
  
