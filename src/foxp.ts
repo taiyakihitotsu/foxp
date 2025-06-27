@@ -21,8 +21,8 @@ export type LispWrapedFnWith<Pre, F, T> = {[c.SexprKey]: F, [c.ValueKey]: LispWr
 export type LispWrapedPrimWith<T extends ut.Primitive> = {[c.SexprKey]: ToLispString<T>, [c.ValueKey]: T}
 
 export const putRecord = <
-  V extends Record<PropertyKey, unknown>
-> (v: V): LispWrapedMapWith<V> => ({[c.SexprKey]: '' as typeUtil.RtoS<V>, [c.ValueKey]: v})
+ V extends Record<PropertyKey, unknown>
+> (v: V extends (ut.ForceReadRecord<V> extends never ? never : V) ? V : never): LispWrapedMapWith<V> => ({[c.SexprKey]: '' as typeUtil.RtoS<V>, [c.ValueKey]: v})
 
 // [note]
 // see `ForceTuple` in `type-util.ts`.
