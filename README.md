@@ -79,6 +79,8 @@ pzero.value // => 0
 ```
 
 
+
+
 ### Other Sample
 See [test/sample](https://github.com/taiyakihitotsu/foxp/tree/main/test/sample)
 
@@ -115,6 +117,7 @@ Important: This doesn't automatically track type transitions of functions at the
 
 **Builtin Functions**: `foxp.bi`
  - Arithmetic : add, sub, mul, div
+ - Comparing: gt, gte, lt, lte, eq
  - Data : assoc, assoc-in, update, update-in, get, get-in
  
 **Pre-conditiond**: `foxp.pre`

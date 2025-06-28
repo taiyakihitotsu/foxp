@@ -41,20 +41,24 @@ export type IsEmail = `(fn [n] (re-find ${EmailRegex} n))`
 // -- pre for builtins
 // -----------------------------
 
-export type add = ['number?', 'number?']
-export type sub = ['number?', 'number?']
-export type mul = ['number?', 'number?']
+export type arithmetic = ['number?', 'number?']
+
+export type add = arithmetic
+export type sub = arithmetic
+export type mul = arithmetic
 export type div = ['number?', '(fn [n] (and (number? n) (not (zero? n))))']
-export type mod = ['number?', 'number?']
+export type mod = arithmetic
 export type inc = ['number?']
 export type dec = ['number?']
 export type get = `(fn [m] (some? (get (get m 0) (get m 1))))`
 export type getIn = `(fn [m] (some? (get-in (get m 0) (get m 1))))`
 
-export type gt  = ['number?', 'number?']
-export type lt  = ['number?', 'number?']
-export type gte = ['number?', 'number?']
-export type lte = ['number?', 'number?']
+export type compare = arithmetic
+export type gt  = arithmetic
+export type lt  = arithmetic
+export type gte = arithmetic
+export type lte = arithmetic
+export type eq = ['some?', 'some?']
 
 export type _msUnroll = `(get m 0) (get m 1) (get m 2)`
 
