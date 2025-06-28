@@ -35,7 +35,7 @@ export type IsMap  = `map?`
 export const IsMap  = `map?`
 
 export type EmailRegex = `'(([^<>()[\\].,;: @"]+(\\.[^<>()[\\].,;: @"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}))'`
-export type IsEmail = `(fn [n] (re-find ${EmailRegex} n))`
+export type IsEmail = `(fn [n] (let [r (re-find ${EmailRegex} n)] (not (= '' r))))`
 
 // -----------------------------
 // -- pre for builtins
