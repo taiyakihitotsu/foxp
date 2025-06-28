@@ -17,5 +17,5 @@
     "noUncheckedIndexedAccess": true,
     "noPropertyAccessFromIndexSignature": true
   },
-  "include": ["./src/**/*.ts"]
+  "include": ["./test/**/*.ts"]
 }
