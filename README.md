@@ -1,5 +1,7 @@
 # Foxp
-A TypeScript type checker enabling pseudo Dependent Types.
+[![npm](https://img.shields.io/npm/v/@taiyakihitotsu/foxp)](https://www.npmjs.com/package/@taiyakihitotsu/foxp) ![license](https://img.shields.io/npm/l/@taiyakihitotsu/foxp) [![build](https://github.com/taiyakihitotsu/foxp/actions/workflows/node.js.yml/badge.svg)](https://github.com/taiyakihitotsu/foxp/actions)
+
+Enabling pseudo Dependent Types --- foxp🦊 does type-check [div-by-zero](#basic-example), [type-safe get/upd](#lens), [range-of-number](#range), [sized-array](#vect), [email-with-regex](#regex) and [more](#defining-your-own-precondition) you want.
 
 ## What is foxp🦊?
 TypeScript's type system cannot natively express certain dependent-type-like guarantees, such as:
@@ -63,7 +65,6 @@ const t2 =
 ```
 
 ### Defining your own precondition
-
 You can define custom preconditions as Lisp S-expressions.
 
 ```typescript
@@ -78,13 +79,95 @@ const pzero = foxp.tap1(inc, negone) // {sexpr: 0, value: 0}
 pzero.value // => 0
 ```
 
-
-
-
-### Other Sample
+## Other Sample
 See [test/sample](https://github.com/taiyakihitotsu/foxp/tree/main/test/sample)
 
-Currently I write lens, vect-n, numrange case there.
+### Lens
+You should `foxp.ro` if you want to use nested data.
+
+```typescript
+const map_getIntest_nest_with_ro_leaf =
+       getIn
+       <pre.getIn>
+       ()
+     ( foxp.putRecord(foxp.ro({a: [0,2], b: 2} as const))
+     , foxp.putVec([':a', 1] as const))
+
+try {
+   const map_getIntest_nest_out_of_bound0 =
+       getIn
+       <pre.getIn>
+       ()
+   // @ts-expect-error:
+     ( foxp.putRecord(foxp.ro({a: [0,2], b: 2} as const))
+     , foxp.putVec([':c'] as const))
+   } catch {}
+```
+from [test/builtins/get-in.ts](https://github.com/taiyakihitotsu/foxp/blob/main/test/builtins/get-in.ts)
+
+
+### Range
+```typescript
+const testnumran0
+  = foxp.putFn1<'(fn [n] (and (< n 10) (< 0 n)))', '(fn [n] (* n 4))'>()((n: number) => n * 4)
+ 
+const testnumran1
+  = foxp.tap1(
+      testnumran0
+      , foxp.putPrim(1))
+ 
+const testnumran2
+  = foxp.tap1(
+      testnumran0
+      , testnumran1 )
+ 
+const testnumran3
+  = foxp.tap1(
+      testnumran0
+// @ts-expect-error:
+      , testnumran2 )
+```
+from [test/sample/numrange.ts](https://github.com/taiyakihitotsu/foxp/blob/main/test/sample/numrange.ts)
+
+### Vect
+```typescript
+type testpre = '(fn [n] (= 3 (count n)))'
+const testvect0
+  = foxp.putFn1<
+    testpre
+    , '(fn [n] n)'>
+    ()
+    ((n: unknown): unknown => n)
+const testvect1 = foxp.putVec([1, 2, 3] as const)
+const testvect1b = foxp.putVec([1,2,3,4] as const)
+
+const testvect2
+  = foxp.tap1(
+      testvect0
+      , testvect1)
+ 
+const testvect2b
+  = foxp.tap1(
+      testvect0
+// @ts-expect-error:
+      , testvect1b)
+```
+from [test/sample/vect.ts](https://github.com/taiyakihitotsu/foxp/blob/main/test/sample/vect.ts)
+
+### Regex
+```typescript
+type email = `'(([^<>()[\\].,;: @"]+(\\.[^<>()[\\].,;: @"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}))'`
+const test_refind0 : Cion.Lisp<`(re-find ${email} 'zzz.zzz@testmailreg.com')`> = `'zzz.zzz@testmailreg.com'`
+const test_refind1 : Cion.Lisp<`(re-find ${email} 'https://github.com/taiyakihitotsu/foxp/tree/main')`> = "''"
+
+const email_str = foxp.putPrim('zzz.zzz@testmailreg.com')
+const not_email_str = foxp.putPrim('https://github.com/taiyakihitotsu/foxp/tree/main')
+const email = foxp.tid<foxp.pre.IsEmail>()(email_str)
+// @ts-expect-error:
+const notemail = foxp.tid<foxp.pre.IsEmail>()(not_email_str)
+```
+
+from [test/sample/email.ts](https://github.com/taiyakihitotsu/foxp/blob/main/test/sample/email.ts)
 
 ## Core concept
 
@@ -117,9 +200,9 @@ Important: This doesn't automatically track type transitions of functions at the
 
 **Builtin Functions**: `foxp.bi`
  - Arithmetic : add, sub, mul, div
- - Comparing: gt, gte, lt, lte, eq
  - Data : assoc, assoc-in, update, update-in, get, get-in
- 
+ - Compare : gt (`>`), lt (`<`), eq (`=`), gte (`>=`), lte (`<=`)
+
 **Pre-conditiond**: `foxp.pre`
  - Eq, Vect, NotZero, Greater, Less, Interval, EmailRegex
  - assocLax, assoc (for update/assoc-in/update-in too)
