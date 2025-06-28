@@ -44,9 +44,9 @@ export const putPrim = <V extends ut.Primitive>(v: V): LispWrapedPrimWith<V> => 
 
 export const tid = <
   T extends string
-, U extends {[c.SexprKey]: U[c.SexprKey]}>
-( _valid: T
-, value: U extends (Cion.Lisp<`(${T} ${U[c.SexprKey] extends string ? U[c.SexprKey] : never})`> extends 'true' ? U : never) ? U : never): U => value
+>() =>
+< U extends {[c.SexprKey]: U[c.SexprKey]}>
+( value: U extends (Cion.Lisp<`(${T} ${U[c.SexprKey] extends string ? U[c.SexprKey] : never})`> extends ('false' | 'nil' | {error: string}) ? never : U) ? U : never): U => value
 
 // readonly 
 export const ro: <U extends unknown[] | Record<PropertyKey, unknown>>(u: U) => ut.DeepReadonly<U> = (u) => u

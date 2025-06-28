@@ -44,10 +44,31 @@ const valid0: '(fn [v] (number? (:x v)))' = '' as '(fn [v] (number? (:x v)))'
 const valid1: '(fn [v] (string? (:y v)))' = '' as '(fn [v] (string? (:y v)))'
 const valid2: '(fn [v] (number? (:z v)))' = '' as '(fn [v] (number? (:z v)))'
 
-const valid_test0 = foxp.tid(valid0, testrec)
-const valid_test1 = foxp.tid(valid2, foxp.tid(valid0, foxp.tid(valid0, testrec)))
+const valid_test0 = foxp.tid<typeof valid0>()(testrec)
+const valid_test1 = 
+  foxp.tid
+    <typeof valid2>
+    ()
+    (foxp.tid
+      <typeof valid0>
+      ()
+      (foxp.tid
+        <typeof valid0>
+        ()
+        (testrec)))
+
+const valid_test2 = 
+  foxp.tid
+    <typeof valid2>
+    ()
+    (foxp.tid
+      <typeof valid1>
+      ()
 // @ts-expect-error:
-const valid_test2 = foxp.tid(valid2, foxp.tid(valid1, foxp.tid(valid0, testrec)))
+      (foxp.tid
+        <typeof valid0>
+        ()
+        (testrec)))
 
 // ---------
 // -- ro
