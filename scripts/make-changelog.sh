@@ -23,7 +23,7 @@ out="changelog/${tag}.md"
 mkdir -p changelog
 
 {
-echo -e "## $tag - $(date +%Y-%m-%d)" >> CHANGELOG.md && \
+echo -e "## $tag - $(date +%Y-%m-%d)"
 echo ""
 echo "### Contributors"
 git log "$prev_tag..$tag" --pretty=format:"%an" | sort | uniq | sed 's/^/- /'
