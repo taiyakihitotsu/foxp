@@ -1,6 +1,6 @@
 import * as c from '../../src/const'
 import * as foxp from '../../src/foxp'
-import { div } from '../../src/builtins'
+import { add, mul, sub, div } from '../../src/builtins'
 import * as merge from '../../src/merge'
 import * as pre from '../../src/pre'
 import { describe, it, expect } from 'vitest'
@@ -106,6 +106,47 @@ const divtest1_pass: {
       , foxp.putPrim(2))
       , foxp.putPrim(5))  
 
+try {
+const divtest1_failure_sub_then_zero: {
+  [c.SexprKey]: 'nil'
+, [c.ValueKey]: number} =
+  div
+    ()
+    ( foxp.putPrim(5)
+// @ts-expect-error:
+    , sub
+      ()
+      ( foxp.putPrim(3)
+      , foxp.putPrim(3)))  
+} catch {}
+
+try {
+const divtest1_failure_add_then_zero: {
+  [c.SexprKey]: 'nil'
+, [c.ValueKey]: number} =
+  div
+    ()
+    ( foxp.putPrim(5)
+// @ts-expect-error:
+    , add
+      ()
+      ( foxp.putPrim(3)
+      , foxp.putPrim(-3)))  
+} catch {}
+
+try {
+const divtest1_failure_mul_then_zero: {
+  [c.SexprKey]: 'nil'
+, [c.ValueKey]: number} =
+  div
+    ()
+    ( foxp.putPrim(5)
+// @ts-expect-error:
+    , mul
+      ()
+      ( foxp.putPrim(3)
+      , foxp.putPrim(0)))  
+} catch {}
 
 const divtest1fail_0_1_string: {
   [c.SexprKey]: '3/10'

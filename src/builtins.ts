@@ -101,8 +101,10 @@ export const assocIn = fn<'assoc-in', pre.assocIn, 3>(3)((m,k,v) => u.assocIn([m
 // [todo]
 export const updateIn = fn<'update-in', pre.updateIn, 3>(3)((m,k,f: {fn: unknown}) => u.updateIn([m,k,f![c.FnKey]]))
 export const get = fn<'get', pre.get, 2>(2)((m,k) => u.get([m,k]))
-// [todo]
 export const getIn = fn<'get-in', pre.getIn, 2>(2)((m,k) => u.getIn([m,k]))
+// export const first  = fn<'first', pre.first, 1>(1)((m) => u.get([m,0]))
+// export const second = fn<'second', pre.second, 1>(1)((m) => u.get([m,1]))
+// export const last = fn<'last', pre.last, 1>(1)((m: unknown[]) => u.get([m,m.length]))
 
 // ---------------------------
 // -- builtins: comparation
@@ -113,5 +115,17 @@ export const lt  = fn<'<',  pre.lt,  2>(2)((x:number,y:number) => x < y)
 export const eq  = fn<'=',  pre.eq,  2>(2)((x:unknown, y:unknown) => x === y)
 export const gte = fn<'>=', pre.gte, 2>(2)((x:number,y:number) => x >= y)
 export const lte = fn<'<=', pre.lte, 2>(2)((x:number,y:number) => x <= y)
+
+// -----------------------
+// -- builtins: logical
+// -----------------------
+// and, or, not
+
+// -----------------------
+// -- builtins: fmap
+// -----------------------
+// map, filter, remove, reduce
+
+
 
 export * as builtins from './builtins'
