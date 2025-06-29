@@ -22,6 +22,10 @@ export type FoxWith<
     , [c.ValueKey]: P }
 export const rfoxposs = <RetS, RetV>(n: RetV): {[c.SexprKey]: RetS, [c.ValueKey]: RetV} => ({[c.SexprKey]: '' as RetS, [c.ValueKey]: n})
 
+type sep<n extends number> = `${n}` extends `${infer n0}${infer n1}${infer n2}` ? [n0, n1, n2] : []
+type aaa = sep<123>
+
+
 // --------------------
 // -- builtins : culc
 // --------------------
@@ -70,177 +74,44 @@ Pre extends t4 = DefaultPre
 ( w?: Arg0 extends Ret0 ? Arg0 : never
 , x?: Arg1 extends Ret1 ? Arg1 : never
 , y?: Arg2 extends Ret2 ? Arg2 : never
-, z?: Arg3 extends Ret3 ? Arg3 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: ret} => rfoxposs<SexprR, ret>(num === 0 ? (f as () => ret)() : num === 1 ? (f as (w: a0) => ret)(w![c.ValueKey]) : num === 2 ? (f as (w: a0, x: a1) => ret)(w![c.ValueKey], x![c.ValueKey]) : num === 3 ? (f as (w: a0, x: a1, y: a2) => ret)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey]) : (f as (w: a0, x: a1, y: a2, z: a3) => ret)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey], z![c.ValueKey]))
+, z?: Arg3 extends Ret3 ? Arg3 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: ret} => rfoxposs<SexprR, ret>(
+  num === 0
+    ? ((f as () => ret)())
+  : num === 1
+    ? ((f as (w: a0) => ret)(w![c.ValueKey]))
+  : num === 2
+    ? ((f as (w: a0, x: a1) => ret)(w![c.ValueKey], x![c.ValueKey]))
+  : num === 3
+    ? ((f as (w: a0, x: a1, y: a2) => ret)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey]))
+  : ((f as (w: a0, x: a1, y: a2, z: a3) => ret)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey], z![c.ValueKey])))
 
 export const add = fn<'+', pre.add, 2>(2)((n: number, m:number) => n + m)
-
-// export const add = <
-//   Pre extends [string, string] | readonly [string, string] | string = pre.add
-// >() =>
-// < Arg0 extends FoxWith<number, Arg0>
-// , Arg1 extends FoxWith<number, Arg1>
-// , SexprR extends Cion.Lisp<`(+ ${FS<Arg0[c.SexprKey]>} ${FS<Arg1[c.SexprKey]>})`>
-// , Pre0 extends string = Pre extends string ? `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg0[c.SexprKey]>}])` : `(${Pre[0]} ${ForceStr<Arg0[c.SexprKey]>})`
-// , Pre1 extends string = Pre extends string ? `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg1[c.SexprKey]>}])` : `(${Pre[1]} ${ForceStr<Arg1[c.SexprKey]>})`
-// , Ret0 = Pre[0] extends '' ? Arg0 : (Cion.Lisp<Pre0> extends ('nil' | 'false') ? never : Arg0)
-// , Ret1 = Pre[1] extends '' ? Arg1 : (Cion.Lisp<Pre1> extends ('nil' | 'false') ? never : Arg1)>
-// ( n: Arg0 extends Ret0 ? Arg0 : never
-// , m: Arg1 extends Ret1 ? Arg1 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: number} => rfoxposs<SexprR, number>(n[c.ValueKey] + m[c.ValueKey])
-
-export const sub = <
-  Pre extends [string, string] | readonly [string, string] | string = pre.sub
->() =>
-< Arg0 extends FoxWith<number, Arg0>
-, Arg1 extends FoxWith<number, Arg1>
-, SexprR extends Cion.Lisp<`(- ${FS<Arg0[c.SexprKey]>} ${FS<Arg1[c.SexprKey]>})`>
-, Pre0 extends string = Pre extends string ? `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg0[c.SexprKey]>}])` : `(${Pre[0]} ${ForceStr<Arg0[c.SexprKey]>})`
-, Pre1 extends string = Pre extends string ? `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg1[c.SexprKey]>}])` : `(${Pre[1]} ${ForceStr<Arg1[c.SexprKey]>})`
-, Ret0 = Pre[0] extends '' ? Arg0 : (Cion.Lisp<Pre0> extends ('nil' | 'false') ? never : Arg0)
-, Ret1 = Pre[1] extends '' ? Arg1 : (Cion.Lisp<Pre1> extends ('nil' | 'false') ? never : Arg1)>
-( n: Arg0 extends Ret0 ? Arg0 : never
-, m: Arg1 extends Ret1 ? Arg1 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: number} => rfoxposs<SexprR, number>(n[c.ValueKey] - m[c.ValueKey])
-
-export const mul = <
-  Pre extends [string, string] | readonly [string, string] | string = pre.mul
->() =>
-< Arg0 extends FoxWith<number, Arg0>
-, Arg1 extends FoxWith<number, Arg1>
-, SexprR extends Cion.Lisp<`(* ${FS<Arg0[c.SexprKey]>} ${FS<Arg1[c.SexprKey]>})`>
-, Pre0 extends string = Pre extends string ? `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg0[c.SexprKey]>}])` : `(${Pre[0]} ${ForceStr<Arg0[c.SexprKey]>})`
-, Pre1 extends string = Pre extends string ? `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg1[c.SexprKey]>}])` : `(${Pre[1]} ${ForceStr<Arg1[c.SexprKey]>})`
-, Ret0 = Pre[0] extends '' ? Arg0 : (Cion.Lisp<Pre0> extends ('nil' | 'false') ? never : Arg0)
-, Ret1 = Pre[1] extends '' ? Arg1 : (Cion.Lisp<Pre1> extends ('nil' | 'false') ? never : Arg1)>
-( n: Arg0 extends Ret0 ? Arg0 : never
-, m: Arg1 extends Ret1 ? Arg1 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: number} => rfoxposs<SexprR, number>(n[c.ValueKey] * m[c.ValueKey])
-
-export const div = <
-  Pre extends [string, string] | readonly [string, string] | string = pre.div
->() =>
-< Arg0 extends FoxWith<number, Arg0>
-, Arg1 extends FoxWith<number, Arg1>
-, SexprR extends Cion.Lisp<`(/ ${FS<Arg0[c.SexprKey]>} ${FS<Arg1[c.SexprKey]>})`>
-, Pre0 extends string = Pre extends string ? `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg0[c.SexprKey]>}])` : `(${Pre[0]} ${ForceStr<Arg0[c.SexprKey]>})`
-// , Pre1 extends string = Pre extends string ? `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg1[c.SexprKey]>}])` : `(${Pre[1]} ${ForceStr<Arg1[c.SexprKey]>})`
-, Pre1 extends string = Pre extends string ? `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg1[c.SexprKey]>}])` : `(${Pre[1]} ${ForceStr<Arg1[c.SexprKey]>})`
-, Ret0 = Pre[0] extends '' ? Arg0 : (Cion.Lisp<Pre0> extends ('nil' | 'false') ? never : Arg0)
-, Ret1 = Pre[1] extends '' ? Arg1 : (Cion.Lisp<Pre1> extends ('nil' | 'false') ? never : Arg1)>
-( n: Arg0 extends Ret0 ? Arg0 : never
-, m: Arg1 extends Ret1 ? Arg1 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: number} => rfoxposs<SexprR, number>(n[c.ValueKey] / m[c.ValueKey])
-
+export const sub = fn<'-', pre.sub, 2>(2)((n: number, m:number) => n - m)
+export const mul = fn<'*', pre.mul, 2>(2)((n: number, m:number) => n * m)
+export const div = fn<'/', pre.div, 2>(2)((n: number, m:number) => n / m)
 
 // ---------------------
 // -- builtins: coll fn
 // ---------------------
 
-export const assoc = <
-  Pre extends string = pre.assoc
->() =>
-< Arg0 extends FoxWith<Record<PropertyKey, unknown> | ut.Tuple, Arg0>
-, Arg1 extends FoxWith<string|number, Arg1>
-, Arg2 extends FoxWith<unknown, Arg2>
-, SexprR extends Cion.Lisp<`(assoc ${FS<Arg0[c.SexprKey]>} ${FS<Arg1[c.SexprKey]>} ${FS<Arg2[c.SexprKey]>})`>
-, Check extends string = `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg1[c.SexprKey]>} ${ForceStr<Arg2[c.SexprKey]>}])`
-, Ret0 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg0
-, Ret1 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg1
-, Ret2 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg2
-, ReturnValue = compiler.Ltc<SexprR extends string ? SexprR : ''>>
-( m: Arg0 extends Ret0 ? Arg0 : never
-, k: Arg1 extends Ret1 ? Arg1 : never
-, v: Arg2 extends Ret2 ? Arg2 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: ReturnValue} => rfoxposs<SexprR, ReturnValue>(u.assoc([m[c.ValueKey], k[c.ValueKey], v[c.ValueKey]]))
+export const assoc = fn<'assoc', pre.assoc, 3>(3)((m,k,v) => u.assoc([m,k,v]))
+// [todo]
+export const update = fn<'update', pre.update, 3>(3)((m,k,f: {fn: unknown}) => u.update([m,k,f![c.FnKey]]))
+export const assocIn = fn<'assoc-in', pre.assocIn, 3>(3)((m,k,v) => u.assocIn([m,k,v]))
+// [todo]
+export const updateIn = fn<'update-in', pre.updateIn, 3>(3)((m,k,f: {fn: unknown}) => u.updateIn([m,k,f![c.FnKey]]))
+export const get = fn<'get', pre.get, 2>(2)((m,k) => u.get([m,k]))
+// [todo]
+export const getIn = fn<'get-in', pre.getIn, 2>(2)((m,k) => u.getIn([m,k]))
 
-export const update = <
-  Pre extends string = pre.update
->() =>
-< Arg0 extends FoxWith<Record<PropertyKey, unknown> | ut.Tuple, Arg0>
-, Arg1 extends FoxWith<string|number, Arg1>
-, Arg2 extends foxp.Foxfn
-, SexprR extends Cion.Lisp<`(update ${FS<Arg0[c.SexprKey]>} ${FS<Arg1[c.SexprKey]>} ${FS<Arg2[c.SexprKey]>})`>
-, Check extends string = `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg1[c.SexprKey]>} ${ForceStr<Arg2[c.SexprKey]>}])`
-, Ret0 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg0
-, Ret1 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg1
-, Ret2 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg2
-, ReturnValue = compiler.Ltc<SexprR extends string ? SexprR : ''>>
-( m: Arg0 extends Ret0 ? Arg0 : never
-, k: Arg1 extends Ret1 ? Arg1 : never
-, v: Arg2 extends Ret2 ? Arg2 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: ReturnValue} => rfoxposs<SexprR, ReturnValue>(u.update([m[c.ValueKey], k[c.ValueKey], v[c.ValueKey][c.FnKey]]))
+// ---------------------------
+// -- builtins: comparation
+// ---------------------------
 
-export const assocIn = <
-  Pre extends string = pre.assocIn
->() =>
-< Arg0 extends FoxWith<Record<PropertyKey, unknown> | ut.Tuple, Arg0>
-, Arg1 extends FoxWith<(string|number)[] | readonly (string|number)[], Arg1>
-, Arg2 extends FoxWith<unknown, Arg2>
-, SexprR extends Cion.Lisp<`(assoc-in ${FS<Arg0[c.SexprKey]>} ${FS<Arg1[c.SexprKey]>} ${FS<Arg2[c.SexprKey]>})`>
-, Check extends string = `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg1[c.SexprKey]>} ${ForceStr<Arg2[c.SexprKey]>}])`
-, Ret0 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg0
-, Ret1 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg1
-, Ret2 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg2
-, ReturnValue = compiler.Ltc<SexprR extends string ? SexprR : ''>>
-( m: Arg0 extends Ret0 ? Arg0 : never
-, k: Arg1 extends Ret1 ? Arg1 : never
-, v: Arg2 extends Ret2 ? Arg2 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: ReturnValue} => rfoxposs<SexprR, ReturnValue>(u.assocIn([m[c.ValueKey], k[c.ValueKey], v[c.ValueKey]]))
-
-export const updateIn = <
-  Pre extends string = pre.updateIn
->() =>
-< Arg0 extends FoxWith<Record<PropertyKey, unknown> | ut.Tuple, Arg0>
-, Arg1 extends FoxWith<(string|number)[] | readonly (string|number)[], Arg1>
-, Arg2 extends foxp.Foxfn
-, SexprR extends Cion.Lisp<`(update-in ${FS<Arg0[c.SexprKey]>} ${FS<Arg1[c.SexprKey]>} ${FS<Arg2[c.SexprKey]>})`>
-, Check extends string = `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg1[c.SexprKey]>} ${ForceStr<Arg2[c.SexprKey]>}])`
-, Ret0 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg0
-, Ret1 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg1
-, Ret2 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg2
-, ReturnValue = compiler.Ltc<SexprR extends string ? SexprR : ''>>
-( m: Arg0 extends Ret0 ? Arg0 : never
-, k: Arg1 extends Ret1 ? Arg1 : never
-, v: Arg2 extends Ret2 ? Arg2 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: ReturnValue} => rfoxposs<SexprR, ReturnValue>(u.updateIn([m[c.ValueKey], k[c.ValueKey], v[c.ValueKey][c.FnKey]]))
-
-export const get = <
-  Pre extends string = pre.get
->() =>
-< Arg0 extends FoxWith<Record<PropertyKey, unknown> | ut.Tuple, Arg0>
-, Arg1 extends FoxWith<string|number, Arg1>
-, SexprR extends Cion.Lisp<`(get ${FS<Arg0[c.SexprKey]>} ${FS<Arg1[c.SexprKey]>})`>
-, Check extends string = `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg1[c.SexprKey]>}])`
-, Ret0 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg0
-, Ret1 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg1
-, ReturnValue = compiler.Ltc<SexprR extends string ? SexprR : ''>>
-( m: Arg0 extends Ret0 ? Arg0 : never
-, k: Arg1 extends Ret1 ? Arg1 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: ReturnValue} => rfoxposs<SexprR, ReturnValue>(u.get([m[c.ValueKey], k[c.ValueKey]]))
-
-export const getIn = <
-  Pre extends string = pre.getIn
->() =>
-< Arg0 extends FoxWith<Record<PropertyKey, unknown> | ut.Tuple, Arg0>
-, Arg1 extends FoxWith<(string|number)[] | readonly (string|number)[], Arg1>
-, SexprR extends Cion.Lisp<`(get-in ${FS<Arg0[c.SexprKey]>} ${FS<Arg1[c.SexprKey]>})`>
-, Check extends string = `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg1[c.SexprKey]>}])`
-, Ret0 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg0
-, Ret1 = Cion.Lisp<Check> extends ('nil' | 'false' | {error: string}) ? never : Arg1
-, ReturnValue = compiler.Ltc<SexprR extends string ? SexprR : ''>>
-( m: Arg0 extends Ret0 ? Arg0 : never
-, k: Arg1 extends Ret1 ? Arg1 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: ReturnValue} => rfoxposs<SexprR, ReturnValue>(u.getIn([m[c.ValueKey], k[c.ValueKey]]))
-
-export const compare = <
-  Sig extends '>' | '<' | '=' | '>=' | '<=' = '>'
->(sig: Sig) => <
-  Pre extends [string, string] | readonly [string, string] | string = pre.compare
->() =>
-< Arg0 extends FoxWith<number, Arg0>
-, Arg1 extends FoxWith<number, Arg1>
-, SexprR extends Cion.Lisp<`(${Sig} ${FS<Arg0[c.SexprKey]>} ${FS<Arg1[c.SexprKey]>})`>
-, Pre0 extends string = Pre extends string ? `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg0[c.SexprKey]>}])` : `(${Pre[0]} ${ForceStr<Arg0[c.SexprKey]>})`
-, Pre1 extends string = Pre extends string ? `(${Pre} [${ForceStr<Arg0[c.SexprKey]>} ${ForceStr<Arg1[c.SexprKey]>}])` : `(${Pre[1]} ${ForceStr<Arg1[c.SexprKey]>})`
-, Ret0 = Pre[0] extends '' ? Arg0 : (Cion.Lisp<Pre0> extends ('nil' | 'false') ? never : Arg0)
-, Ret1 = Pre[1] extends '' ? Arg1 : (Cion.Lisp<Pre1> extends ('nil' | 'false') ? never : Arg1)>
-( n: Arg0 extends Ret0 ? Arg0 : never
-, m: Arg1 extends Ret1 ? Arg1 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: boolean} => rfoxposs<SexprR, boolean>(sig === '>' ? n[c.ValueKey] > m[c.ValueKey] : sig === '<' ?  n[c.ValueKey] < m[c.ValueKey] : sig === '=' ?  n[c.ValueKey] === m[c.ValueKey] : sig === '>=' ?  n[c.ValueKey] >= m[c.ValueKey] :  n[c.ValueKey] <= m[c.ValueKey])
-
-export const gt = compare('>')
-export const lt = compare('<')
-export const eq = compare('=')
-export const gte = compare('>=')
-export const lte = compare('<=')
+export const gt  = fn<'>',  pre.gt,  2>(2)((x:number,y:number) => x > y)
+export const lt  = fn<'<',  pre.lt,  2>(2)((x:number,y:number) => x < y)
+export const eq  = fn<'=',  pre.eq,  2>(2)((x:unknown, y:unknown) => x === y)
+export const gte = fn<'>=', pre.gte, 2>(2)((x:number,y:number) => x >= y)
+export const lte = fn<'<=', pre.lte, 2>(2)((x:number,y:number) => x <= y)
 
 export * as builtins from './builtins'

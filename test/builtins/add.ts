@@ -136,10 +136,28 @@ const addtest1f_notmatch_sexpr: {
        , foxp.putPrim(1)))
     , foxp.putPrim(3))
 
+const addtest1_success_return_neg: {
+  [c.SexprKey]: '-5'
+, [c.ValueKey]: number} =
+  add
+    ()
+    (add
+      ()
+      ( foxp.putPrim(8)
+      , foxp.putPrim(-16))
+    , add
+      ()
+      (add
+        ()
+        ( foxp.putPrim(1)
+        , foxp.putPrim(-2))
+        , foxp.putPrim(4)) ) 
+
 describe('add', () => {
 it('', () => { expect(addtest0.value).toBe(2) })
 it('', () => { expect(addtest0_str.value).toBe(2)})
 it('', () => { expect(addtest0b.value).toBe(2)})
 it('', () => { expect(addtest0b_strict.value).toBe(2)})
 it('', () => { expect(addtest1_pass.value).toBe(5)})
+it('', () => { expect(addtest1_success_return_neg.value).toBe(-5)})
 })
