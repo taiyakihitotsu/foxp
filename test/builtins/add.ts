@@ -80,6 +80,17 @@ const addtest0f_notmatch_sexpr: {
     ( foxp.putPrim(1)
     , foxp.putPrim(1))
 
+// @ts-expect-error:
+const addtest0f_maltype: {
+  [c.SexprKey]: '3'
+, [c.ValueKey]: number} =
+  add
+    <preadd>
+    ()
+    ( foxp.putPrim(1)
+// @ts-expect-error:
+    , foxp.putPrim('string'))
+
 const addtest1_pass: {
   [c.SexprKey]: '5'
 , [c.ValueKey]: number} =

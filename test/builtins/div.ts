@@ -192,7 +192,9 @@ const divtest1f_notmatch_sexpr: {
     , foxp.putPrim(4))
 
 try {
+// @ts-expect-error:
 const divtest1f_error_divbyzero: {
+  // [note] LispDivError2
   [c.SexprKey]: '3/10'
 , [c.ValueKey]: number} =
    div

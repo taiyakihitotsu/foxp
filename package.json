@@ -36,6 +36,6 @@
   "author": "taiyakihitotsu <taiyakihitotsu@proton.me> https://github.com/taiyakihitotsu",
   "license": "3-clause BSD license",
   "dependencies": {
-    "@taiyakihitotsu/cion": "^0.2.1"
+    "@taiyakihitotsu/cion": "^0.2.2"
   }
 }

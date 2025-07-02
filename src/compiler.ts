@@ -69,7 +69,8 @@ export type ltcError2 = 'ltcError2'
 export type ltcError3 = 'ltcError3'
 export type ltcError4 = 'ltcError4'
 export type Error<S extends string> = {error: S}
-export type ltCompiler<
+export type ltCompiler<Parsed extends string[]> = _ltCompiler<Parsed>
+export type _ltCompiler<
   Parsed  extends string[]
 , Current extends StackCon = {state: 'vec', stack: []}
 , Stack   extends StackCon[] = []> =
@@ -78,27 +79,27 @@ export type ltCompiler<
   : Parsed extends [infer F extends string, ...infer Rest extends string[]]
     ? F extends '[' | '{'
       ? Current['state'] extends 'fn'
-        ? ltCompiler<Rest, StackPush<Current, F>, Stack>
-      : ltCompiler<Rest, {state: (F extends '[' ? 'vec' : 'map'), stack: []}, [Current, ...Stack]>
+        ? _ltCompiler<Rest, StackPush<Current, F>, Stack>
+      : _ltCompiler<Rest, {state: (F extends '[' ? 'vec' : 'map'), stack: []}, [Current, ...Stack]>
     : F extends '('
-      ? ltCompiler<Rest, {state: 'fn', stack: []}, [Current, ...Stack]>
+      ? _ltCompiler<Rest, {state: 'fn', stack: []}, [Current, ...Stack]>
     : F extends ')'
       ? Stack extends [ infer Last extends StackCon
                       , ...infer Tail extends StackCon[]]
-        ? ltCompiler<Rest, StackPush<Last, Function>, Tail>
+        ? _ltCompiler<Rest, StackPush<Last, Function>, Tail>
       : Error<ltcError1>
     : F extends ']' | '}'
       ? Current['state'] extends 'fn'
-        ? ltCompiler<Rest, StackPush<Current, F>, Stack>
+        ? _ltCompiler<Rest, StackPush<Current, F>, Stack>
       : Stack extends [ infer Last extends StackCon
                       , ...infer Tail extends StackCon[]]
         ? Current['state'] extends 'map'
-          ? ltCompiler<Rest, StackPush<Last, VtoLispM<Current['stack']>>, Tail>
+          ? _ltCompiler<Rest, StackPush<Last, VtoLispM<Current['stack']>>, Tail>
         : Current['state'] extends 'vec'
-          ? ltCompiler<Rest, StackPush<Last, Current['stack']>, Tail>
+          ? _ltCompiler<Rest, StackPush<Last, Current['stack']>, Tail>
         : Error<ltcError2>
       : Error<ltcError3>
-    : ltCompiler<Rest, StackPush<Current, PrimToTS<F>>, Stack>
+    : _ltCompiler<Rest, StackPush<Current, PrimToTS<F>>, Stack>
   : Error<ltcError4>
 
 export type BracketWrap<S extends string> = `[${S}]`

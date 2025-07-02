@@ -3,7 +3,6 @@ import * as foxp from './foxp'
 import type Cion from '@taiyakihitotsu/cion'
 import * as u from './util'
 import * as ut from './type-util'
-import * as compiler from './compiler'
 import * as pre from './pre'
 
 export type DivF<N extends string|number> = `(fn [n] (/ n ${N}))`
@@ -51,7 +50,8 @@ export type t4 = string | [string] | readonly [string] |
 export const fn = <
   SexprFunction extends string
 , DefaultPre extends t4
-, narg extends N4
+, narg = DefaultPre extends pre.add ? 2 : 0
+//, narg extends N4
 >(num: narg) =>
 <a0, a1, a2, a3, ret>
 (f: narg extends N0 ? () => ret : narg extends N1 ? (w: a0) => ret : narg extends N2 ? (w: a0, x:a1) => ret : narg extends N3 ? (w: a0, x:a1, y:a2) => ret : (w: a0, x:a1, y:a2, z:a3) => ret) => <
@@ -85,7 +85,7 @@ Pre extends t4 = DefaultPre
     ? ((f as (w: a0, x: a1, y: a2) => ret)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey]))
   : ((f as (w: a0, x: a1, y: a2, z: a3) => ret)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey], z![c.ValueKey])))
 
-export const add = fn<'+', pre.add, 2>(2)((n: number, m:number) => n + m)
+export const add = fn<'+', pre.add>(2)((n: number, m:number) => n + m)
 export const sub = fn<'-', pre.sub, 2>(2)((n: number, m:number) => n - m)
 export const mul = fn<'*', pre.mul, 2>(2)((n: number, m:number) => n * m)
 export const div = fn<'/', pre.div, 2>(2)((n: number, m:number) => n / m)
@@ -102,9 +102,12 @@ export const assocIn = fn<'assoc-in', pre.assocIn, 3>(3)((m,k,v) => u.assocIn([m
 export const updateIn = fn<'update-in', pre.updateIn, 3>(3)((m,k,f: {fn: unknown}) => u.updateIn([m,k,f![c.FnKey]]))
 export const get = fn<'get', pre.get, 2>(2)((m,k) => u.get([m,k]))
 export const getIn = fn<'get-in', pre.getIn, 2>(2)((m,k) => u.getIn([m,k]))
-// export const first  = fn<'first', pre.first, 1>(1)((m) => u.get([m,0]))
-// export const second = fn<'second', pre.second, 1>(1)((m) => u.get([m,1]))
-// export const last = fn<'last', pre.last, 1>(1)((m: unknown[]) => u.get([m,m.length]))
+
+// -- do tests belows
+
+export const first  = fn<'first', pre.first, 1>(1)((m) => u.get([m,0]))
+export const second = fn<'second', pre.second, 1>(1)((m) => u.get([m,1]))
+export const last = fn<'last', pre.last, 1>(1)((m: unknown[]) => u.get([m,m.length]))
 
 // ---------------------------
 // -- builtins: comparation
@@ -115,17 +118,70 @@ export const lt  = fn<'<',  pre.lt,  2>(2)((x:number,y:number) => x < y)
 export const eq  = fn<'=',  pre.eq,  2>(2)((x:unknown, y:unknown) => x === y)
 export const gte = fn<'>=', pre.gte, 2>(2)((x:number,y:number) => x >= y)
 export const lte = fn<'<=', pre.lte, 2>(2)((x:number,y:number) => x <= y)
+export const mod = fn<'mod', pre.mod, 2>(2)((x:number,y:number) => x % y)
 
 // -----------------------
 // -- builtins: logical
 // -----------------------
-// and, or, not
+
+export const and = fn<'and', pre.and, 2>(2)((x:boolean,y:boolean) => x && y)
+export const or  = fn<'or',  pre.or,  2>(2)((x:boolean,y:boolean) => x || y)
+export const not = fn<'not', pre.not, 1>(1)((x:boolean) => !x)
+
+// -------------------
+// -- builtins: cond
+// -------------------
+
+export const If  = fn<'if', pre.If, 3>(3)((x,y,z) => x ? y : z)
+// export const loop
 
 // -----------------------
 // -- builtins: fmap
 // -----------------------
-// map, filter, remove, reduce
+export const map = fn<'map', pre.map, 2>(2)((f: {fn: (x:unknown) => unknown}, m:unknown[]) => m.map(f![c.FnKey]))
+export const filter = fn<'filter', pre.filter, 2>(2)((f: {fn: (x:unknown) => unknown}, m:unknown[]) => m.filter(f![c.FnKey]))
+export const remove = fn<'remove', pre.remove, 2>(2)((f: {fn: (x:unknown) => unknown}, m:unknown[]) => m.filter((a) => !(f![c.FnKey](a))))
+// reduce
+export const reduce = fn<'reduce', pre.reduce, 3>(3)((f: {fn: (x:unknown) => unknown}, i: unknown, m:unknown[]) => m.reduce(f![c.FnKey], i))
+
+// -----------------------
+// -- check
+// -----------------------
+
+// number?, string?, vector?, map?, fn?, ifn?, nat-int?, pos-int?, neg-int?, odd?, even?, zero?, keyword?, empty?, boolean?, type, every?, some, nil?, some?
+
+// ----------------------
+// -- string
+// -----------------------
+
+// ----------------------
+// -- builtins: data
+// ----------------------
+
+// export const keys
+// export const count
+// export const drop
+// export const take
+// export const reverse
+// export const conj
+// export const concat
+// export const interleave
+
+
 
 
 
 export * as builtins from './builtins'
+
+
+
+
+
+
+
+
+
+
+
+
+
