@@ -5,32 +5,37 @@ import type Cion from '@taiyakihitotsu/cion'
 import * as c from './const'
 import * as ut from './type-util'
 
+import {t4, pickArgs, MergePreStr} from './pre'
+
 // ----------------
 // -- merge pre
 // ----------------
 
-export type MergePreStr<
-  SPre extends string
-, TPre extends string
-, ArgName extends string = 'n'> =
-  SPre extends ''
-    ? TPre
-  : TPre extends ''
-    ? SPre
-  : `(fn [${ArgName}] (and (${SPre} ${ArgName}) (${TPre} ${ArgName})))`
+// // [todo] legacy
+// export type MergePreTuple<
+//   SPre extends string[]
+// , TPre extends string[]
+// , Preset extends Record<string, unknown>> = _MergePreTuple<SPre, TPre, Preset>
+// // [note]
+// // All element fn of S/TPre should be unary function,
+// //   which you can get it with `getOnePre`
+// //   implemented like `Preset[SPre[0]][0]`. 
+// // 
+// // `Preset` is prepared just for 
 
-export type MergePreTuple<
-  SPre extends string[]
-, TPre extends string[]
-, ArgNames extends string[] = ['mpt_w', 'mpt_x', 'mpt_y', 'mpt_z']
-, Ret extends string[] = []> =
-  [SPre, TPre] extends [[], []]
-    ? Ret
-  : SPre['length'] extends TPre['length']
-    ? [SPre, TPre, ArgNames] extends [[infer hspre extends string, ...infer tspre extends string[]], [infer htpre extends string, ...infer ttpre extends string[]], [infer harg extends string, ...infer targ extends string[]]]
-      ? MergePreTuple<tspre, ttpre, targ, [...Ret, MergePreStr<hspre, htpre, harg>]>
-    : never
-  : never
+// type _MergePreTuple<
+//   SPre extends string[]
+// , TPre extends string[]
+// , Preset extends Record<string, unknown>
+// , Ret extends string[] = []> =
+//   [SPre, TPre] extends [[], []]
+//     ? Ret
+//   : SPre['length'] extends TPre['length']
+//     ? [SPre, TPre] extends [[infer hspre extends string, ...infer tspre extends string[]], [infer htpre extends string, ...infer ttpre extends string[]]]
+// //      ? [getOnePre<hspre, Preset>, getOnePre<htpre, Preset>]
+//       ? _MergePreTuple<tspre, ttpre, Preset, [...Ret, MergePreStr<getOnePre<hspre, Preset>, getOnePre<htpre, Preset>>]>
+//     : never
+//   : never
 
 // [note]
 // `GensymEnvs extends string[]` part don't use yArg
@@ -51,13 +56,13 @@ export type MergePreRaw<
       ? [MergePreStr<
            compiler.Fgensym<xPre, xArg, xApp>
          , compiler.Fgensym<yPre, yArg, yApp>
-         , rArg>
+         >
          , [rArg, `${xArg}${xApp}`, `${yArg}${yApp}`]]
     : GensymEnvs extends string[]
       ? [MergePreStr<
            compiler.Fgensym<xPre, xArg, xApp>
          , gt.LoopGensym<yPre, GensymEnvs, yApp>
-         , rArg>
+         >
          , [rArg, `${xArg}${xApp}`, ...gt.LoopAppend<GensymEnvs, yApp>]]
     : never
   : never
