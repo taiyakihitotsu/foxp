@@ -137,13 +137,14 @@ export type arithmetic2 = `(fn [x y] (and (number? x) (number? y)))`
 export type number0 = `number?`
 export type compare = arithmetic2
 
+type _notdiv0 = `(fn [x y] (and (number? x) ((fn [n] (and (number? n) (not (zero? n)))) y)))`
 type arithmetic = checkPreMap<{
   add: arithmetic2
   , sub: arithmetic2
   , mul: arithmetic2
-  , div: `(fn [x y] (and (number? x) ((fn [n] (and (number? n) (not (zero? n)))) y)))`
-  , mod: arithmetic2
-  , rem: arithmetic2
+  , div: _notdiv0
+  , mod: _notdiv0
+  , rem: _notdiv0
   , trunc: number0
   , floor: number0
   , inc: number0

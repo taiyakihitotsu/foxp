@@ -110,7 +110,11 @@ export const lt  = fn<'<',  pre.bi.lt>(2)((x:number,y:number) => x < y)
 export const eq  = fn<'=',  pre.bi.eq>(2)((x:unknown, y:unknown) => x === y)
 export const gte = fn<'>=', pre.bi.gte>(2)((x:number,y:number) => x >= y)
 export const lte = fn<'<=', pre.bi.lte>(2)((x:number,y:number) => x <= y)
-export const mod = fn<'mod', pre.bi.mod>(2)((x:number,y:number) => x % y)
+export const mod = fn<'mod', pre.bi.mod>(2)(u.mod)
+export const rem = fn<'rem', pre.bi.rem>(2)((x:number,y:number) => x % y)
+export const trunc = fn<'trunc', pre.bi.trunc>(1)(Math.trunc) 
+export const floor = fn<'floor', pre.bi.floor>(1)(Math.floor)
+
 
 // -----------------------
 // -- builtins: logical

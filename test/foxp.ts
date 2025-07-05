@@ -2,11 +2,16 @@ import * as foxp from '../src/foxp'
 import { const as c } from '../src/const'
 import * as ut from '../src/type-util'
 
-// test
 const test_lispwrapprim0: {[c.SexprKey]: '1', [c.ValueKey]: 1} = foxp.putPrim(1)
 const test_lispwrapprim1: {[c.SexprKey]: 'true', [c.ValueKey]: true} = foxp.putPrim(true)
 const test_lispwrapprim2: {[c.SexprKey]: `'teststr'`, [c.ValueKey]: 'teststr'} = foxp.putPrim('teststr')
 const test_lispwrapmap0:  {[c.SexprKey]: '[0 1 2]', [c.ValueKey]: unknown} = foxp.putVec([0,1,2] as const)
+
+const test_fraction0: {[c.SexprKey]: '1/3', [c.ValueKey]: number} = foxp.putPrim('1/3')
+const test_fraction1: {[c.SexprKey]: '-1/3', [c.ValueKey]: number} = foxp.putPrim('-1/3')
+const test_fraction2: {[c.SexprKey]: '3', [c.ValueKey]: number} = foxp.putPrim('3')
+const test_fraction3: {[c.SexprKey]: '-3', [c.ValueKey]: number} = foxp.putPrim('-3')
+
 
 // ----------
 // -- put

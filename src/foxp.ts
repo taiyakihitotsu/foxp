@@ -3,6 +3,7 @@ import type { typeUtil } from './type-util'
 import * as compiler from './compiler'
 import { const as c } from './const'
 import * as ut from './type-util'
+import * as fraction from './fraction'
 
 // -------------
 // -- LispWrap
@@ -11,14 +12,21 @@ import * as ut from './type-util'
 // value -> singleton type -> Cion Lisp Sexpr
 
 export type _LispString<S extends string> = `'${S}'`
-export type ToLispString<T extends ut.Primitive> = T extends `:${infer K}` ? `:${K}` : T extends string ? _LispString<T> : `${T}`
+export type ToLispString<
+  T extends ut.Primitive> = 
+  T extends `:${infer K}`
+    ? `:${K}`
+  : T extends string
+    ? [fraction.isRational<T>, _LispString<T>] extends [true, `'${infer N}'`]
+      ? N
+    : _LispString<T>
+  : `${T}`
 
 export type LispWrapedMapWith<T> = {[c.SexprKey]: typeUtil.RtoS<T>, [c.ValueKey]: T}
 export type LispWrapedVecWith<T extends ut.Tuple> = {[c.SexprKey]: typeUtil.VtoS<T>, value: T}
-// type LispWrapedVecWith<T extends ut.Tuple> = {[c.SexprKey]: typeUtil.VtoS<ut.ForceTuple<T>>, value: ut.ForceTuple<T>}
 export type LispWrapedFnValue<Pre, T> = {fn : T, pre : Pre}
 export type LispWrapedFnWith<Pre, F, T> = {[c.SexprKey]: F, [c.ValueKey]: LispWrapedFnValue<Pre, T>}
-export type LispWrapedPrimWith<T extends ut.Primitive> = {[c.SexprKey]: ToLispString<T>, [c.ValueKey]: T}
+
 
 export const putRecord = <
  V extends Record<PropertyKey, unknown>
@@ -36,7 +44,12 @@ export const putVec = <
 const _putFn1 = <Pre, F, T>(f:T): LispWrapedFnWith<Pre,F,T> => ({[c.SexprKey]: '' as F, [c.ValueKey]: {[c.FnKey]: f as T, [c.PreKey]: '' as Pre}})
 export const putFn1 = <Pre,F>() => <T>(f:T): LispWrapedFnWith<Pre,F,T> => _putFn1<Pre,F,T>(f)
 
-export const putPrim = <V extends ut.Primitive>(v: V): LispWrapedPrimWith<V> => ({[c.SexprKey]: '' as ToLispString<V>, [c.ValueKey]: v})
+// -- primitive
+// [note]
+// Fraction is not supported with TypeScript in default.
+// See `ToLispString` as well.
+export type LispWrapedPrimWith<T extends ut.Primitive, R extends ut.Primitive> = {[c.SexprKey]: ToLispString<T>, [c.ValueKey]: R}
+export const putPrim = <V extends ut.Primitive, R extends ut.Primitive = (fraction.isRational<V> extends true ? number : V)>(v: V): LispWrapedPrimWith<V,R> => ({[c.SexprKey]: '' as ToLispString<V>, [c.ValueKey]: fraction.someFraction(v) as R})
 
 // --------------------------
 // -- type check id
