@@ -32,7 +32,7 @@ const gtetest0_eq_merge_success: {
   [c.SexprKey]: 'true'
 , [c.ValueKey]: boolean} =
    gte
-     <['pos-int?', 'pos-int?']>
+     <`(fn [x y] (and (pos-int? x) (pos-int? y)))`>
      ()
      ( foxp.putPrim(1)
      , foxp.putPrim(1))
@@ -41,7 +41,7 @@ const gtetest0_gt_merge_success: {
   [c.SexprKey]: 'true'
 , [c.ValueKey]: boolean} =
    gte
-     <['pos-int?', 'pos-int?']>
+     <`(fn [x y] (and (pos-int? x) (pos-int? y)))`>
      ()
      ( foxp.putPrim(2)
      , foxp.putPrim(1))
@@ -50,7 +50,7 @@ const gtetest0_lt_merge_success: {
   [c.SexprKey]: 'false'
 , [c.ValueKey]: boolean} =
    gte
-     <['pos-int?', 'pos-int?']>
+     <`(fn [x y] (and (pos-int? x) (pos-int? y)))`>
      ()
      ( foxp.putPrim(1)
      , foxp.putPrim(2))
@@ -59,7 +59,7 @@ const gtetest0_eq_merge_failure: {
   [c.SexprKey]: 'true'
 , [c.ValueKey]: boolean} =
    gte
-     <['neg-int?', 'neg-int?']>
+     <`(fn [x y] (and (neg-int? x) (neg-int? y)))`>
      ()
 // @ts-expect-error:
      ( foxp.putPrim(1)
@@ -69,7 +69,7 @@ const gtetest0_gt_merge_failure: {
   [c.SexprKey]: 'true'
 , [c.ValueKey]: boolean} =
    gte
-     <['neg-int?', 'neg-int?']>
+     <`(fn [x y] (and (neg-int? x) (neg-int? y)))`>
      ()
 // @ts-expect-error:
      ( foxp.putPrim(2)
@@ -79,7 +79,7 @@ const gtetest0_lt_merge_failure: {
   [c.SexprKey]: 'false'
 , [c.ValueKey]: boolean} =
    gte
-     <['neg-int?', 'neg-int?']>
+     <`(fn [x y] (and (neg-int? x) (neg-int? y)))`>
      ()
 // @ts-expect-error:
      ( foxp.putPrim(1)

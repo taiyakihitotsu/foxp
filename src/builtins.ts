@@ -5,26 +5,14 @@ import * as u from './util'
 import * as ut from './type-util'
 import * as pre from './pre'
 import * as merge from './merge'
+import * as compiler from './compiler'
 
-export type DivF<N extends string|number> = `(fn [n] (/ n ${N}))`
-export const DivF = (n:number) => (m: number): number => m / n
+// export type DivF<N extends string|number> = `(fn [n] (/ n ${N}))`
+// export const DivF = (n:number) => (m: number): number => m / n
 
 // ----------------
 // -- util part
 // ----------------
-export type ForceStr<S> = S extends string ? S : never
-export type FS<S> = ForceStr<S>
-export type Add<N extends string, M extends string> = `(+ ${N} ${M})`
-export type FoxWith<
-  P
-, N> =
-{ [c.SexprKey]: (N extends {[c.SexprKey]: string} ? N : never)[c.SexprKey]
-    , [c.ValueKey]: P }
-export const rfoxposs = <RetS, RetV>(n: RetV): {[c.SexprKey]: RetS, [c.ValueKey]: RetV} => ({[c.SexprKey]: '' as RetS, [c.ValueKey]: n})
-
-// --------------------
-// -- builtins : culc
-// --------------------
 
 export type N0 = 0
 export type N1 = N0 | 1
@@ -32,7 +20,56 @@ export type N2 = N1 | 2
 export type N3 = N2 | 3
 export type N4 = N3 | 4
 
+export type ForceStr<S> = S extends string ? S : never
+export type FS<S>  = ForceStr<S>
+export type FN4<S> = S extends N4 ? S : never
+export type Add<N extends string, M extends string> = `(+ ${N} ${M})`
+export type FoxTypeExt = {[c.SexprKey]: string, [c.ContKey]: string}
+
+export type FoxWith<
+  P
+, N> =
+  { [c.SexprKey]: (N extends FoxTypeExt ? N : never)[c.SexprKey]
+  , [c.ContKey] : (N extends FoxTypeExt ? N : never)[c.ContKey]
+  , [c.FnFlagKey]: foxp.IsFnForm<P>
+  , [c.ValueKey]: P }
+
+export const rfoxposs = <RetS, RetV, Cont, Flag>(n: RetV): 
+  { [c.SexprKey]: RetS
+  , [c.ContKey]: Cont
+  , [c.FnFlagKey]: Flag
+  , [c.ValueKey]: RetV} => (
+  { [c.SexprKey]: '' as RetS
+  , [c.ContKey]: '' as Cont
+  , [c.FnFlagKey]: '' as Flag
+  , [c.ValueKey]: n})
+
+// ----------------
+// -- Gen Cont
+// ----------------
+//
+// [note]
+// - This is for def `fn`
+// - Args should be string like 'x y z'
+export type GenCont<
+  M extends {pre: string, sexpr: string, args: string}> = 
+  `(if (and (every? some? [${M['args']}]) (${M['pre']} ${M['args']})) (${M['sexpr']} ${M['args']}) nil)`
+// [note]
+// This type-level function provides a fixed-length argument list Arguments for a variadic function type fn, making its arguments fixed-length instead of variadic.
+export type UnrollArgsStr<
+  narg extends N4
+, Key  extends c.SexprKey | c.ContKey
+, Arg0
+, Arg1
+, Arg2
+, Arg3> =
+  [Arg0, Arg1, Arg2, Arg3] extends infer MA extends [{[c.SexprKey]: string, [c.ContKey]: string}, {[c.SexprKey]: string, [c.ContKey]: string}, {[c.SexprKey]: string, [c.ContKey]: string}, {[c.SexprKey]: string, [c.ContKey]: string}]
+    ? `${narg extends N0 ? '' : `${FS<MA[0][Key]>}`}${narg extends N1 ? '' :  ` ${FS<MA[1][Key]>}`}${narg extends N2 ? '' :  ` ${FS<MA[2][Key]>}`}${narg extends N3 ? '' :  ` ${FS<MA[3][Key]>}`}`
+  : never
+
 export type ExpandPre<narg extends N4> = (narg extends N0 ? '' : narg extends N1 ? ([string] | readonly [string]) : narg extends N2 ? ([string, string] | readonly [string, string]) : ([string, string, string] | readonly [string, string, string])) | string
+
+export type GetFlag<A> = A extends {[c.FnFlagKey]: boolean} ? A[c.FnFlagKey] extends true ? true : false : false
 
 // [note]
 // this is from v0.3.0
@@ -52,21 +89,25 @@ Pre extends string = DefaultPre
 , Arg1 extends FoxWith<a1, Arg1>
 , Arg2 extends FoxWith<a2, Arg2>
 , Arg3 extends FoxWith<a3, Arg3>
-, UnrollArgsStr extends `${narg extends N0 ? '' : `${FS<Arg0[c.SexprKey]>}`}${narg extends N1 ? '' :  ` ${FS<Arg1[c.SexprKey]>}`}${narg extends N2 ? '' :  ` ${FS<Arg2[c.SexprKey]>}`}${narg extends N3 ? '' :  ` ${FS<Arg3[c.SexprKey]>}`}`
+, IsQuote extends (ut.Equal<(GetFlag<Arg0> | GetFlag<Arg1> | GetFlag<Arg2> | GetFlag<Arg3>), false>)
+, UnrollArgsStrResult extends UnrollArgsStr<FN4<narg>, c.SexprKey, Arg0, Arg1, Arg2, Arg3>
+, UnrollContStrResult extends UnrollArgsStr<FN4<narg>, c.ContKey, Arg0, Arg1, Arg2, Arg3>
 , PreCountCheck extends narg extends pre.countArgs<Pre> ? true : false
-, SexprR extends PreCountCheck extends false ? {error: 'PreCountFailure'} : Cion.Lisp<`(${SexprFunction}${narg extends N0 ? '' : ` ${UnrollArgsStr}`})`>
-, Pre0 extends string = `(${Pre} ${UnrollArgsStr})`
-, Pre1 extends string = `(${Pre} ${UnrollArgsStr})`
-, Pre2 extends string = `(${Pre} ${UnrollArgsStr})`
-, Pre3 extends string = `(${Pre} ${UnrollArgsStr})`
-, Ret0 = narg extends N0 ? never : Pre[0] extends '' ? Arg0 : (Cion.Lisp<Pre0> extends ('nil' | 'false') ? never : Arg0)
-, Ret1 = narg extends N0 ? never : Pre[1] extends '' ? Arg1 : (Cion.Lisp<Pre1> extends ('nil' | 'false') ? never : Arg1)
-, Ret2 = narg extends N0 ? never : Pre[2] extends '' ? Arg2 : (Cion.Lisp<Pre2> extends ('nil' | 'false') ? never : Arg2)
-, Ret3 = narg extends N0 ? never : Pre[3] extends '' ? Arg3 : (Cion.Lisp<Pre3> extends ('nil' | 'false') ? never : Arg3)>
-( w?: Arg0 extends Ret0 ? Arg0 : never
-, x?: Arg1 extends Ret1 ? Arg1 : never
-, y?: Arg2 extends Ret2 ? Arg2 : never
-, z?: Arg3 extends Ret3 ? Arg3 : never): {[c.SexprKey]: SexprR, [c.ValueKey]: ret} => rfoxposs<SexprR, ret>(
+, SexprR extends PreCountCheck extends false ? {error: 'PreCountFailure'} : Cion.Lisp<`(${SexprFunction}${narg extends N0 ? '' : ` ${UnrollArgsStrResult}`})`>
+, PreResult extends `(${Pre} ${UnrollArgsStrResult})`
+, ContResult extends GenCont<{args: UnrollArgsStrResult, sexpr: SexprFunction, pre: Pre}>
+, Ret0 = narg extends N0 ? never : (Cion.Lisp<PreResult> extends ('nil' | 'false' | {error: string} ) ? never : Arg0)
+, Ret1 = Arg1
+, Ret2 = Arg2
+, Ret3 = Arg3
+> ( w?: Arg0 extends Ret0 ? Arg0 : never
+  , x?: Arg1 extends Ret1 ? Arg1 : never
+  , y?: Arg2 extends Ret2 ? Arg2 : never
+  , z?: Arg3 extends Ret3 ? Arg3 : never)
+: { [c.SexprKey]: SexprR
+  , [c.ContKey]: ContResult
+  , [c.ValueKey]: ret
+  , [c.FnFlagKey]: IsQuote} => rfoxposs<SexprR, ret, ContResult, IsQuote>(
   num === 0
     ? ((f as () => ret)())
   : num === 1
@@ -76,6 +117,12 @@ Pre extends string = DefaultPre
   : num === 3
     ? ((f as (w: a0, x: a1, y: a2) => ret)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey]))
   : ((f as (w: a0, x: a1, y: a2, z: a3) => ret)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey], z![c.ValueKey])))
+
+
+
+// -----------------------------
+// -- builtins: arithmetic
+// -----------------------------
 
 export const add = fn<'+', pre.bi.add>(2)((n: number, m:number) => n + m)
 export const sub = fn<'-', pre.bi.sub>(2)((n: number, m:number) => n - m)
@@ -99,6 +146,7 @@ export const getIn = fn<'get-in', pre.bi.getIn>(2)((m,k) => u.getIn([m,k]))
 
 export const first  = fn<'first', pre.bi.first>(1)((m) => u.get([m,0]))
 export const second = fn<'second', pre.bi.second>(1)((m) => u.get([m,1]))
+export const third = fn<'third', pre.bi.third>(1)((m) => u.get([m,2]))
 export const last = fn<'last', pre.bi.last>(1)((m: unknown[]) => u.get([m,m.length]))
 
 // ---------------------------
@@ -114,6 +162,8 @@ export const mod = fn<'mod', pre.bi.mod>(2)(u.mod)
 export const rem = fn<'rem', pre.bi.rem>(2)((x:number,y:number) => x % y)
 export const trunc = fn<'trunc', pre.bi.trunc>(1)(Math.trunc) 
 export const floor = fn<'floor', pre.bi.floor>(1)(Math.floor)
+export const abs = fn<'abs', pre.bi.abs>(1)(Math.abs)
+
 
 
 // -----------------------

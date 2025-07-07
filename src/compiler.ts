@@ -9,7 +9,7 @@ import * as ut from './type-util'
 // - 3. Call this compiler to earn the corresponding TS type
 //
 // Finally, we get both: S-exprs at the Cion context & TS types at the TS context.
-
+//
 // Default S would be key, map, vec.
 // Not-builtin fn pattern is processed in ltCompiler.
 export type PrimToTS<
@@ -23,7 +23,13 @@ export type PrimToTS<
       ? string
     : S extends Cion.Builtins
       ? Function
-    : S
+    : S extends `(fn [${infer _}`
+      ? Function
+    : S extends `[`
+      ? unknown[]
+    : S extends `{`
+      ? Record<PropertyKey, unknown>
+    : Symbol
   : S
 
 export type KeyName<S extends string> = S extends `:${infer N}` ? N : S
