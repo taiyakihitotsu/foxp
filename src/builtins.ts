@@ -14,6 +14,9 @@ import * as compiler from './compiler'
 // -- util part
 // ----------------
 
+// [todo]
+export type LispFalsy = 'nil' | 'false' | {error: string} 
+
 export type N0 = 0
 export type N1 = N0 | 1
 export type N2 = N1 | 2
@@ -83,6 +86,7 @@ export const rfoxposs = <RetS, RetV, Cont, Flag>(n: RetV):
 export type GenCont<
   M extends {pre: string, sexpr: string, args: string}> = 
   `(if (and (every? some? [${M['args']}]) (${M['pre']} ${M['args']})) (${M['sexpr']} ${M['args']}) nil)`
+
 // [note]
 // This type-level function provides a fixed-length argument list Arguments for a variadic function type fn, making its arguments fixed-length instead of variadic.
 export type UnrollArgsStr<
@@ -175,41 +179,47 @@ export const mul = fn<'*', pre.bi.mul>(2)((n: number, m:number) => n * m)
 export const div = fn<'/', pre.bi.div>(2)((n: number, m:number) => n / m)
 
 // [todo]
-const lambdatest0 = <N>(n: N) => add()(foxp.putPrim(1), foxp.putSym('n', n))
+const lambdatest0 = (n: number) => add()(foxp.putPrim(1), foxp.putSym('n', n))
 const lambdatesta = lambdatest0(1)
 const lambdatest1 = <N>(n: N) => add()(foxp.putPrim(1), foxp.putPrim(1))
 
-const lambda = <
-  N
-, RT extends FoxTypeExt
-, Sexpr
-, Value
-, Cont
-, Flag
-, Count extends pre.countArgs<FS<Cont>>
+export const lambda = <
+  narg extends N4>(
+  n: narg) => <
+  Cont
 , a0, a1, a2, a3
-, ret extends
-   { [c.SexprKey]: Sexpr
-   , [c.ValueKey]: Value
-   , [c.ContKey] : Cont
-   , [c.FnFlagKey]: Flag }
-, retfn extends Sexpr
-, R extends FoxTypeExt
-, V
-, Arg0 extends FoxWith<a0, Arg0>>
-  (anonfn: (w: a0) => ret) => <
-//  X extends FoxWith<number, X> // [todo/note] this is an error for a0 not compatible false to true, 
-  X extends FoxWith<number, X>
-, RetSexpr extends Cion.Lisp<`((fn [n] ${FS<ret[c.SexprKey]>}) ${FS<X[c.SexprKey]>})`>
-, RetCont extends `((fn [n] ${FS<ret[c.ContKey]>}) ${FS<X[c.SexprKey]>})`
-, PreCheck extends Cion.Lisp<`((fn [n] ${FS<ret[c.ContKey]>}) ${FS<X[c.SexprKey]>})`> extends 'nil' | 'false' | {error: string} ? false : true>
-(x: X extends (PreCheck extends true ? X : never) ? X : never) => (
+, quotedFn extends FoxTypeExt
+, Arg0 extends FoxWith<a0, Arg0>
+> (
+anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn : narg extends N2 ? (w: a0, x:a1) => quotedFn : narg extends N3 ? (w: a0, x:a1, y:a2) => quotedFn : (w: a0, x:a1, y:a2, z:a3) => quotedFn
+  ) => <
+  futureArg0 extends FoxWith<a0, futureArg0>
+, futureArg1 extends FoxWith<a1, futureArg0>
+, futureArg2 extends FoxWith<a2, futureArg0>
+, futureArg3 extends FoxWith<a3, futureArg0>
+, RetSexpr extends Cion.Lisp<`((fn [n] ${FS<quotedFn[c.SexprKey]>}) ${FS<futureArg0[c.SexprKey]>})`>
+, FnCont extends `((fn [n] ${FS<quotedFn[c.ContKey]>}) ${FS<futureArg0[c.SexprKey]>})`
+, PreCheck extends Cion.Lisp<FnCont> extends LispFalsy ? false : true>
+( futurearg0?: futureArg0 extends (PreCheck extends true ? futureArg0 : never) ? futureArg0 : never
+, futurearg1?: futureArg1
+, futurearg2?: futureArg2
+, futurearg3?: futureArg3) => (
 { [c.SexprKey]: '' as RetSexpr
 , [c.FnFlagKey]: false as false
-, [c.ContKey]: '' as RetCont
-, [c.ValueKey]: anonfn(x![c.ValueKey] as unknown as a0)[c.ValueKey] })
+, [c.ContKey]: '' as a0
+, [c.ValueKey]: 
+  n === 0
+    ? (anonfn as () => quotedFn)()[c.ValueKey]
+  : n === 1
+    ? (anonfn as (w: a0) => quotedFn)(futurearg0![c.ValueKey])[c.ValueKey]
+  : n === 2
+    ? (anonfn as (w: a0, x: a1) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey])[c.ValueKey]
+  : n === 3
+    ? (anonfn as (w: a0, x: a1, y: a2) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey], futurearg2![c.ValueKey])[c.ValueKey]
+  : (anonfn as (w: a0, x: a1, y: a2, z: a3) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey], futurearg2![c.ValueKey], futurearg3![c.ValueKey])[c.ValueKey]
+})
 
-const lambdatestr0 = lambda(lambdatest0)(foxp.putPrim(1))
+const lambdatestr0 = lambda(1)(lambdatest0)(foxp.putPrim(1))
 
 
 

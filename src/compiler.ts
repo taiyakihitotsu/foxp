@@ -25,11 +25,12 @@ export type PrimToTS<
       ? Function
     : S extends `(fn [${infer _}`
       ? Function
-    : S extends `[`
-      ? unknown[]
-    : S extends `{`
-      ? Record<PropertyKey, unknown>
-    : Symbol
+    // : S extends `[`
+    //   ? unknown[]
+    // : S extends `{`
+    //   ? Record<PropertyKey, unknown>
+    : S
+//    : Symbol
   : S
 
 export type KeyName<S extends string> = S extends `:${infer N}` ? N : S

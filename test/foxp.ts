@@ -27,14 +27,14 @@ const deepsym_test5 : foxp.DeeplySymSearch<{a: {b: {c: {[c.FnFlagKey]: true}}}, 
 // -- put
 // ----------
 const testvec = foxp.putVec([0, 1, 2] as const)
-const testvect: typeof testvec = {sexpr: '[0 1 2]', value: [0, 1, 2]}
+const testvect: typeof testvec = {sexpr: '[0 1 2]', value: [0, 1, 2], [c.ContKey]: '[0 1 2]', [c.FnFlagKey]: false}
 const __readonlyv = [0, 1, 2] as const
 // @ts-expect-error:
 const testvec_f = foxp.putVec([0, 1, 2])
 // @ts-expect-error:
-const testvec_ft: typeof testvec_f = {sexpr: '[0 1 2]', value: [0, 1, 2]}
+const testvec_ft: typeof testvec_f = {sexpr: '[0 1 2]', value: [0, 1, 2], [c.ContKey]: '[0 1 2]', [c.FnFlagKey]: false}
 const testvec_ro = foxp.putVec(__readonlyv)
-const testvec_rot: typeof testvec_ro = {sexpr: '[0 1 2]', value: [0, 1, 2]}
+const testvec_rot: typeof testvec_ro = {sexpr: '[0 1 2]', value: [0, 1, 2], [c.ContKey]: '[0 1 2]', [c.FnFlagKey]: false}
 const testvec_rot_malv: typeof testvec_ro = {
   sexpr: '[0 1 2]'
 , value: [ 0
@@ -42,7 +42,7 @@ const testvec_rot_malv: typeof testvec_ro = {
 // @ts-expect-error:
          , 3]}
 const testvec_empty = foxp.putVec([] as const)
-const testvec_emptyt: typeof testvec_empty = {sexpr: '[]', value: []}
+const testvec_emptyt: typeof testvec_empty = {sexpr: '[]', value: [], [c.ContKey]: '[]', [c.FnFlagKey]: false}
 // @ts-expect-error:
 const testvec_empty0 = foxp.putVec([])
 
