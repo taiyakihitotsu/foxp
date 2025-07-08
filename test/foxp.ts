@@ -16,11 +16,11 @@ const test_fraction3: {[c.SexprKey]: '-3', [c.ValueKey]: number} = foxp.putPrim(
 // -- symbol search
 // ------------------
 const deepsym_test0 : foxp.DeeplySymSearch<[1,2,3]> = false
-const deepsym_test1 : foxp.DeeplySymSearch<[1,2,{sym: 'x'}]> = true
-const deepsym_test2 : foxp.DeeplySymSearch<[1,2,[3, 4, {sym: 'x'}]]> = true
-const deepsym_test3 : foxp.DeeplySymSearch<{a: [1,2,[3, 4, {sym: 'x'}]]}> = true
+const deepsym_test1 : foxp.DeeplySymSearch<[1,2,{[c.FnFlagKey]: true}]> = true
+const deepsym_test2 : foxp.DeeplySymSearch<[1,2,[3, 4, {[c.FnFlagKey]: true}]]> = true
+const deepsym_test3 : foxp.DeeplySymSearch<{a: [1,2,[3, 4, {[c.FnFlagKey]: true}]]}> = true
 const deepsym_test4 : foxp.DeeplySymSearch<{a: [1,2,[3, 4, 5]]}> = false
-const deepsym_test5 : foxp.DeeplySymSearch<{a: {b: {c: {sym: 'x'}}}, x: [0, 1]}> = true
+const deepsym_test5 : foxp.DeeplySymSearch<{a: {b: {c: {[c.FnFlagKey]: true}}}, x: [0, 1]}> = true
 
 
 // ----------

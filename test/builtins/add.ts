@@ -15,7 +15,8 @@ type partialPre = `(fn [x y] (number? x))`
 const addtest0: {
   [c.SexprKey]: '2'
 , [c.ContKey] : '(if (and (every? some? [1 1]) ((fn [x y] (number? x)) 1 1)) (+ 1 1) nil)'
-, [c.ValueKey]: number} =
+, [c.ValueKey]: number
+, [c.FnFlagKey]: false} =
    add
      <partialPre>
      ()

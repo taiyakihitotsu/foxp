@@ -5,7 +5,7 @@ import { const as c } from './const'
 import * as ut from './type-util'
 import * as fraction from './fraction'
 
-export type IsFnForm<P> = Symbol extends compiler.PrimToTS<P> ? true : false
+export type IsFnForm<P> = [P, Symbol] extends [string, compiler.PrimToTS<P>] ? true : false
 
 // -------------
 // -- LispWrap
@@ -23,7 +23,7 @@ export type ToLispString<
     : _LispString<T>
   : `${T}`
 
-type SymSig = {sym: string}
+type SymSig = {[c.FnFlagKey]: true}
 type Rec = Record<PropertyKey, unknown>
 // [todo] test
 // [note]
@@ -113,6 +113,22 @@ export const putPrim = <
 , [c.ContKey]: '' as ToLispString<V>
 , [c.FnFlagKey]: null as unknown as IsFnForm<V>
 , [c.ValueKey]: fraction.someFraction(v) as R})
+
+export const putSym = <
+  Sym extends string
+, V>(
+  s: Sym
+, v: V):
+{ [c.SexprKey]: Sym
+, [c.ContKey] : Sym
+, [c.FnFlagKey]: true
+, [c.ValueKey]: Symbol} => (
+{ [c.SexprKey]: '' as Sym
+, [c.ContKey] : '' as Sym
+, [c.FnFlagKey]: true
+, [c.ValueKey]: v as Symbol})
+
+
 
 // --------------------------
 // -- type check id
