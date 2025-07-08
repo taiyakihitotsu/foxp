@@ -176,7 +176,42 @@ export const div = fn<'/', pre.bi.div>(2)((n: number, m:number) => n / m)
 
 // [todo]
 const lambdatest0 = <N>(n: N) => add()(foxp.putPrim(1), foxp.putSym('n', n))
+const lambdatesta = lambdatest0(1)
 const lambdatest1 = <N>(n: N) => add()(foxp.putPrim(1), foxp.putPrim(1))
+
+const lambda = <
+  N
+, RT extends FoxTypeExt
+, Sexpr
+, Value
+, Cont
+, Flag
+, Count extends pre.countArgs<FS<Cont>>
+, a0, a1, a2, a3
+, ret extends
+   { [c.SexprKey]: Sexpr
+   , [c.ValueKey]: Value
+   , [c.ContKey] : Cont
+   , [c.FnFlagKey]: Flag }
+, retfn extends Sexpr
+, R extends FoxTypeExt
+, V
+, Arg0 extends FoxWith<a0, Arg0>>
+  (anonfn: (w: a0) => ret) => <
+//  X extends FoxWith<number, X> // [todo/note] this is an error for a0 not compatible false to true, 
+  X extends FoxWith<number, X>
+, RetSexpr extends Cion.Lisp<`((fn [n] ${FS<ret[c.SexprKey]>}) ${FS<X[c.SexprKey]>})`>
+, RetCont extends `((fn [n] ${FS<ret[c.ContKey]>}) ${FS<X[c.SexprKey]>})`
+, PreCheck extends Cion.Lisp<`((fn [n] ${FS<ret[c.ContKey]>}) ${FS<X[c.SexprKey]>})`> extends 'nil' | 'false' | {error: string} ? false : true>
+(x: X extends (PreCheck extends true ? X : never) ? X : never) => (
+{ [c.SexprKey]: '' as RetSexpr
+, [c.FnFlagKey]: false as false
+, [c.ContKey]: '' as RetCont
+, [c.ValueKey]: anonfn(x![c.ValueKey] as unknown as a0)[c.ValueKey] })
+
+const lambdatestr0 = lambda(lambdatest0)(foxp.putPrim(1))
+
+
 
 // ---------------------
 // -- builtins: coll fn
