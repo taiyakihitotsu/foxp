@@ -57,13 +57,14 @@ export type ForceAssign<
     : Data
   : never
 
+// [note]
+// P can be unknown so we should use ut.Equal to detect a value of [c.FnFlagKey].
 export type FoxWith<
   P
 , N> =
   { [c.SexprKey]: (N extends FoxTypeExt ? N : never)[c.SexprKey]
   , [c.ContKey] : (N extends FoxTypeExt ? N : never)[c.ContKey]
-  , [c.FnFlagKey]: Symbol extends P ? true : false
-//  , [c.FnFlagKey]: (N extends FoxTypeExt ? N : never)[c.FnFlagKey] extends true ? true : Symbol extends P ? true : false
+  , [c.FnFlagKey]: ut.Equal<Symbol,P>
   , [c.ValueKey]: P }
 
 export const rfoxposs = <RetS, RetV, Cont, Flag>(n: RetV): 

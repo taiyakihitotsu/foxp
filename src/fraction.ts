@@ -7,9 +7,11 @@ import * as mathjs from 'mathjs'
 
 export type isRational<
   S> = 
-  Cion.Lisp<`(re-find '^-?[0-9]+(/[0-9]+)?$' '${S}')`> extends `''`
-    ? false
-  : true
+  S extends string
+    ? Cion.Lisp<`(re-find '^-?[0-9]+(/[0-9]+)?$' '${S}')`> extends `''`
+      ? false
+    : true
+  : false
 
 const math = mathjs.create(mathjs.all!)
 export const someFraction: (s: unknown) => number = (s) => typeof s === 'string' && math.isFraction(s) ? math.evaluate(s) : s

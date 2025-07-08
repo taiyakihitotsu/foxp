@@ -24,7 +24,8 @@ export type ToLispString<
   : `${T}`
 
 type SymSig = {[c.FnFlagKey]: true}
-type Rec = Record<PropertyKey, unknown>
+type Rec = Record<PropertyKey, unknown> | Readonly<Record<PropertyKey, unknown>>
+type Arr = unknown[] | readonly unknown[]
 // [todo] test
 // [note]
 // 
@@ -35,7 +36,7 @@ export type DeeplySymSearch<
   : Data extends [infer F, ...infer T]
     ? F extends SymSig
       ? true
-    : F extends Rec | unknown[]
+    : F extends Rec | Arr
       ? false extends DeeplySymSearch<F>
         ? DeeplySymSearch<T>
       : true
