@@ -106,7 +106,7 @@ export type ExpandPre<narg extends N4> = (narg extends N0 ? '' : narg extends N1
 export type GetFlag<A> = A extends FoxTypeExt ? ut.Equal<A[c.FnFlagKey], true> extends true ? true : IsSymbol<A> extends true ? true : false : false
 
 // [note]
-// this is from v0.3.0
+// this is from v0.4.0
 // if you want to check the unroll version, see there.
 // [note]
 // this is named `fn` currently but I'll be changed.
@@ -116,23 +116,17 @@ export const fn = <
 , narg = pre.countArgs<DefaultPre>
 >(num: narg) =>
 <a0, a1, a2, a3, ret>
-(f: narg extends N0 ? () => ret : narg extends N1 ? (w: a0) => ret : narg extends N2 ? (w: a0, x:a1) => ret : narg extends N3 ? (w: a0, x:a1, y:a2) => ret : (w: a0, x:a1, y:a2, z:a3) => ret) => <
+(f: (narg extends N0 ? () => ret : narg extends N1 ? (w: a0) => ret : narg extends N2 ? (w: a0, x:a1) => ret : narg extends N3 ? (w: a0, x:a1, y:a2) => ret : (w: a0, x:a1, y:a2, z:a3) => ret)) => <
 Pre extends string = DefaultPre
 >() =>
 < Arg0 extends FoxWith<true extends IsSymbol<Arg0> ? Symbol : narg extends N0 ? never : a0, Arg0>
 , Arg1 extends FoxWith<true extends IsSymbol<Arg1> ? Symbol : narg extends N1 ? never : a1, Arg1>
 , Arg2 extends FoxWith<true extends IsSymbol<Arg2> ? Symbol : narg extends N2 ? never : a2, Arg2>
 , Arg3 extends FoxWith<true extends IsSymbol<Arg3> ? Symbol : narg extends N3 ? never : a3, Arg3>
-// < Arg0 extends FoxWith<a0, Arg0>
-// , Arg1 extends FoxWith<a1, Arg1>
-// , Arg2 extends FoxWith<a2, Arg2>
-// , Arg3 extends FoxWith<a3, Arg3>
-//, IsQuote extends (ut.Equal<(GetFlag<Arg0> | GetFlag<Arg1> | GetFlag<Arg2> | GetFlag<Arg3>), false>) extends true ? false : true
 , IsQuote extends [GetFlag<Arg0>, GetFlag<Arg1>, GetFlag<Arg2>, GetFlag<Arg3>] extends [false, false, false, false] ? false : true
 , UnrollArgsStrResult extends UnrollArgsStr<FN4<narg>, c.SexprKey, Arg0, Arg1, Arg2, Arg3>
 , UnrollContStrResult extends UnrollArgsStr<FN4<narg>, c.ContKey, Arg0, Arg1, Arg2, Arg3>
 , PreCountCheck extends narg extends pre.countArgs<Pre> ? true : false
-// , SexprR extends PreCountCheck extends false ? {error: 'PreCountFailure'} : Cion.Lisp<`(${SexprFunction}${narg extends N0 ? '' : ` ${UnrollArgsStrResult}`})`>
 , _SexprR extends `(${SexprFunction}${narg extends N0 ? '' : ` ${UnrollArgsStrResult}`})`
 , SexprR extends PreCountCheck extends false ? {error: 'PreCountFailure'} : IsQuote extends true ? _SexprR : Cion.Lisp<_SexprR>
 , PreResult extends `(${Pre} ${UnrollArgsStrResult})`
@@ -148,7 +142,6 @@ Pre extends string = DefaultPre
 : { [c.SexprKey]: SexprR
   , [c.ContKey]: ContResult
   , [c.ValueKey]: ret
-//  , [c.ValueKey]: [GetFlag<Arg0>, GetFlag<Arg1>, GetFlag<Arg2>, GetFlag<Arg3>, IsQuote]
   , [c.FnFlagKey]: IsQuote} => rfoxposs<SexprR, ret, ContResult, IsQuote>(
   num === 0
     ? ((f as () => ret)())
@@ -179,13 +172,10 @@ export const sub = fn<'-', pre.bi.sub>(2)((n: number, m:number) => n - m)
 export const mul = fn<'*', pre.bi.mul>(2)((n: number, m:number) => n * m)
 export const div = fn<'/', pre.bi.div>(2)((n: number, m:number) => n / m)
 
-// [todo]
-const lambdatest0 = (n: number) => add()(foxp.putPrim(1), foxp.putSym('n', n))
-const lambdatesta = lambdatest0(1)
-const lambdatest1 = <N>(n: N) => add()(foxp.putPrim(1), foxp.putPrim(1))
-
 export const lambda = <
-  narg extends N4>(
+  Args extends string
+, DefaultPre extends string
+, narg = pre.countArgs<`(fn [${Args}])`>>(
   n: narg) => <
   Cont
 , a0, a1, a2, a3
@@ -194,33 +184,69 @@ export const lambda = <
 > (
 anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn : narg extends N2 ? (w: a0, x:a1) => quotedFn : narg extends N3 ? (w: a0, x:a1, y:a2) => quotedFn : (w: a0, x:a1, y:a2, z:a3) => quotedFn
   ) => <
+  Pre extends string = DefaultPre
+  >() => <
   futureArg0 extends FoxWith<a0, futureArg0>
 , futureArg1 extends FoxWith<a1, futureArg0>
 , futureArg2 extends FoxWith<a2, futureArg0>
 , futureArg3 extends FoxWith<a3, futureArg0>
-, RetSexpr extends Cion.Lisp<`((fn [n] ${FS<quotedFn[c.SexprKey]>}) ${FS<futureArg0[c.SexprKey]>})`>
-, FnCont extends `((fn [n] ${FS<quotedFn[c.ContKey]>}) ${FS<futureArg0[c.SexprKey]>})`
+
+// , UnrollArgsStrResult extends UnrollArgsStr<FN4<narg>, c.SexprKey, Arg0, Arg1, Arg2, Arg3>
+, UnrollContStrResult extends UnrollArgsStr<FN4<narg>, c.ContKey, futureArg0, futureArg1, futureArg2, futureArg3>
+// , RetSexpr extends Cion.Lisp<`((fn [${Args}] ${FS<quotedFn[c.SexprKey]>}) ${FS<futureArg0[c.SexprKey]>})`>
+// , FnCont extends `((fn [${Args}] ${FS<quotedFn[c.ContKey]>}) ${FS<futureArg0[c.SexprKey]>})`
+, RetSexpr extends Cion.Lisp<`((fn [${Args}] ${FS<quotedFn[c.SexprKey]>}) ${UnrollContStrResult})`>
+, FnCont extends `((fn [${Args}] (and (${Pre} ${Args}) ${FS<quotedFn[c.ContKey]>})) ${UnrollContStrResult})`
+
 , PreCheck extends Cion.Lisp<FnCont> extends LispFalsy ? false : true>
 ( futurearg0?: futureArg0 extends (PreCheck extends true ? futureArg0 : never) ? futureArg0 : never
 , futurearg1?: futureArg1
 , futurearg2?: futureArg2
-, futurearg3?: futureArg3) => (
-{ [c.SexprKey]: '' as RetSexpr
-, [c.FnFlagKey]: false as false
-, [c.ContKey]: '' as a0
-, [c.ValueKey]: 
-  n === 0
-    ? (anonfn as () => quotedFn)()[c.ValueKey]
+// rfoxposs<SexprR, ret, ContResult, IsQuote>
+, futurearg3?: futureArg3) => rfoxposs<RetSexpr, unknown ,RetSexpr, false>(
+  ( n === 0
+    ? (anonfn as () => quotedFn)()
   : n === 1
-    ? (anonfn as (w: a0) => quotedFn)(futurearg0![c.ValueKey])[c.ValueKey]
+    ? (anonfn as (w: a0) => quotedFn)(futurearg0![c.ValueKey])
   : n === 2
-    ? (anonfn as (w: a0, x: a1) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey])[c.ValueKey]
+    ? (anonfn as (w: a0, x: a1) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey])
   : n === 3
-    ? (anonfn as (w: a0, x: a1, y: a2) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey], futurearg2![c.ValueKey])[c.ValueKey]
-  : (anonfn as (w: a0, x: a1, y: a2, z: a3) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey], futurearg2![c.ValueKey], futurearg3![c.ValueKey])[c.ValueKey]
-})
+    ? (anonfn as (w: a0, x: a1, y: a2) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey], futurearg2![c.ValueKey])
+  : (anonfn as (w: a0, x: a1, y: a2, z: a3) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey], futurearg2![c.ValueKey], futurearg3![c.ValueKey]))[c.ValueKey]
 
-const lambdatestr0 = lambda(1)(lambdatest0)(foxp.putPrim(1))
+
+// { [c.SexprKey]: '' as RetSexpr
+// , [c.FnFlagKey]: false as false
+// , [c.ContKey]: '' as RetSexpr
+// , [c.ValueKey]: 
+//   ( n === 0
+//     ? (anonfn as () => quotedFn)()[c.ValueKey]
+//   : n === 1
+//     ? (anonfn as (w: a0) => quotedFn)(futurearg0![c.ValueKey])[c.ValueKey]
+//   : n === 2
+//     ? (anonfn as (w: a0, x: a1) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey])[c.ValueKey]
+//   : n === 3
+//     ? (anonfn as (w: a0, x: a1, y: a2) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey], futurearg2![c.ValueKey])[c.ValueKey]
+//   : (anonfn as (w: a0, x: a1, y: a2, z: a3) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey], futurearg2![c.ValueKey], futurearg3![c.ValueKey])[c.ValueKey])
+// }
+)
+
+// const switchFn = <
+//   narg extends N4
+// , a0, a1, a2, a3
+// , RetType>(
+//   n: narg
+// , anonfn: narg extends N0 ? () => RetType : narg extends N1 ? (w: a0) => RetType : narg extends N2 ? (w: a0, x:a1) => RetType : narg extends N3 ? (w: a0, x:a1, y:a2) => RetType : (w: a0, x:a1, y:a2, z:a3) => RetType) => (
+//   n === 0
+//     ? (anonfn as () => RetType)()[c.ValueKey]
+//   : n === 1
+//     ? (anonfn as (w: a0) => RetType)(w![c.ValueKey])[c.ValueKey]
+//   : n === 2
+//     ? (anonfn as (w: a0, x: a1) => RetType)(w![c.ValueKey], x![c.ValueKey])[c.ValueKey]
+//   : n === 3
+//     ? (anonfn as (w: a0, x: a1, y: a2) => RetType)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey])[c.ValueKey]
+//   : (anonfn as (w: a0, x: a1, y: a2, z: a3) => RetType)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey], z![c.ValueKey])[c.ValueKey])
+
 
 
 
