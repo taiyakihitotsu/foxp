@@ -6,13 +6,14 @@ import * as pre from '../../src/pre'
 import type Cion from '@taiyakihitotsu/cion'
 import * as ut from '../../src/type-util'
 import { describe, it, expect } from 'vitest'
+
 const _arg0 = {a: 1, b: 2} as const // foxp.putRecord({a: 1, b: 2} as const)
 const _arg_p0 = foxp.putRecord(_arg0)
 const _pre0 : Cion.Lisp<`((fn [m] (-> m map?)) ${typeof _arg_p0.sexpr})`> = 'true'
 const _pre1 : Cion.Lisp<`((fn [m] (-> m second keyword?)) [${typeof _arg_p0.sexpr} :a])`> = 'true'
 const _pre2 : Cion.Lisp<`((fn [m] (= (type (get m 2)) (type (get (first m) (second m))))) [${typeof _arg_p0.sexpr} :a 9])`> = 'true'
-const _pre3 : Cion.Lisp<`(${pre.updateLax} [${typeof _arg_p0.sexpr} ${typeof _pk} inc])`> = 'true'
-const _pre34 : Cion.Lisp<`(${pre.updateLax} [{:a 1 :b 2} :a inc])`> = 'true'
+const _pre3 : Cion.Lisp<`(${pre.bi.updateLax} ${typeof _arg_p0.sexpr} ${typeof _pk} inc)`> = 'true'
+const _pre34 : Cion.Lisp<`(${pre.bi.updateLax} {:a 1 :b 2} :a inc)`> = 'true'
 const _pre34upd : Cion.Lisp<`(update {:a 1 :b 2} :a inc)`> = `{:a 2 :b 2}`
 const maintest_lisp_3: Cion.Lisp<`(update {:a 1 :b 2} :a (fn [x] (+ x 99)))`> = '{:a 100 :b 2}'
 const maintest_lisp_4: Cion.Lisp<`(update {:a 1 :b 2} :a inc)`> = '{:a 2 :b 2}'
@@ -26,7 +27,7 @@ const a2 = foxp.putFn1<'number?', 'inc'>()(fnarg)
 const a2_fail = foxp.putFn1<'number?', '(fn [m] "string")'>()(fnarg_fail)
 // [todo] update update.pre and write it down directly to test
 const vsraw0: Cion.Lisp<`((fn [m] (and (fn? (get m 2)))) [${typeof a0.sexpr} ${typeof a1.sexpr} ${typeof a2.sexpr}])`> = 'true'
-const vsraw1: Cion.Lisp<`(${pre.updateLax} [${typeof a0.sexpr} ${typeof a1.sexpr} ${typeof a2.sexpr}])`> = 'true'
+const vsraw1: Cion.Lisp<`(${pre.bi.updateLax} ${typeof a0.sexpr} ${typeof a1.sexpr} ${typeof a2.sexpr})`> = 'true'
 
 // ---------
 // -- map
@@ -34,7 +35,7 @@ const vsraw1: Cion.Lisp<`(${pre.updateLax} [${typeof a0.sexpr} ${typeof a1.sexpr
 
 const map_updatetest0 =
    update
-     <pre.updateLax>
+     <pre.bi.updateLax>
      ()
      ( foxp.putRecord(_arg0)
      , foxp.putPrim(':a')
@@ -42,7 +43,7 @@ const map_updatetest0 =
 
 const map_updatetest0_pseudofail_valuemiss =
    update
-     <pre.updateLax>
+     <pre.bi.updateLax>
      ()
      ( foxp.putRecord(_arg0)
      , foxp.putPrim(':a')
@@ -50,7 +51,7 @@ const map_updatetest0_pseudofail_valuemiss =
 
 const map_updatetest0_pseudofail_keymiss =
    update
-     <pre.updateLax>
+     <pre.bi.updateLax>
      ()
      ( foxp.putRecord(_arg0)
      , foxp.putPrim(':x')
@@ -59,7 +60,7 @@ const map_updatetest0_pseudofail_keymiss =
 try {
 const map_updatetest1_fail_valuemiss =
    update
-     <pre.update>
+     <pre.bi.update>
      ()
 // @ts-expect-error:
      ( foxp.putRecord(_arg0)
@@ -70,7 +71,7 @@ const map_updatetest1_fail_valuemiss =
 try {
 const map_updatetest2_fail_keymiss =
    update
-     <pre.update>
+     <pre.bi.update>
      ()
 // @ts-expect-error:
      ( foxp.putRecord(_arg0)
@@ -81,7 +82,7 @@ const map_updatetest2_fail_keymiss =
 try {
 const map_updatetest2_fail_returnmiss =
    update
-     <pre.update>
+     <pre.bi.update>
      ()
 // @ts-expect-error:
      ( foxp.putRecord(_arg0)
@@ -92,7 +93,7 @@ const map_updatetest2_fail_returnmiss =
 try {
 const map_updatetest2_fail_return_and_keymiss =
    update
-     <pre.update>
+     <pre.bi.update>
      ()
 // @ts-expect-error:
      ( foxp.putRecord(_arg0)
@@ -115,7 +116,7 @@ const _arg11 = foxp.putPrim(2)
 
 const vec_updatetest0 =
    update
-     <pre.updateLax>
+     <pre.bi.updateLax>
      ()
      ( foxp.putVec(_arg1)
      , foxp.putPrim(2)
@@ -125,7 +126,7 @@ const vec_updatetest0 =
 try {
 const vec_updatetest0_fail_keymiss =
    update
-     <pre.updateLax>
+     <pre.bi.updateLax>
      ()
 // @ts-expect-error:
      ( foxp.putVec(_arg1)
@@ -135,7 +136,7 @@ const vec_updatetest0_fail_keymiss =
 
 const vec_updatetest0_success_valuesame =
    update
-     <pre.update>
+     <pre.bi.update>
      ()
      ( foxp.putVec(_arg1)
      , foxp.putPrim(2)
@@ -144,7 +145,7 @@ const vec_updatetest0_success_valuesame =
 try {
 const vec_updatetest0_pseudofail_valuemiss =
    update
-     <pre.update>
+     <pre.bi.update>
      ()
 // @ts-expect-error:
      ( foxp.putVec(_arg1)
@@ -155,7 +156,7 @@ const vec_updatetest0_pseudofail_valuemiss =
 try {
 const vec_updatetest0_pseudofail_keymiss =
    update
-     <pre.update>
+     <pre.bi.update>
      ()
 // @ts-expect-error:
      ( foxp.putVec(_arg1)

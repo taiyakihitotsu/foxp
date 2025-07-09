@@ -13,7 +13,7 @@ import * as ut from '../../src/type-util'
 
 const map_getIntest0 =
     getIn
-    <pre.getIn>
+    <pre.bi.getIn>
     ()
   ( foxp.putRecord({a: 1, b: 2} as const)
   , foxp.putVec([':a'] as const))
@@ -23,7 +23,7 @@ const a = {a: 1, b: 2} as const
 try {
 const map_getIntest0_not_readonly =
     getIn
-    <pre.getIn>
+    <pre.bi.getIn>
     ()
 // @ts-expect-error:
   ( foxp.putRecord({a: 1, b: 2})
@@ -34,7 +34,7 @@ const map_getIntest0_not_readonly =
 try {
 const map_getIntest0_out_of_bound =
     getIn
-    <pre.getIn>
+    <pre.bi.getIn>
     ()
 // @ts-expect-error:
   ( foxp.putRecord({a: 1, b: 2} as const)
@@ -44,7 +44,7 @@ const map_getIntest0_out_of_bound =
 const v = [0,2] as const
 const map_getIntest_nest0 =
     getIn
-    <pre.getIn>
+    <pre.bi.getIn>
     ()
   ( foxp.putRecord({a: v, b: 2} as const)
   , foxp.putVec([':a'] as const))
@@ -56,14 +56,14 @@ const getintest2: Cion.Lisp<`(get-in {:a [0 2] :b 2} [:a 0])`> = '0'
 
 const map_getIntest_nest_with_ro =
     getIn
-    <pre.getIn>
+    <pre.bi.getIn>
     ()
   ( foxp.putRecord(foxp.ro({a: [0,2], b: 2} as const))
   , foxp.putVec([':a'] as const))
 
 const map_getIntest_nest_with_ro_leaf =
     getIn
-    <pre.getIn>
+    <pre.bi.getIn>
     ()
   ( foxp.putRecord(foxp.ro({a: [0,2], b: 2} as const))
   , foxp.putVec([':a', 1] as const))
@@ -71,7 +71,7 @@ const map_getIntest_nest_with_ro_leaf =
 try {
 const map_getIntest_nest_without_ro =
     getIn
-    <pre.getIn>
+    <pre.bi.getIn>
     ()
 // @ts-expect-error:
   ( foxp.putRecord(foxp.ro({a: [0,2], b: 2}))
@@ -81,7 +81,7 @@ const map_getIntest_nest_without_ro =
 try {
 const map_getIntest_nest_out_of_bound0 =
     getIn
-    <pre.getIn>
+    <pre.bi.getIn>
     ()
 // @ts-expect-error:
   ( foxp.putRecord(foxp.ro({a: [0,2], b: 2} as const))
@@ -90,14 +90,14 @@ const map_getIntest_nest_out_of_bound0 =
 
 const vec_getIntest_nest_with_ro_2 =
     getIn
-    <pre.getIn>
+    <pre.bi.getIn>
     ()
   ( foxp.putVec(foxp.ro([0, {a: [0,2], b: 2}] as const))
   , foxp.putVec([1, ':a'] as const))
 
 const vec_getIntest_nest_with_ro_2_leaf =
     getIn
-    <pre.getIn>
+    <pre.bi.getIn>
     ()
   ( foxp.putVec(foxp.ro([0, {a: [0,2], b: 2}] as const))
   , foxp.putVec([1, ':a', 0] as const))
@@ -105,7 +105,7 @@ const vec_getIntest_nest_with_ro_2_leaf =
 try {
 const vec_getIntest_nest_without_ro =
     getIn
-    <pre.getIn>
+    <pre.bi.getIn>
     ()
 // @ts-expect-error:
   ( foxp.putVec(foxp.ro({a: [0,2], b: 2}))
@@ -115,7 +115,7 @@ const vec_getIntest_nest_without_ro =
 try {
 const vec_getIntest_nest_out_of_bound0 =
     getIn
-    <pre.getIn>
+    <pre.bi.getIn>
     ()
 // @ts-expect-error:
   ( foxp.putVec(foxp.ro([0, {a: [0,2], b: 2}] as const))
@@ -125,7 +125,7 @@ const vec_getIntest_nest_out_of_bound0 =
 try {
 const vec_getIntest_nest_out_of_bound1 =
     getIn
-    <pre.getIn>
+    <pre.bi.getIn>
     ()
 // @ts-expect-error:
   ( foxp.putVec(foxp.ro([0, {a: [0,2], b: 2}] as const))
@@ -135,7 +135,7 @@ const vec_getIntest_nest_out_of_bound1 =
 try {
 const vec_getIntest_nest_out_of_bound2 =
     getIn
-    <pre.getIn>
+    <pre.bi.getIn>
     ()
 // @ts-expect-error:
   ( foxp.putVec(foxp.ro([0, {a: [0,2], b: 2}] as const))

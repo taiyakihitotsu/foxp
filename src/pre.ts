@@ -63,7 +63,7 @@ type resolveLambdaPre<
     : bi[S]
   : S
 
-type countArgsString<
+export type countArgsString<
   S extends string> = 
   Cion.Lisp<`(let [r (split ${S} ' ')] (if (= r ['[]']) 0 (count r)))`> 
 

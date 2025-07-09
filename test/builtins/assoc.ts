@@ -12,7 +12,7 @@ const _arg_p0 = foxp.putRecord(_arg0)
 const _pre0 : Cion.Lisp<`((fn [m] (-> m map?)) ${typeof _arg_p0.sexpr})`> = 'true'
 const _pre1 : Cion.Lisp<`((fn [m] (-> m second keyword?)) [${typeof _arg_p0.sexpr} :a])`> = 'true'
 const _pre2 : Cion.Lisp<`((fn [m] (= (type (get m 2)) (type (get (first m) (second m))))) [${typeof _arg_p0.sexpr} :a 9])`> = 'true'
-const _pre3 : Cion.Lisp<`(${pre.assocLax} [${typeof _arg_p0.sexpr} ${typeof _pk} 9])`> = 'true'
+const _pre3 : Cion.Lisp<`(${pre.bi.assocLax} [${typeof _arg_p0.sexpr} ${typeof _pk} 9])`> = 'true'
 const _pk = foxp.putPrim(':a').sexpr
 
 // ---------
@@ -21,7 +21,7 @@ const _pk = foxp.putPrim(':a').sexpr
 
 const map_assoctest0 =
     assoc
-    <pre.assocLax>
+    <pre.bi.assocLax>
     ()
 ( foxp.putRecord(_arg0)
   , foxp.putPrim(':a')
@@ -29,7 +29,7 @@ const map_assoctest0 =
 
 const map_assoctest0_pseudofail_valuemiss =
     assoc
-    <pre.assocLax>
+    <pre.bi.assocLax>
     ()
 ( foxp.putRecord(_arg0)
   , foxp.putPrim(':a')
@@ -37,7 +37,7 @@ const map_assoctest0_pseudofail_valuemiss =
 
 const map_assoctest0_pseudofail_keymiss =
     assoc
-    <pre.assocLax>
+    <pre.bi.assocLax>
     ()
 ( foxp.putRecord(_arg0)
   , foxp.putPrim(':x')
@@ -46,7 +46,7 @@ const map_assoctest0_pseudofail_keymiss =
 
 const map_assoctest1 =
     assoc
-    <pre.assoc>
+    <pre.bi.assoc>
     ()
 ( foxp.putRecord(_arg0)
   , foxp.putPrim(':a')
@@ -55,7 +55,7 @@ const map_assoctest1 =
 
 const map_assoctest1_fail_valuemiss =
     assoc
-    <pre.assoc>
+    <pre.bi.assoc>
     ()
 // @ts-expect-error:
 ( foxp.putRecord(_arg0)
@@ -64,7 +64,7 @@ const map_assoctest1_fail_valuemiss =
 
 const map_assoctest2_fail_keymiss =
     assoc
-    <pre.assoc>
+    <pre.bi.assoc>
     ()
 // @ts-expect-error:
 ( foxp.putRecord(_arg0)
@@ -86,7 +86,7 @@ const _arg11 = foxp.putPrim(2)
 
 const vec_assoctest0 =
     assoc
-    <pre.assocLax>
+    <pre.bi.assocLax>
     ()
 ( foxp.putVec(_arg1)
   , foxp.putPrim(2)
@@ -95,7 +95,7 @@ const vec_assoctest0 =
 
 const vec_assoctest0_fail_keymiss =
     assoc
-    <pre.assocLax>
+    <pre.bi.assocLax>
     ()
 // @ts-expect-error:
 ( foxp.putVec(_arg1)
@@ -104,7 +104,7 @@ const vec_assoctest0_fail_keymiss =
 
 const vec_assoctest0_success_valuesame =
     assoc
-    <pre.assoc>
+    <pre.bi.assoc>
     ()
 ( foxp.putVec(_arg1)
   , foxp.putPrim(2)
@@ -113,7 +113,7 @@ const vec_assoctest0_success_valuesame =
 
 const vec_assoctest0_pseudofail_valuemiss =
     assoc
-    <pre.assoc>
+    <pre.bi.assoc>
     ()
 // @ts-expect-error:
 ( foxp.putVec(_arg1)
@@ -122,7 +122,7 @@ const vec_assoctest0_pseudofail_valuemiss =
 
 const vec_assoctest0_pseudofail_keymiss =
     assoc
-    <pre.assoc>
+    <pre.bi.assoc>
     ()
 // @ts-expect-error:
 ( foxp.putVec(_arg1)
