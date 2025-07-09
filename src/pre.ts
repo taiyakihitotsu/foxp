@@ -105,7 +105,9 @@ export type _MergePreStr<
 // ------------
 
 export type notZero = `(fn [n] (-> n zero? not))`
-export type countN<N extends boolean|number|string> = `(fn [n] (and (vector? n) (= ${N} (count n))))`
+type Primitive = boolean|string|number
+export type countN<N extends Primitive> = `(fn [n] (and (vector? n) (= ${N} (count n))))`
+export type range<N extends Primitive, M extends Primitive> = `(fn [n] (< ${N} n ${M}))`
 
 export type Eq<N extends boolean|number|string> = `(fn [n] (= ${N} n))`
 export const Eq = (N: boolean|number|string) => `(fn [n] (= ${N} n))` // todo
@@ -119,8 +121,7 @@ export const Grater = (N: number) => `(fn [n] (< ${N} n))`
 export type Less<N extends string> = `(fn [n] (> ${N} n))`
 export const Less = (N: number) => `(fn [n] (> ${N} n))`
 
-export type Interval<N extends string, M extends string> = `(fn [n] (< ${N} n ${M}))`
-export const Interval  = (N:number, M:number) => `(fn [n] (< ${N} n ${M}))`
+
 
 export type EmailRegex = `'(([^<>()[\\].,;: @"]+(\\.[^<>()[\\].,;: @"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}))'`
 export type IsEmail = `(fn [n] (let [r (re-find ${EmailRegex} n)] (not (= '' r))))`

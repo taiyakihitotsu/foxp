@@ -28,7 +28,9 @@ export type FS<S>  = ForceStr<S>
 export type FN4<S> = S extends N4 ? S : never
 export type Add<N extends string, M extends string> = `(+ ${N} ${M})`
 // [todo] move to foxp.ts
-export type FoxTypeExt = {[c.SexprKey]: string, [c.ContKey]: string, [c.FnFlagKey]: boolean, [c.ValueKey]: unknown}
+// [todo]
+export type FoxTypeExt = {[c.SexprKey]: string, [c.ContKey]: string, [c.FnFlagKey]: unknown, [c.ValueKey]: unknown}
+export type LambdaReturnExt = FoxTypeExt | (() => LambdaReturnExt) | ((w: FoxTypeExt) => LambdaReturnExt) | ((w: FoxTypeExt, x: FoxTypeExt) => LambdaReturnExt) | ((w: FoxTypeExt, x: FoxTypeExt, y: FoxTypeExt) => LambdaReturnExt) | ((w: FoxTypeExt, x: FoxTypeExt, y: FoxTypeExt, z: FoxTypeExt) => LambdaReturnExt)
 
 export type AssignSym<
   Type
@@ -67,14 +69,14 @@ export type FoxWith<
   , [c.FnFlagKey]: ut.Equal<Symbol,P>
   , [c.ValueKey]: P }
 
-export const rfoxposs = <RetS, RetV, Cont, Flag>(n: RetV): 
+export const rfoxposs = <RetS, RetV, Cont, Flag extends boolean>(n: RetV): 
   { [c.SexprKey]: RetS
   , [c.ContKey]: Cont
   , [c.FnFlagKey]: Flag
   , [c.ValueKey]: RetV} => (
   { [c.SexprKey]: '' as RetS
   , [c.ContKey]: '' as Cont
-  , [c.FnFlagKey]: '' as Flag
+  , [c.FnFlagKey]: null as unknown as Flag
   , [c.ValueKey]: n})
 
 // ----------------
@@ -104,6 +106,47 @@ export type UnrollArgsStr<
 export type ExpandPre<narg extends N4> = (narg extends N0 ? '' : narg extends N1 ? ([string] | readonly [string]) : narg extends N2 ? ([string, string] | readonly [string, string]) : ([string, string, string] | readonly [string, string, string])) | string
 
 export type GetFlag<A> = A extends FoxTypeExt ? ut.Equal<A[c.FnFlagKey], true> extends true ? true : IsSymbol<A> extends true ? true : false : false
+
+const runFn = <
+  narg extends N4
+, a0
+, a1
+, a2
+, a3
+, ret>() => 
+<
+//   W extends FoxWith<true extends IsSymbol<W> ? Symbol : narg extends N0 ? never : a0, W>
+// , X extends FoxWith<true extends IsSymbol<X> ? Symbol : narg extends N1 ? never : a1, X>
+// , Y extends FoxWith<true extends IsSymbol<Y> ? Symbol : narg extends N2 ? never : a2, Y>
+// , Z extends FoxWith<true extends IsSymbol<Z> ? Symbol : narg extends N3 ? never : a3, Z>
+  W extends FoxWith<a0, W>
+, X extends FoxWith<a1, X>
+, Y extends FoxWith<a2, Y>
+, Z extends FoxWith<a3, Z>
+>(
+  n: narg
+, fn: ( narg extends N0
+          ? (() => ret)
+        : narg extends N1
+          ? ((w: a0) => ret)
+        : narg extends N2
+          ? ((w: a0, x:a1) => ret)
+        : narg extends N3
+          ? ((w: a0, x:a1, y:a2) => ret)
+        : ((w: a0, x:a1, y:a2, z:a3) => ret))
+, w?: W
+, x?: X
+, y?: Y
+, z?: Z) => (
+  n === 0
+    ? (fn as () => ret)()
+  : n === 1
+    ? (fn as (w: a0) => ret)(w![c.ValueKey])
+  : n === 2
+    ? (fn as (w: a0, x: a1) => ret)(w![c.ValueKey], x![c.ValueKey])
+  : n === 3
+    ? (fn as (w: a0, x: a1, y: a2) => ret)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey])
+  : (fn as (w: a0, x: a1, y: a2, z: a3) => ret)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey], z![c.ValueKey]))
 
 // [note]
 // this is from v0.4.0
@@ -146,23 +189,12 @@ Pre extends string = DefaultPre
 ( runFn
     <narg, a0, a1, a2, a3, ret>
     ()
-    (num, f, w as FoxWith<a0, Arg0>, x as FoxWith<a1, Arg1>, y as FoxWith<a2, Arg2>, z as FoxWith<a3, Arg3>))
-// ( num === 0
-//     ? ((f as () => ret)())
-//   : num === 1
-//     ? ((f as (w: a0) => ret)(w![c.ValueKey] as a0))
-//   : num === 2
-//     ? ((f as (w: a0, x: a1) => ret)(w![c.ValueKey] as a0, x![c.ValueKey] as a1))
-//   : num === 3
-//     ? ((f as (w: a0, x: a1, y: a2) => ret)
-//        ( w![c.ValueKey] as a0
-//        , x![c.ValueKey] as a1
-//        , y![c.ValueKey] as a2))
-//   : ((f as (w: a0, x: a1, y: a2, z: a3) => ret)
-//      ( w![c.ValueKey] as a0
-//      , x![c.ValueKey] as a1
-//      , y![c.ValueKey] as a2
-//      , z![c.ValueKey] as a3)))
+    ( num
+    , f
+    , w as FoxWith<a0, Arg0>
+    , x as FoxWith<a1, Arg1>
+    , y as FoxWith<a2, Arg2>
+    , z as FoxWith<a3, Arg3>))
 
 export const lambda = <
   Args extends string
@@ -172,40 +204,46 @@ export const lambda = <
   Cont
 , a0, a1, a2, a3
 , quotedFn extends FoxTypeExt
-, Arg0 extends FoxWith<a0, Arg0>
+// , Arg0 extends FoxWith<a0, Arg0>
 > (
 anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn : narg extends N2 ? (w: a0, x:a1) => quotedFn : narg extends N3 ? (w: a0, x:a1, y:a2) => quotedFn : (w: a0, x:a1, y:a2, z:a3) => quotedFn
   ) => <
   Pre extends string = DefaultPre
   >() => <
-  futureArg0 extends FoxWith<a0, futureArg0>
-, futureArg1 extends FoxWith<a1, futureArg1>
-, futureArg2 extends FoxWith<a2, futureArg2>
-, futureArg3 extends FoxWith<a3, futureArg3>
-, UnrollContStrResult extends UnrollArgsStr<FN4<narg>, c.ContKey, futureArg0, futureArg1, futureArg2, futureArg3>
-, RetSexpr extends Cion.Lisp<`((fn [${Args}] ${FS<quotedFn[c.SexprKey]>}) ${UnrollContStrResult})`>
+  FutureArg0 extends FoxWith<true extends IsSymbol<FutureArg0> ? Symbol : narg extends N0 ? never : a0, FutureArg0>
+, FutureArg1 extends FoxWith<true extends IsSymbol<FutureArg1> ? Symbol : narg extends N1 ? never : a1, FutureArg1>
+, FutureArg2 extends FoxWith<true extends IsSymbol<FutureArg2> ? Symbol : narg extends N2 ? never : a2, FutureArg2>
+, FutureArg3 extends FoxWith<true extends IsSymbol<FutureArg3> ? Symbol : narg extends N3 ? never : a3, FutureArg3>
+
+//   FutureArg0 extends FoxWith<a0, FutureArg0>
+// , FutureArg1 extends FoxWith<a1, FutureArg1>
+// , FutureArg2 extends FoxWith<a2, FutureArg2>
+// , FutureArg3 extends FoxWith<a3, FutureArg3>
+
+, IsQuote extends [GetFlag<FutureArg0>, GetFlag<FutureArg1>, GetFlag<FutureArg2>, GetFlag<FutureArg3>] extends [false, false, false, false] ? false : true
+
+, UnrollContStrResult extends UnrollArgsStr<FN4<narg>, c.ContKey, FutureArg0, FutureArg1, FutureArg2, FutureArg3>
+, SexprR extends Cion.Lisp<`((fn [${Args}] ${FS<quotedFn[c.SexprKey]>}) ${UnrollContStrResult})`>
+
 , FnCont extends `((fn [${Args}] (and (${Pre} ${Args}) ${FS<quotedFn[c.ContKey]>})) ${UnrollContStrResult})`
-, PreCheck extends Cion.Lisp<FnCont> extends LispFalsy ? false : true>
-( futurearg0?: futureArg0 extends (PreCheck extends true ? futureArg0 : never) ? futureArg0 : never
-, futurearg1?: futureArg1
-, futurearg2?: futureArg2
-, futurearg3?: futureArg3) => rfoxposs<RetSexpr, unknown ,RetSexpr, false>
+
+, PreCheck extends Cion.Lisp<FnCont> extends LispFalsy ? false : true
+, ret extends unknown
+>
+(
+  futurearg0?: true extends IsQuote ? FutureArg0 : FutureArg0 extends (PreCheck extends true ? FutureArg0 : never) ? FutureArg0 : never
+//  futurearg0?: FutureArg0 extends (PreCheck extends true ? FutureArg0 : never) ? FutureArg0 : never
+, futurearg1?: FutureArg1
+, futurearg2?: FutureArg2
+, futurearg3?: FutureArg3)
+: { [c.SexprKey]: SexprR
+  , [c.ContKey]:  SexprR
+  , [c.ValueKey]: unknown
+  , [c.FnFlagKey]: IsQuote} => rfoxposs<SexprR,unknown,SexprR, IsQuote>
 ( runFn
     <narg, a0, a1, a2, a3, quotedFn>
     ()
-    (n, anonfn, futurearg0, futurearg1, futurearg2, futurearg3)[c.ValueKey])
-
-// (
-//   ( n === 0
-//     ? (anonfn as () => quotedFn)()
-//   : n === 1
-//     ? (anonfn as (w: a0) => quotedFn)(futurearg0![c.ValueKey])
-//   : n === 2
-//     ? (anonfn as (w: a0, x: a1) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey])
-//   : n === 3
-//     ? (anonfn as (w: a0, x: a1, y: a2) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey], futurearg2![c.ValueKey])
-//   : (anonfn as (w: a0, x: a1, y: a2, z: a3) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey], futurearg2![c.ValueKey], futurearg3![c.ValueKey]))[c.ValueKey]
-// )
+    (n, anonfn, futurearg0 as FoxWith<a0, FutureArg0>, futurearg1 as FoxWith<a1, FutureArg1>, futurearg2 as FoxWith<a2, FutureArg2>, futurearg3 as FoxWith<a3, FutureArg3>)[c.ValueKey])
 
 // -----------------------------
 // -- builtins: arithmetic
@@ -215,43 +253,8 @@ export const add = fn<'+', pre.bi.add>(2)((n: number, m:number) => n + m)
 export const sub = fn<'-', pre.bi.sub>(2)((n: number, m:number) => n - m)
 export const mul = fn<'*', pre.bi.mul>(2)((n: number, m:number) => n * m)
 export const div = fn<'/', pre.bi.div>(2)((n: number, m:number) => n / m)
-
-const runFn = <
-  narg extends N4
-, a0
-, a1
-, a2
-, a3
-, ret>() => <
-  W extends FoxWith<a0, W>
-, X extends FoxWith<a1, X>
-, Y extends FoxWith<a2, Y>
-, Z extends FoxWith<a3, Z>
->(
-  n: narg
-, fn: ( narg extends N0
-          ? (() => ret)
-        : narg extends N1
-          ? ((w: a0) => ret)
-        : narg extends N2
-          ? ((w: a0, x:a1) => ret)
-        : narg extends N3
-          ? ((w: a0, x:a1, y:a2) => ret)
-        : ((w: a0, x:a1, y:a2, z:a3) => ret))
-, w?: W
-, x?: X
-, y?: Y
-, z?: Z) => (
-  n === 0
-    ? (fn as () => ret)()
-  : n === 1
-    ? (fn as (w: a0) => ret)(w![c.ValueKey])
-  : n === 2
-    ? (fn as (w: a0, x: a1) => ret)(w![c.ValueKey], x![c.ValueKey])
-  : n === 3
-    ? (fn as (w: a0, x: a1, y: a2) => ret)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey])
-  : (fn as (w: a0, x: a1, y: a2, z: a3) => ret)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey], z![c.ValueKey]))
-
+export const inc = fn<'inc', pre.bi.inc>(1)((n: number) => n + 1)
+export const dec = fn<'dec', pre.bi.dec>(1)((n: number) => n - 1)
 
 // ---------------------
 // -- builtins: coll fn
