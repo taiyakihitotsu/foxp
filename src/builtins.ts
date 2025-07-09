@@ -113,7 +113,7 @@ export type GetFlag<A> = A extends FoxTypeExt ? ut.Equal<A[c.FnFlagKey], true> e
 export const fn = <
   SexprFunction extends string
 , DefaultPre extends string
-, narg = pre.countArgs<DefaultPre>
+, narg extends N4 = pre.countArgs<DefaultPre>
 >(num: narg) =>
 <a0, a1, a2, a3, ret>
 (f: (narg extends N0 ? () => ret : narg extends N1 ? (w: a0) => ret : narg extends N2 ? (w: a0, x:a1) => ret : narg extends N3 ? (w: a0, x:a1, y:a2) => ret : (w: a0, x:a1, y:a2, z:a3) => ret)) => <
@@ -142,40 +142,32 @@ Pre extends string = DefaultPre
 : { [c.SexprKey]: SexprR
   , [c.ContKey]: ContResult
   , [c.ValueKey]: ret
-  , [c.FnFlagKey]: IsQuote} => rfoxposs<SexprR, ret, ContResult, IsQuote>(
-  num === 0
-    ? ((f as () => ret)())
-  : num === 1
-    ? ((f as (w: a0) => ret)(w![c.ValueKey] as a0))
-  : num === 2
-    ? ((f as (w: a0, x: a1) => ret)(w![c.ValueKey] as a0, x![c.ValueKey] as a1))
-  : num === 3
-    ? ((f as (w: a0, x: a1, y: a2) => ret)
-       ( w![c.ValueKey] as a0
-       , x![c.ValueKey] as a1
-       , y![c.ValueKey] as a2))
-  : ((f as (w: a0, x: a1, y: a2, z: a3) => ret)
-     ( w![c.ValueKey] as a0
-     , x![c.ValueKey] as a1
-     , y![c.ValueKey] as a2
-     , z![c.ValueKey] as a3)))
-
-const aa: ut.Equal<false | false, false> = true
-
-
-// -----------------------------
-// -- builtins: arithmetic
-// -----------------------------
-
-export const add = fn<'+', pre.bi.add>(2)((n: number, m:number) => n + m)
-export const sub = fn<'-', pre.bi.sub>(2)((n: number, m:number) => n - m)
-export const mul = fn<'*', pre.bi.mul>(2)((n: number, m:number) => n * m)
-export const div = fn<'/', pre.bi.div>(2)((n: number, m:number) => n / m)
+  , [c.FnFlagKey]: IsQuote} => rfoxposs<SexprR, ret, ContResult, IsQuote>
+( runFn
+    <narg, a0, a1, a2, a3, ret>
+    ()
+    (num, f, w as FoxWith<a0, Arg0>, x as FoxWith<a1, Arg1>, y as FoxWith<a2, Arg2>, z as FoxWith<a3, Arg3>))
+// ( num === 0
+//     ? ((f as () => ret)())
+//   : num === 1
+//     ? ((f as (w: a0) => ret)(w![c.ValueKey] as a0))
+//   : num === 2
+//     ? ((f as (w: a0, x: a1) => ret)(w![c.ValueKey] as a0, x![c.ValueKey] as a1))
+//   : num === 3
+//     ? ((f as (w: a0, x: a1, y: a2) => ret)
+//        ( w![c.ValueKey] as a0
+//        , x![c.ValueKey] as a1
+//        , y![c.ValueKey] as a2))
+//   : ((f as (w: a0, x: a1, y: a2, z: a3) => ret)
+//      ( w![c.ValueKey] as a0
+//      , x![c.ValueKey] as a1
+//      , y![c.ValueKey] as a2
+//      , z![c.ValueKey] as a3)))
 
 export const lambda = <
   Args extends string
 , DefaultPre extends string
-, narg = pre.countArgs<`(fn [${Args}])`>>(
+, narg extends N4 = pre.countArgs<`(fn [${Args}])`>>(
   n: narg) => <
   Cont
 , a0, a1, a2, a3
@@ -187,67 +179,78 @@ anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn
   Pre extends string = DefaultPre
   >() => <
   futureArg0 extends FoxWith<a0, futureArg0>
-, futureArg1 extends FoxWith<a1, futureArg0>
-, futureArg2 extends FoxWith<a2, futureArg0>
-, futureArg3 extends FoxWith<a3, futureArg0>
-
-// , UnrollArgsStrResult extends UnrollArgsStr<FN4<narg>, c.SexprKey, Arg0, Arg1, Arg2, Arg3>
+, futureArg1 extends FoxWith<a1, futureArg1>
+, futureArg2 extends FoxWith<a2, futureArg2>
+, futureArg3 extends FoxWith<a3, futureArg3>
 , UnrollContStrResult extends UnrollArgsStr<FN4<narg>, c.ContKey, futureArg0, futureArg1, futureArg2, futureArg3>
-// , RetSexpr extends Cion.Lisp<`((fn [${Args}] ${FS<quotedFn[c.SexprKey]>}) ${FS<futureArg0[c.SexprKey]>})`>
-// , FnCont extends `((fn [${Args}] ${FS<quotedFn[c.ContKey]>}) ${FS<futureArg0[c.SexprKey]>})`
 , RetSexpr extends Cion.Lisp<`((fn [${Args}] ${FS<quotedFn[c.SexprKey]>}) ${UnrollContStrResult})`>
 , FnCont extends `((fn [${Args}] (and (${Pre} ${Args}) ${FS<quotedFn[c.ContKey]>})) ${UnrollContStrResult})`
-
 , PreCheck extends Cion.Lisp<FnCont> extends LispFalsy ? false : true>
 ( futurearg0?: futureArg0 extends (PreCheck extends true ? futureArg0 : never) ? futureArg0 : never
 , futurearg1?: futureArg1
 , futurearg2?: futureArg2
-// rfoxposs<SexprR, ret, ContResult, IsQuote>
-, futurearg3?: futureArg3) => rfoxposs<RetSexpr, unknown ,RetSexpr, false>(
-  ( n === 0
-    ? (anonfn as () => quotedFn)()
-  : n === 1
-    ? (anonfn as (w: a0) => quotedFn)(futurearg0![c.ValueKey])
-  : n === 2
-    ? (anonfn as (w: a0, x: a1) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey])
-  : n === 3
-    ? (anonfn as (w: a0, x: a1, y: a2) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey], futurearg2![c.ValueKey])
-  : (anonfn as (w: a0, x: a1, y: a2, z: a3) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey], futurearg2![c.ValueKey], futurearg3![c.ValueKey]))[c.ValueKey]
+, futurearg3?: futureArg3) => rfoxposs<RetSexpr, unknown ,RetSexpr, false>
+( runFn
+    <narg, a0, a1, a2, a3, quotedFn>
+    ()
+    (n, anonfn, futurearg0, futurearg1, futurearg2, futurearg3)[c.ValueKey])
 
-
-// { [c.SexprKey]: '' as RetSexpr
-// , [c.FnFlagKey]: false as false
-// , [c.ContKey]: '' as RetSexpr
-// , [c.ValueKey]: 
+// (
 //   ( n === 0
-//     ? (anonfn as () => quotedFn)()[c.ValueKey]
+//     ? (anonfn as () => quotedFn)()
 //   : n === 1
-//     ? (anonfn as (w: a0) => quotedFn)(futurearg0![c.ValueKey])[c.ValueKey]
+//     ? (anonfn as (w: a0) => quotedFn)(futurearg0![c.ValueKey])
 //   : n === 2
-//     ? (anonfn as (w: a0, x: a1) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey])[c.ValueKey]
+//     ? (anonfn as (w: a0, x: a1) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey])
 //   : n === 3
-//     ? (anonfn as (w: a0, x: a1, y: a2) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey], futurearg2![c.ValueKey])[c.ValueKey]
-//   : (anonfn as (w: a0, x: a1, y: a2, z: a3) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey], futurearg2![c.ValueKey], futurearg3![c.ValueKey])[c.ValueKey])
-// }
-)
+//     ? (anonfn as (w: a0, x: a1, y: a2) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey], futurearg2![c.ValueKey])
+//   : (anonfn as (w: a0, x: a1, y: a2, z: a3) => quotedFn)(futurearg0![c.ValueKey], futurearg1![c.ValueKey], futurearg2![c.ValueKey], futurearg3![c.ValueKey]))[c.ValueKey]
+// )
 
-// const switchFn = <
-//   narg extends N4
-// , a0, a1, a2, a3
-// , RetType>(
-//   n: narg
-// , anonfn: narg extends N0 ? () => RetType : narg extends N1 ? (w: a0) => RetType : narg extends N2 ? (w: a0, x:a1) => RetType : narg extends N3 ? (w: a0, x:a1, y:a2) => RetType : (w: a0, x:a1, y:a2, z:a3) => RetType) => (
-//   n === 0
-//     ? (anonfn as () => RetType)()[c.ValueKey]
-//   : n === 1
-//     ? (anonfn as (w: a0) => RetType)(w![c.ValueKey])[c.ValueKey]
-//   : n === 2
-//     ? (anonfn as (w: a0, x: a1) => RetType)(w![c.ValueKey], x![c.ValueKey])[c.ValueKey]
-//   : n === 3
-//     ? (anonfn as (w: a0, x: a1, y: a2) => RetType)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey])[c.ValueKey]
-//   : (anonfn as (w: a0, x: a1, y: a2, z: a3) => RetType)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey], z![c.ValueKey])[c.ValueKey])
+// -----------------------------
+// -- builtins: arithmetic
+// -----------------------------
 
+export const add = fn<'+', pre.bi.add>(2)((n: number, m:number) => n + m)
+export const sub = fn<'-', pre.bi.sub>(2)((n: number, m:number) => n - m)
+export const mul = fn<'*', pre.bi.mul>(2)((n: number, m:number) => n * m)
+export const div = fn<'/', pre.bi.div>(2)((n: number, m:number) => n / m)
 
+const runFn = <
+  narg extends N4
+, a0
+, a1
+, a2
+, a3
+, ret>() => <
+  W extends FoxWith<a0, W>
+, X extends FoxWith<a1, X>
+, Y extends FoxWith<a2, Y>
+, Z extends FoxWith<a3, Z>
+>(
+  n: narg
+, fn: ( narg extends N0
+          ? (() => ret)
+        : narg extends N1
+          ? ((w: a0) => ret)
+        : narg extends N2
+          ? ((w: a0, x:a1) => ret)
+        : narg extends N3
+          ? ((w: a0, x:a1, y:a2) => ret)
+        : ((w: a0, x:a1, y:a2, z:a3) => ret))
+, w?: W
+, x?: X
+, y?: Y
+, z?: Z) => (
+  n === 0
+    ? (fn as () => ret)()
+  : n === 1
+    ? (fn as (w: a0) => ret)(w![c.ValueKey])
+  : n === 2
+    ? (fn as (w: a0, x: a1) => ret)(w![c.ValueKey], x![c.ValueKey])
+  : n === 3
+    ? (fn as (w: a0, x: a1, y: a2) => ret)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey])
+  : (fn as (w: a0, x: a1, y: a2, z: a3) => ret)(w![c.ValueKey], x![c.ValueKey], y![c.ValueKey], z![c.ValueKey]))
 
 
 // ---------------------

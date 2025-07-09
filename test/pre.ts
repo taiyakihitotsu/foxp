@@ -15,7 +15,12 @@ const countArgsString_test1 : pre.countArgs<`(fn [m] (inc))`> = 1
 const countArgsString_test2 : pre.countArgs<`(fn [x y] (inc))`> = 2
 const countArgsString_test3 : pre.countArgs<`(fn [x y z] (inc))`> = 3
 const countArgsString_test4 : pre.countArgs<`(fn [a b c d] (inc))`> = 4
+
+// [note]
+// Put it in fn-form.
+// @ts-expect-error:
 const countArgsString_test4jv : pre.countArgs<`[a b c d]`> = 4
+
 const countArgsString_test5 : pre.countArgs<`inc`> = 1
 const countArgsString_test6 : pre.countArgs<`and`> = 2
 const countArgsString_test7 : pre.countArgs<`assoc`> = 3

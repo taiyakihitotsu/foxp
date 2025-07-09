@@ -104,6 +104,9 @@ export type _MergePreStr<
 // -- genPre
 // ------------
 
+export type notZero = `(fn [n] (-> n zero? not))`
+export type countN<N extends boolean|number|string> = `(fn [n] (and (vector? n) (= ${N} (count n))))`
+
 export type Eq<N extends boolean|number|string> = `(fn [n] (= ${N} n))`
 export const Eq = (N: boolean|number|string) => `(fn [n] (= ${N} n))` // todo
 
