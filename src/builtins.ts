@@ -223,7 +223,8 @@ anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn
 , IsQuote extends [GetFlag<FutureArg0>, GetFlag<FutureArg1>, GetFlag<FutureArg2>, GetFlag<FutureArg3>] extends [false, false, false, false] ? false : true
 
 , UnrollContStrResult extends UnrollArgsStr<FN4<narg>, c.ContKey, FutureArg0, FutureArg1, FutureArg2, FutureArg3>
-, SexprR extends Cion.Lisp<`((fn [${Args}] ${FS<quotedFn[c.SexprKey]>}) ${UnrollContStrResult})`>
+, _SexprR extends `((fn [${Args}] ${FS<quotedFn[c.SexprKey]>}) ${UnrollContStrResult})`
+, SexprR extends IsQuote extends true ? _SexprR : Cion.Lisp<_SexprR>
 
 , FnCont extends `((fn [${Args}] (and (${Pre} ${Args}) ${FS<quotedFn[c.ContKey]>})) ${UnrollContStrResult})`
 
@@ -237,9 +238,10 @@ anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn
 , futurearg2?: FutureArg2
 , futurearg3?: FutureArg3)
 : { [c.SexprKey]: SexprR
-  , [c.ContKey]:  SexprR
+  , [c.ContKey]:  FnCont
+//  , [c.ContKey]:  SexprR
   , [c.ValueKey]: unknown
-  , [c.FnFlagKey]: IsQuote} => rfoxposs<SexprR,unknown,SexprR, IsQuote>
+  , [c.FnFlagKey]: IsQuote} => rfoxposs<SexprR,unknown,FnCont, IsQuote>
 ( runFn
     <narg, a0, a1, a2, a3, quotedFn>
     ()

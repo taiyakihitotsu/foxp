@@ -1,19 +1,53 @@
 import { lambda, add, fn } from '../../src/builtins'
 import * as foxp from '../../src/foxp'
 import * as pre  from '../../src/pre'
+import * as c    from '../../src/const'
 import { describe, it, expect } from 'vitest'
 
-// -- pass through
-const a = lambda<'m', 'number?'>(1)((m:number) => add()(foxp.putPrim(1), foxp.putSym('m', m)))
-const lambdatest0 = (m: number) => a()(foxp.putSym('m', m))
+type yposint = `(fn [x y] (pos-int? y))`
 
-// -- return fn
-const b = lambda<'m', 'number?'>(1)((m:number) => lambda<'n', 'number?'>(1)((n:number) => add()(foxp.putSym('n', n), foxp.putSym('m', m)))) // [todo] change => foxtypeext to . | lambda
+//
+// -- normal
+//
+const lambda_a = lambda<'m', 'number?'>(1)((m:number) => add<yposint>()(foxp.putPrim(1), foxp.putSym('m', m)))
+const a_success0 = lambda_a()(foxp.putPrim(1))
+const a_success1
+ = lambda_a
+     ()
+// @ts-expect-error
+     (foxp.putPrim(-1))
 
-const c = lambda<'m', 'number?'>(1)((m:number) => add()(foxp.putPrim(1), foxp.putSym('m', m)))
+// 
+// -- pass through pattern
+//
+const lambda_c = lambda<'m', 'number?'>(1)((m:number) => add<yposint>()(foxp.putPrim(1), foxp.putSym('m', m)))
+const d_success2 = lambda<'n', 'number?'>(1)((n:number) => lambda_c()(foxp.putSym('n', n)))
+const d_success3 = d_success2()(foxp.putPrim(1))
+const d_success4
+ = d_success2
+     ()
+// @ts-expect-error:
+     (foxp.putPrim(-1))
 
-const d_success = lambda<'n', 'number?'>(1)((n:number) => c()(foxp.putPrim(1)))
-const d_success2 = lambda<'m', 'number?'>(1)((m:number) => c()(foxp.putSym('m', m))) // [todo] if quote-true, sexprR shouldn't be evaluated.
+//
+// -- pass through pattern 2
+//
+const e_success3 = lambda<'m', 'pos-int?'>(1)((m:number) => lambda_c()(foxp.putSym('m', m)))
+const e_success4 = lambda<'n', 'number?'>(1)((n:number) => e_success3()(foxp.putSym('n', n)))
+const e_success5 = e_success4()(foxp.putPrim(1))
+const e_failure5 = 
+  e_success4
+    ()
+// @ts-expect-error:
+    (foxp.putPrim('s'))
+const e_failure6 = 
+  e_success4
+    ()
+// @ts-expect-error:
+    (foxp.putPrim(-1))
+
+// -- return lambda
+const f = lambda<'m', 'pos-int?'>(1)((m: number) => lambda<'n', 'number?'>(1)((n:number) => add()(foxp.putSym('n', n), foxp.putSym('m', m))))
 
 // -- currying
 
@@ -24,4 +58,5 @@ const d_success2 = lambda<'m', 'number?'>(1)((m:number) => c()(foxp.putSym('m', 
 
 // describe('lambda', () => {
 // it('', () => { expect(lambdatestr0.value).toBe(2) })
+// it('', () => { expect(d_success3.value).toBe(2) })
 // })
