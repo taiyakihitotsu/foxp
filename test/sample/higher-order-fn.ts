@@ -17,6 +17,39 @@ const a_success1
 // @ts-expect-error
      (foxp.putPrim(-1))
 
+// --------------------
+// -- normal hof
+// --------------------
+// draft
+const hlambda_a = lambda<'m', 'number?'>(1)((m:number) => add<yposint>()(foxp.putPrim(1), foxp.putSym('m', m)))
+const ha = (n:number) => hlambda_a()(foxp.putSym('n', n))
+const ha2 = lambda<'n', 'number?'>(1)(ha)
+const hat = lambda<'n', 'number?'>(1)((n:number) => (
+  { sexpr: 'inc'
+  , cont: 'true' // 'number?'
+  , fnflag: true
+  , value:
+    { fn: lambda<'m', 'number?'>(1)((m:number) => add<yposint>()(foxp.putSym('n', n), foxp.putSym('m', m)))
+    , pre: 'number?'}} as const))
+
+const hattt  = hat()
+const hat_s  = hat()(foxp.putPrim(1)).value.value.fn
+const hatss  = hat_s()(foxp.putPrim(1))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // 
 // -- pass through pattern
 //
@@ -45,18 +78,3 @@ const e_failure6 =
     ()
 // @ts-expect-error:
     (foxp.putPrim(-1))
-
-// -- return lambda
-const f = lambda<'m', 'pos-int?'>(1)((m: number) => lambda<'n', 'number?'>(1)((n:number) => add()(foxp.putSym('n', n), foxp.putSym('m', m))))
-
-// -- currying
-
-
-// const lambdatestr0 = lambda<'n m', pre.bi.add>(2)(lambdatest0)()
-
- 
-
-// describe('lambda', () => {
-// it('', () => { expect(lambdatestr0.value).toBe(2) })
-// it('', () => { expect(d_success3.value).toBe(2) })
-// })
