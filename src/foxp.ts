@@ -165,8 +165,6 @@ export const ro: <U extends unknown[] | Record<PropertyKey, unknown>>(u: U) => u
 //
 // `compiler.Ltc` translates TS types to the Cion S-exprs string.
 // The result is the S-exprs value of the return type.
-/*
-
 export const tap1 = <
   S extends { [c.SexprKey]: string
             , [c.ContKey] : string
@@ -183,14 +181,13 @@ export const tap1 = <
   ( lf: F
   , a: S extends (Cion.Lisp<BPre> extends ('false' | 'nil' | {error: string}) ? never : S) ? S : never)
   : { [c.SexprKey]: BPost
-    , [c.ContKey] : string
     , [c.ValueKey]: RetType} =>
 { return {
     [c.SexprKey]: '' as unknown as BPost
   , [c.ValueKey]: (lf[c.ValueKey][c.FnKey] as unknown as F[c.ValueKey][c.FnKey])(a[c.ValueKey]) as unknown as RetType
 }}
 
-*/
+
 // ----------------
 // -- getter
 // ----------------

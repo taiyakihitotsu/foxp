@@ -11,44 +11,11 @@ type yposint = `(fn [x y] (pos-int? y))`
 //
 const lambda_a = lambda<'m', 'number?'>(1)((m:number) => add<yposint>()(foxp.putPrim(1), foxp.putSym('m', m)))
 const a_success0 = lambda_a()(foxp.putPrim(1))
-const a_success1
+const a_failure0
  = lambda_a
      ()
 // @ts-expect-error
      (foxp.putPrim(-1))
-
-// --------------------
-// -- normal hof
-// --------------------
-// draft
-const hlambda_a = lambda<'m', 'number?'>(1)((m:number) => add<yposint>()(foxp.putPrim(1), foxp.putSym('m', m)))
-const ha = (n:number) => hlambda_a()(foxp.putSym('n', n))
-const ha2 = lambda<'n', 'number?'>(1)(ha)
-const hat = lambda<'n', 'number?'>(1)((n:number) => (
-  { sexpr: 'inc'
-  , cont: 'true' // 'number?'
-  , fnflag: true
-  , value:
-    { fn: lambda<'m', 'number?'>(1)((m:number) => add<yposint>()(foxp.putSym('n', n), foxp.putSym('m', m)))
-    , pre: 'number?'}} as const))
-
-const hattt  = hat()
-const hat_s  = hat()(foxp.putPrim(1)).value.value.fn
-const hatss  = hat_s()(foxp.putPrim(1))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // 
 // -- pass through pattern
@@ -56,7 +23,7 @@ const hatss  = hat_s()(foxp.putPrim(1))
 const lambda_c = lambda<'m', 'number?'>(1)((m:number) => add<yposint>()(foxp.putPrim(1), foxp.putSym('m', m)))
 const d_success2 = lambda<'n', 'number?'>(1)((n:number) => lambda_c()(foxp.putSym('n', n)))
 const d_success3 = d_success2()(foxp.putPrim(1))
-const d_success4
+const d_failure0
  = d_success2
      ()
 // @ts-expect-error:
@@ -78,3 +45,12 @@ const e_failure6 =
     ()
 // @ts-expect-error:
     (foxp.putPrim(-1))
+
+
+// -- vitest
+
+describe('hof', () => {
+it('', () => { expect(a_success0.value).toBe(2) })
+it('', () => { expect(d_success3.value).toBe(2) })
+it('', () => { expect(e_success5.value).toBe(2) })
+})

@@ -214,12 +214,6 @@ anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn
 , FutureArg1 extends FoxWith<true extends IsSymbol<FutureArg1> ? Symbol : narg extends N1 ? never : a1, FutureArg1>
 , FutureArg2 extends FoxWith<true extends IsSymbol<FutureArg2> ? Symbol : narg extends N2 ? never : a2, FutureArg2>
 , FutureArg3 extends FoxWith<true extends IsSymbol<FutureArg3> ? Symbol : narg extends N3 ? never : a3, FutureArg3>
-
-//   FutureArg0 extends FoxWith<a0, FutureArg0>
-// , FutureArg1 extends FoxWith<a1, FutureArg1>
-// , FutureArg2 extends FoxWith<a2, FutureArg2>
-// , FutureArg3 extends FoxWith<a3, FutureArg3>
-
 , IsQuote extends [GetFlag<FutureArg0>, GetFlag<FutureArg1>, GetFlag<FutureArg2>, GetFlag<FutureArg3>] extends [false, false, false, false] ? false : true
 
 , UnrollContStrResult extends UnrollArgsStr<FN4<narg>, c.ContKey, FutureArg0, FutureArg1, FutureArg2, FutureArg3>
@@ -232,14 +226,13 @@ anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn
 >
 (
   futurearg0?: true extends IsQuote ? FutureArg0 : FutureArg0 extends (PreCheck extends true ? FutureArg0 : never) ? FutureArg0 : FnCont
-//  futurearg0?: FutureArg0 extends (PreCheck extends true ? FutureArg0 : never) ? FutureArg0 : never
 , futurearg1?: FutureArg1
 , futurearg2?: FutureArg2
 , futurearg3?: FutureArg3)
 : { [c.SexprKey]: SexprR
   , [c.ContKey]:  FnCont
   , [c.ValueKey]: quotedFn
-  , [c.FnFlagKey]: IsQuote} => // rfoxposs<SexprR,quotedFn,FnCont, IsQuote>
+  , [c.FnFlagKey]: IsQuote} =>
 ( runFn
     <narg, a0, a1, a2, a3, quotedFn>
     ()
@@ -249,12 +242,12 @@ anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn
   , [c.ValueKey]: quotedFn
   , [c.FnFlagKey]: IsQuote})
 
-// export const lamwrap = (lamf): =>
-// ({ [c.SexprKey]: SexprR
-//   , [c.ContKey]:  FnCont
-// //  , [c.ContKey]:  SexprR
-//   , [c.ValueKey]: lamf
-//   , [c.FnFlagKey]: IsQuote})
+
+
+
+
+
+
 
 
 
