@@ -30,7 +30,8 @@ export type Add<N extends string, M extends string> = `(+ ${N} ${M})`
 // [todo] move to foxp.ts
 // [todo]
 export type FoxTypeExt = {[c.SexprKey]: string, [c.ContKey]: string, [c.FnFlagKey]: unknown, [c.ValueKey]: unknown}
-export type LambdaReturnExt = FoxTypeExt | (() => LambdaReturnExt) | ((w: FoxTypeExt) => LambdaReturnExt) | ((w: FoxTypeExt, x: FoxTypeExt) => LambdaReturnExt) | ((w: FoxTypeExt, x: FoxTypeExt, y: FoxTypeExt) => LambdaReturnExt) | ((w: FoxTypeExt, x: FoxTypeExt, y: FoxTypeExt, z: FoxTypeExt) => LambdaReturnExt)
+export type FoxFnTypeExt = {[c.SexprKey]: string, [c.ContKey]: string, [c.FnFlagKey]: unknown, [c.ValueKey]: {[c.PreKey]: string, [c.FnKey]: LambdaReturnExt<unknown>}}
+export type LambdaReturnExt<ReturnT> = ReturnT | (() => LambdaReturnExt<ReturnT>) | ((w: ReturnT) => LambdaReturnExt<ReturnT>) | ((w: ReturnT, x: ReturnT) => LambdaReturnExt<ReturnT>) | ((w: ReturnT, x: ReturnT, y: ReturnT) => LambdaReturnExt<ReturnT>) | ((w: ReturnT, x: ReturnT, y: ReturnT, z: ReturnT) => LambdaReturnExt<ReturnT>)
 
 export type AssignSym<
   Type
@@ -249,7 +250,7 @@ export const lambdaWrap = <
   n: narg) => <
   Cont
 , a0, a1, a2, a3
-, quotedFn // extends FoxTypeExt
+, quotedFn extends LambdaReturnExt<FoxFnTypeExt | FoxTypeExt>
 > (
 anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn : narg extends N2 ? (w: a0, x:a1) => quotedFn : narg extends N3 ? (w: a0, x:a1, y:a2) => quotedFn : (w: a0, x:a1, y:a2, z:a3) => quotedFn
   ) => <
@@ -267,7 +268,14 @@ anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn
 , _SexprR extends `((fn [${Args}] ${FS<quotedFnSexpr>}) ${UnrollContStrResult})`
 , SexprR extends IsQuote extends true ? _SexprR : Cion.Lisp<_SexprR>
 
-, FnCont extends `((fn [${Args}] (and (${Pre} ${Args}))) ${FS<FutureArg0[c.SexprKey]>})`
+// , FnCont extends `((fn [${Args}] (and (${Pre} ${Args}))) ${FS<FutureArg0[c.SexprKey]>})`
+, FnCont extends `((fn [${Args}] (${Pre} ${Args})) ${FS<FutureArg0[c.SexprKey]>})`
+
+// --- success for the deepest
+// , PickedFnCont extends `((fn [${Args}] (and (${Pre} ${Args}) ${FS<(quotedFn extends {[c.ContKey]: string} ? quotedFn : never)[c.ContKey]>})) ${UnrollContStrResult})`
+, PickedFnCont extends ((quotedFn extends {[c.ContKey]: string} ? `((fn [${Args}] (and (${Pre} ${Args}) ${FS<quotedFn[c.ContKey]>})) ${UnrollContStrResult})` : ''))
+
+, ReturnCont extends PickedFnCont
 
 , PreCheckWithFnCont extends Cion.Lisp<FnCont> extends LispFalsy ? false : true
 >
@@ -276,28 +284,26 @@ anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn
 , futurearg1?: FutureArg1
 , futurearg2?: FutureArg2
 , futurearg3?: FutureArg3) // : =>
-: { [c.ValueKey]: { [c.FnKey] : quotedFn
-                  , [c.PreKey]: any}
-  , [c.SexprKey]:  any
-  , [c.FnFlagKey]: any
-  , [c.ContKey]:   any} =>
-
-  // : { [c.SexprKey]: SexprR
-  // , [c.ContKey]:  FnCont
-  // , [c.ValueKey]: { [c.FnKey]: ReturnType<typeof anonfn>[c.FnKey]
-  //                   [c.PreKey]: ReturnType<typeof anonfn>[c.PreKey]}
-  // , [c.FnFlagKey]: IsQuote} =>
+: { [c.ValueKey] : { [c.FnKey] : quotedFn
+                   , [c.PreKey]: Pre}
+  , env: `${Args} ${FS<FutureArg0[c.SexprKey]>}`
+  , [c.SexprKey] : any
+  , [c.FnFlagKey]: IsQuote
+//  , [c.ContKey]  : FnCont} =>
+  , [c.ContKey]  : ReturnCont} =>
 (
 { [c.SexprKey]: ''
-, [c.FnFlagKey]: null
-, [c.ContKey]: ''
+, env: '' as `${Args} ${FS<FutureArg0[c.SexprKey]>}`
+, [c.FnFlagKey]: null as unknown as IsQuote
+, [c.ContKey]: '' as unknown as ReturnCont
 , [c.ValueKey]:
-  { [c.FnKey]: 
+  { [c.PreKey]: '' as Pre
+  , [c.FnKey]: 
     ( runFn
         <narg, a0, a1, a2, a3, quotedFn>
         ()
         (n, anonfn, futurearg0 as FoxWith<a0, FutureArg0>, futurearg1 as FoxWith<a1, FutureArg1>, futurearg2 as FoxWith<a2, FutureArg2>, futurearg3 as FoxWith<a3, FutureArg3>))
-  , [c.PreKey]: ''}}
+  }}
 )
 
 

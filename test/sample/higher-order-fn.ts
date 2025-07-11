@@ -48,14 +48,52 @@ const e_failure6 =
 
 
 
+
+
+
+
+
+
+
+
 // hof by hand
 
 const ft = lambdaWrap<'m', 'pos-int?'>(1)((m:number) => (
-        lambdaWrap<'n', 'number?'>(1)((n: number) => add()(foxp.putSym('n', n), foxp.putSym('m', m)))))
+  lambdaWrap<'n', 'number?'>(1)((n: number) =>
+    add()(foxp.putSym('n', n), foxp.putSym('m', m)))))
 
 const ft_result0 = ft()(foxp.putPrim(1))
+
+const ft_result0_isquote: typeof ft_result0[c.FnFlagKey] = false
+const ft_result0_sexpr: typeof ft_result0[c.SexprKey] = false
+const ft_result0_env: typeof ft_result0['env'] = 'm 1'
+const ft_result0_cont: typeof ft_result0[c.ContKey] = ''
+const ft_result0_value_pre: typeof ft_result0[c.ValueKey][c.PreKey] = 'pos-int?'
+
+// the last of curry.
 const ft_result1 = ft_result0.value.fn()(foxp.putPrim(2))
+
+const ft_result1_isquote: typeof ft_result1[c.FnFlagKey] = false
+const ft_result1_sexpr: typeof ft_result1[c.SexprKey] = false
+const ft_result1_env: typeof ft_result1['env'] = 'n 2'
+const ft_result1_cont: typeof ft_result1[c.ContKey] = '((fn [n] (and (number? n) (if (and (every? some? [n m]) ((fn [x y] (and (number? x) (number? y))) n m)) (+ n m) nil))) 2)'
+const ft_result1_value_pre: typeof ft_result1[c.ValueKey][c.PreKey] = 'number?'
+
+
+
+// final result, to test in vitest.
 const ft_result2 = ft_result0.value.fn()(foxp.putPrim(2)).value.fn
+
+
+
+
+
+
+
+
+
+
+
 
 // -- vitest
 
