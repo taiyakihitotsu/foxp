@@ -67,16 +67,21 @@ const ft_result0 = ft()(foxp.putPrim(1))
 const ft_result0_isquote: typeof ft_result0[c.FnFlagKey] = false
 const ft_result0_sexpr: typeof ft_result0[c.SexprKey] = false
 const ft_result0_env: typeof ft_result0['env'] = 'm 1'
+const ft_result0_leafflag: typeof ft_result0['leafflag']  = false
 const ft_result0_cont: typeof ft_result0[c.ContKey] = ''
 const ft_result0_value_pre: typeof ft_result0[c.ValueKey][c.PreKey] = 'pos-int?'
 
 // the last of curry.
-const ft_result1 = ft_result0.value.fn()(foxp.putPrim(2))
+const ft_result1 = ft_result0.value.fn<'number?', typeof ft_result0_env>()(foxp.putPrim(2))
 
-const ft_result1_isquote: typeof ft_result1[c.FnFlagKey] = false
+const ft_result1_isquote:  typeof ft_result1[c.FnFlagKey] = false
+// [todo] true if it's the deepest lambda.
+const ft_result1_leafflag: typeof ft_result1['leafflag']  = true
 const ft_result1_sexpr: typeof ft_result1[c.SexprKey] = false
-const ft_result1_env: typeof ft_result1['env'] = 'n 2'
-const ft_result1_cont: typeof ft_result1[c.ContKey] = '((fn [n] (and (number? n) (if (and (every? some? [n m]) ((fn [x y] (and (number? x) (number? y))) n m)) (+ n m) nil))) 2)'
+// [todo] this is sym env.
+const ft_result1_env: typeof ft_result1['env'] = 'm 1 n 2'
+// [todo] to make let eat, via overwriting a precond, with exec fn.
+const ft_result1_cont: typeof ft_result1[c.ContKey] = '(and (number? n) (if (and (every? some? [n m]) ((fn [x y] (and (number? x) (number? y))) n m)) (+ n m) nil))'
 const ft_result1_value_pre: typeof ft_result1[c.ValueKey][c.PreKey] = 'number?'
 
 

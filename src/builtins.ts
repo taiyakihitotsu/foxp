@@ -255,7 +255,7 @@ export const lambdaWrap = <
 anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn : narg extends N2 ? (w: a0, x:a1) => quotedFn : narg extends N3 ? (w: a0, x:a1, y:a2) => quotedFn : (w: a0, x:a1, y:a2, z:a3) => quotedFn
   ) => <
   Pre extends string = DefaultPre
-, Env extends string = Args
+, Env extends string = ''
   >() => <
   FutureArg0 extends FoxWith<true extends IsSymbol<FutureArg0> ? Symbol : narg extends N0 ? never : a0, FutureArg0>
 , FutureArg1 extends FoxWith<true extends IsSymbol<FutureArg1> ? Symbol : narg extends N1 ? never : a1, FutureArg1>
@@ -273,28 +273,34 @@ anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn
 
 // --- success for the deepest
 // , PickedFnCont extends `((fn [${Args}] (and (${Pre} ${Args}) ${FS<(quotedFn extends {[c.ContKey]: string} ? quotedFn : never)[c.ContKey]>})) ${UnrollContStrResult})`
-, PickedFnCont extends ((quotedFn extends {[c.ContKey]: string} ? `((fn [${Args}] (and (${Pre} ${Args}) ${FS<quotedFn[c.ContKey]>})) ${UnrollContStrResult})` : ''))
+// , PickedFnCont extends ((quotedFn extends {[c.ContKey]: string} ? `((fn [${Args}] (and (${Pre} ${Args}) ${FS<quotedFn[c.ContKey]>})) ${UnrollContStrResult})` : ''))
+// -- deleted fn
+, PickedFnCont extends ((quotedFn extends {[c.ContKey]: string} ? `(and (${Pre} ${Args}) ${FS<quotedFn[c.ContKey]>})` : ''))
 
 , ReturnCont extends PickedFnCont
+, ReturnEnv  extends `${Env extends '' ? '' : `${Env} `}${Args} ${FS<FutureArg0[c.SexprKey]>}`
+, ReturnFnFlag extends IsQuote
+, ReturnLeafFlag extends (quotedFn extends {[c.FnFlagKey]: boolean} ? quotedFn[c.FnFlagKey] : false)
 
 , PreCheckWithFnCont extends Cion.Lisp<FnCont> extends LispFalsy ? false : true
 >
-(
-  futurearg0?: true extends IsQuote ? FutureArg0 : FutureArg0 extends (PreCheckWithFnCont extends true ? FutureArg0 : never) ? FutureArg0 : FnCont
+( futurearg0?: true extends IsQuote ? FutureArg0 : FutureArg0 extends (PreCheckWithFnCont extends true ? FutureArg0 : never) ? FutureArg0 : FnCont
 , futurearg1?: FutureArg1
 , futurearg2?: FutureArg2
 , futurearg3?: FutureArg3) // : =>
 : { [c.ValueKey] : { [c.FnKey] : quotedFn
                    , [c.PreKey]: Pre}
-  , env: `${Args} ${FS<FutureArg0[c.SexprKey]>}`
+  , env: ReturnEnv
+  , leafflag: ReturnLeafFlag
   , [c.SexprKey] : any
-  , [c.FnFlagKey]: IsQuote
+  , [c.FnFlagKey]: ReturnFnFlag
 //  , [c.ContKey]  : FnCont} =>
   , [c.ContKey]  : ReturnCont} =>
 (
 { [c.SexprKey]: ''
-, env: '' as `${Args} ${FS<FutureArg0[c.SexprKey]>}`
-, [c.FnFlagKey]: null as unknown as IsQuote
+, env: '' as ReturnEnv
+, leafflag: null as unknown as ReturnLeafFlag
+, [c.FnFlagKey]: null as unknown as ReturnFnFlag
 , [c.ContKey]: '' as unknown as ReturnCont
 , [c.ValueKey]:
   { [c.PreKey]: '' as Pre
@@ -305,7 +311,6 @@ anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn
         (n, anonfn, futurearg0 as FoxWith<a0, FutureArg0>, futurearg1 as FoxWith<a1, FutureArg1>, futurearg2 as FoxWith<a2, FutureArg2>, futurearg3 as FoxWith<a3, FutureArg3>))
   }}
 )
-
 
 
 
