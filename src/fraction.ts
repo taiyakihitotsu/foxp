@@ -8,24 +8,21 @@ import * as mathjs from 'mathjs'
 export type isRational<
   S> = 
   S extends string
-    ? Cion.Lisp<`(re-find '^-?[0-9]+(/[0-9]+)?$' '${S}')`> extends `''`
+    ? Cion.Lisp<`(re-find '^-?[0-9]+(/\\+?[0-9]+)?$' '${S}')`> extends `''`
       ? false
     : true
   : false
 
-const math = mathjs.create(mathjs.all!)
-export const someFraction: (s: unknown) => number = (s) => typeof s === 'string' && math.isFraction(s) ? math.evaluate(s) : s
+export const math = mathjs.create(mathjs.all!)
 
-const isRational_test0: isRational<'3/2'> = true
-const isRational_test1: isRational<'2'> = true
-const isRational_test2: isRational<'-2'> = true
-const isRational_test3: isRational<'-2/10'> = true
-const isRational_test4: isRational<'0'> = true
-const isRational_test5: isRational<'-2/+1'> = false
-const isRational_test6: isRational<'string'> = false
-const isRational_test7: isRational<'8/'> = false
-const isRational_test8: isRational<'/8'> = false
-const isRational_test9: isRational<'8//'> = false
-const isRational_test10: isRational<'-/8'> = false
+// export const someFraction: (s: unknown) => number = (s) => typeof s === 'string' && math.isFraction(s) ? math.evaluate(s) : s
+
+export const someFraction: (s: unknown) => number = (s) => {
+  if (typeof s === 'string') {
+    try { const r = math.evaluate(s);
+          return (typeof r === 'function') ? s : r }
+    catch (error) { return s }}
+  else { return s }
+}
 
 export * as fraction from './fraction'

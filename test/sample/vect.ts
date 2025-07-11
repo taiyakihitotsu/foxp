@@ -15,6 +15,6 @@ const testvect0_ffailure =
     (foxp.putVec(foxp.ro([0, 1] as const)))
 
 describe("vect", () => {
-  it("", () => { expect(tested_vec).toEqual([1,2,3]) })
-  it("", () => { expect(testvect0.value).toEqual(1) })
+  it("[0 1 2]", () => { expect(tested_vec.value).toEqual([0,1,2]) })
+  it("(first [0 1 2])", () => { expect(testvect0.value).toEqual(0) })
 })

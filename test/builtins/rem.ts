@@ -227,5 +227,5 @@ describe('rem', () => {
 it('', () => { expect(remtest0.value).toBe(1) })
 it('', () => { expect(remtest0b.value).toBe(1) })
 it('', () => { expect(remtest0b_strict.value).toBe(1) })
-it('', () => { expect(remtest1_pass.value).toBe(3/10) })
+it('', () => { expect(remtest1_pass.value).toBe(1) })
 })

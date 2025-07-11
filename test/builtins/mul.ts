@@ -138,9 +138,9 @@ const multest1f_notmatch_sexpr: {
     , foxp.putPrim(3))
 
 describe("mul", () => {
-it('', () => { expect(multest0.value).toBe(3) })
-it('', () => { expect(multest0_str.value).toBe(3) })
-it('', () => { expect(multest0b.value).toBe(3) })
-it('', () => { expect(multest0b_strict.value).toBe(3) })
-it('', () => { expect(multest1_pass.value).toBe(6) })
+it('1*3', () => { expect(multest0.value).toBe(3) })
+it('1*3', () => { expect(multest0_str.value).toBe(3) })
+it('1*3', () => { expect(multest0b.value).toBe(3) })
+it('1*3', () => { expect(multest0b_strict.value).toBe(3) })
+it('1*2*3', () => { expect(multest1_pass.value).toBe(6) })
 })

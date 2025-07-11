@@ -101,19 +101,19 @@ export const putFn1 = <Pre,F>() => <T>(f:T): LispWrapedFnWith<Pre,F,T> => _putFn
 // See `ToLispString` as well.
 export type LispWrapedPrimWith<
   T extends ut.Primitive
-, R extends ut.Primitive> =
-    { [c.SexprKey]: ToLispString<T>
-      , [c.ContKey]:  ToLispString<T>
-      , [c.ValueKey]: R
-      , [c.FnFlagKey]:  IsFnForm<T>}
+, R extends ut.Primitive> = {
+  [c.SexprKey] : ToLispString<T>
+, [c.ContKey]  :  ToLispString<T>
+, [c.ValueKey] : R
+, [c.FnFlagKey]:  IsFnForm<T>}
 export const putPrim = <
   V extends ut.Primitive
 , R extends ut.Primitive = (fraction.isRational<V> extends true ? number : V)>
 (v: V): LispWrapedPrimWith<V,R> =>
-({[c.SexprKey]: '' as ToLispString<V>
-, [c.ContKey]: '' as ToLispString<V>
+({[c.SexprKey] : '' as ToLispString<V>
+, [c.ContKey]  : '' as ToLispString<V>
 , [c.FnFlagKey]: null as unknown as IsFnForm<V>
-, [c.ValueKey]: fraction.someFraction(v) as R})
+, [c.ValueKey] : fraction.someFraction(v) as R})
 
 export const putSym = <
   Sym extends string

@@ -51,10 +51,10 @@ const floor_test_failure_precheck0:
 
 
 
-describe("mul", () => {
+describe("floor", () => {
 it('', () => { expect(floor_test_ok0.value).toBe(0) })
 it('', () => { expect(floor_test_ok1.value).toBe(3) })
 it('', () => { expect(floor_test_ok3.value).toBe(1) })
-it('', () => { expect(floor_test_ok4.value).toBe(0) })
+it('', () => { expect(floor_test_ok4.value).toBe(-1) })
 it('', () => { expect(floor_test_ok_precheck0.value).toBe(-5) })
 })

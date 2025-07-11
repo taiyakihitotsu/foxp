@@ -236,16 +236,11 @@ anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn
 ( runFn
     <narg, a0, a1, a2, a3, quotedFn>
     ()
-    (n, anonfn, futurearg0 as FoxWith<a0, FutureArg0>, futurearg1 as FoxWith<a1, FutureArg1>, futurearg2 as FoxWith<a2, FutureArg2>, futurearg3 as FoxWith<a3, FutureArg3>)[c.ValueKey] as unknown as
+    (n, anonfn, futurearg0 as FoxWith<a0, FutureArg0>, futurearg1 as FoxWith<a1, FutureArg1>, futurearg2 as FoxWith<a2, FutureArg2>, futurearg3 as FoxWith<a3, FutureArg3>) as unknown as
  { [c.SexprKey]: SexprR
   , [c.ContKey]:  FnCont
   , [c.ValueKey]: quotedFn
   , [c.FnFlagKey]: IsQuote})
-
-
-
-
-
 
 export const lambdaWrap = <
   Args extends string
@@ -280,16 +275,30 @@ anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn
   futurearg0?: true extends IsQuote ? FutureArg0 : FutureArg0 extends (PreCheckWithFnCont extends true ? FutureArg0 : never) ? FutureArg0 : FnCont
 , futurearg1?: FutureArg1
 , futurearg2?: FutureArg2
-, futurearg3?: FutureArg3) =>
+, futurearg3?: FutureArg3) // : =>
+: { [c.ValueKey]: { [c.FnKey] : quotedFn
+                  , [c.PreKey]: any}
+  , [c.SexprKey]:  any
+  , [c.FnFlagKey]: any
+  , [c.ContKey]:   any} =>
+
   // : { [c.SexprKey]: SexprR
   // , [c.ContKey]:  FnCont
   // , [c.ValueKey]: { [c.FnKey]: ReturnType<typeof anonfn>[c.FnKey]
   //                   [c.PreKey]: ReturnType<typeof anonfn>[c.PreKey]}
   // , [c.FnFlagKey]: IsQuote} =>
-( runFn
-    <narg, a0, a1, a2, a3, quotedFn>
-    ()
-    (n, anonfn, futurearg0 as FoxWith<a0, FutureArg0>, futurearg1 as FoxWith<a1, FutureArg1>, futurearg2 as FoxWith<a2, FutureArg2>, futurearg3 as FoxWith<a3, FutureArg3>))
+(
+{ [c.SexprKey]: ''
+, [c.FnFlagKey]: null
+, [c.ContKey]: ''
+, [c.ValueKey]:
+  { [c.FnKey]: 
+    ( runFn
+        <narg, a0, a1, a2, a3, quotedFn>
+        ()
+        (n, anonfn, futurearg0 as FoxWith<a0, FutureArg0>, futurearg1 as FoxWith<a1, FutureArg1>, futurearg2 as FoxWith<a2, FutureArg2>, futurearg3 as FoxWith<a3, FutureArg3>))
+  , [c.PreKey]: ''}}
+)
 
 
 

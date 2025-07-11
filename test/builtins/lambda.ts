@@ -8,9 +8,10 @@ const lambdatesta = lambdatest0(1)
 const lambdatest1 = <N>(n: N) => add()(foxp.putPrim(1), foxp.putPrim(1))
 
 // -- values
-const lambdatestr0   = lambda<'n', 'number?'>(1)(lambdatest0)()(foxp.putPrim(1))
-
-const lambdatestr0p  = lambda<'n', 'pos-int?'>(1)(lambdatest0)()(foxp.putPrim(1))
+const _lambdatestr0 = lambda<'n', 'number?'>(1)((n: number) => add()(foxp.putPrim(1), foxp.putSym('n', n)))
+const lambdatestr0 = _lambdatestr0()(foxp.putPrim(1))
+const _lambdatestr0p = lambda<'n', 'pos-int?'>(1)((n: number) => add()(foxp.putPrim(1), foxp.putSym('n', n)))
+const lambdatestr0p = _lambdatestr0p()(foxp.putPrim(1))
 
 const lambdatestr1pf =
   lambda<'n', 'pos-int?'>

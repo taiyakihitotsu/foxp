@@ -51,35 +51,11 @@ const e_failure6 =
 // hof by hand
 
 const ft = lambdaWrap<'m', 'pos-int?'>(1)((m:number) => (
-  { [c.SexprKey]: ''
-  , [c.FnFlagKey]: false
-  , [c.ContKey]: ''
-  , [c.ValueKey]:
-    { [c.FnKey]:
-        lambdaWrap<'n', 'number?'>(1)((n: number) => add()(foxp.putSym('n', n), foxp.putSym('m', m)))
-    , [c.PreKey]: ''}}))
+        lambdaWrap<'n', 'number?'>(1)((n: number) => add()(foxp.putSym('n', n), foxp.putSym('m', m)))))
 
 const ft_result0 = ft()(foxp.putPrim(1))
 const ft_result1 = ft_result0.value.fn()(foxp.putPrim(2))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const ft_result2 = ft_result0.value.fn()(foxp.putPrim(2)).value.fn
 
 // -- vitest
 
@@ -87,4 +63,5 @@ describe('hof', () => {
 it('', () => { expect(a_success0.value).toBe(2) })
 it('', () => { expect(d_success3.value).toBe(2) })
 it('', () => { expect(e_success5.value).toBe(2) })
+it('', () => { expect(ft_result2.value).toBe(3) })
 })

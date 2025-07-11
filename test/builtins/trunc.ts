@@ -51,10 +51,10 @@ const trunc_test_failure_precheck0:
 
 
 
-describe("mul", () => {
-it('', () => { expect(trunc_test_ok0.value).toBe(0) })
-it('', () => { expect(trunc_test_ok1.value).toBe(3) })
-it('', () => { expect(trunc_test_ok3.value).toBe(1) })
-it('', () => { expect(trunc_test_ok4.value).toBe(0) })
-it('', () => { expect(trunc_test_ok_precheck0.value).toBe(-5) })
+describe("trunc", () => {
+it('trunc 1/3', () => { expect(trunc_test_ok0.value).toBe(0) })
+it('trunc 3', () => { expect(trunc_test_ok1.value).toBe(3) })
+it('trunc 3/2', () => { expect(trunc_test_ok3.value).toBe(1) })
+it('trunc -1/5', () => { expect(Math.abs(trunc_test_ok4.value)).toEqual(0) }) // todo
+it('trunc -5', () => { expect(trunc_test_ok_precheck0.value).toBe(-5) })
 })

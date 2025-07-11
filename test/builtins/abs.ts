@@ -3,7 +3,7 @@ import * as foxp from '../../src/foxp'
 import { abs } from '../../src/builtins'
 import * as merge from '../../src/merge'
 import * as pre from '../../src/pre'
-import { strict as assert } from 'assert'
+
 import { describe, it, expect } from 'vitest'
 
 const abs_test_ok0:
@@ -54,7 +54,7 @@ const abs_test_failure_precheck0:
 
 
 
-describe("mul", () => {
+describe("abs", () => {
 it('', () => { expect(abs_test_ok0.value).toBe(1/3) })
 it('', () => { expect(abs_test_ok1.value).toBe(3) })
 it('', () => { expect(abs_test_ok3.value).toBe(3/2) })

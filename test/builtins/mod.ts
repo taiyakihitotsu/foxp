@@ -225,8 +225,8 @@ const modtest1f_error_modbyzero2: {
 } catch {}
 
 describe('mod', () => {
-it('', () => { expect(modtest0.value).toBe(1) })
-it('', () => { expect(modtest0b.value).toBe(1) })
-it('', () => { expect(modtest0b_strict.value).toBe(1) })
-it('', () => { expect(modtest1_pass.value).toBe(3/10) })
+it('3 mod 2', () => { expect(modtest0.value).toBe(1) })
+it('3 mod 2', () => { expect(modtest0b.value).toBe(1) })
+it('3 mod 2', () => { expect(modtest0b_strict.value).toBe(1) })
+it('3 mod 2 mod 5', () => { expect(modtest1_pass.value).toBe(1) })
 })
