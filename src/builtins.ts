@@ -247,6 +247,55 @@ anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn
 
 
 
+export const lambdaWrap = <
+  Args extends string
+, DefaultPre extends string
+, narg extends N4 = pre.countArgs<`(fn [${Args}])`>>(
+  n: narg) => <
+  Cont
+, a0, a1, a2, a3
+, quotedFn // extends FoxTypeExt
+> (
+anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn : narg extends N2 ? (w: a0, x:a1) => quotedFn : narg extends N3 ? (w: a0, x:a1, y:a2) => quotedFn : (w: a0, x:a1, y:a2, z:a3) => quotedFn
+  ) => <
+  Pre extends string = DefaultPre
+, Env extends string = Args
+  >() => <
+  FutureArg0 extends FoxWith<true extends IsSymbol<FutureArg0> ? Symbol : narg extends N0 ? never : a0, FutureArg0>
+, FutureArg1 extends FoxWith<true extends IsSymbol<FutureArg1> ? Symbol : narg extends N1 ? never : a1, FutureArg1>
+, FutureArg2 extends FoxWith<true extends IsSymbol<FutureArg2> ? Symbol : narg extends N2 ? never : a2, FutureArg2>
+, FutureArg3 extends FoxWith<true extends IsSymbol<FutureArg3> ? Symbol : narg extends N3 ? never : a3, FutureArg3>
+, IsQuote extends [GetFlag<FutureArg0>, GetFlag<FutureArg1>, GetFlag<FutureArg2>, GetFlag<FutureArg3>] extends [false, false, false, false] ? false : true
+
+, UnrollContStrResult extends UnrollArgsStr<FN4<narg>, c.ContKey, FutureArg0, FutureArg1, FutureArg2, FutureArg3>
+, quotedFnSexpr extends (quotedFn extends {[c.SexprKey]: unknown} ? quotedFn[c.SexprKey] : never)
+, _SexprR extends `((fn [${Args}] ${FS<quotedFnSexpr>}) ${UnrollContStrResult})`
+, SexprR extends IsQuote extends true ? _SexprR : Cion.Lisp<_SexprR>
+
+, FnCont extends `((fn [${Args}] (and (${Pre} ${Args}))) ${FS<FutureArg0[c.SexprKey]>})`
+
+, PreCheckWithFnCont extends Cion.Lisp<FnCont> extends LispFalsy ? false : true
+>
+(
+  futurearg0?: true extends IsQuote ? FutureArg0 : FutureArg0 extends (PreCheckWithFnCont extends true ? FutureArg0 : never) ? FutureArg0 : FnCont
+, futurearg1?: FutureArg1
+, futurearg2?: FutureArg2
+, futurearg3?: FutureArg3) =>
+  // : { [c.SexprKey]: SexprR
+  // , [c.ContKey]:  FnCont
+  // , [c.ValueKey]: { [c.FnKey]: ReturnType<typeof anonfn>[c.FnKey]
+  //                   [c.PreKey]: ReturnType<typeof anonfn>[c.PreKey]}
+  // , [c.FnFlagKey]: IsQuote} =>
+( runFn
+    <narg, a0, a1, a2, a3, quotedFn>
+    ()
+    (n, anonfn, futurearg0 as FoxWith<a0, FutureArg0>, futurearg1 as FoxWith<a1, FutureArg1>, futurearg2 as FoxWith<a2, FutureArg2>, futurearg3 as FoxWith<a3, FutureArg3>))
+
+
+
+
+
+
 
 
 

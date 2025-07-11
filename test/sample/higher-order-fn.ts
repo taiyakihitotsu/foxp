@@ -1,4 +1,4 @@
-import { lambda, add, fn } from '../../src/builtins'
+import { lambda, lambdaWrap, add, fn } from '../../src/builtins'
 import * as foxp from '../../src/foxp'
 import * as pre  from '../../src/pre'
 import * as c    from '../../src/const'
@@ -45,6 +45,40 @@ const e_failure6 =
     ()
 // @ts-expect-error:
     (foxp.putPrim(-1))
+
+
+
+// hof by hand
+
+const ft = lambdaWrap<'m', 'pos-int?'>(1)((m:number) => (
+  { [c.SexprKey]: ''
+  , [c.FnFlagKey]: false
+  , [c.ContKey]: ''
+  , [c.ValueKey]:
+    { [c.FnKey]:
+        lambdaWrap<'n', 'number?'>(1)((n: number) => add()(foxp.putSym('n', n), foxp.putSym('m', m)))
+    , [c.PreKey]: ''}}))
+
+const ft_result0 = ft()(foxp.putPrim(1))
+const ft_result1 = ft_result0.value.fn()(foxp.putPrim(2))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // -- vitest
