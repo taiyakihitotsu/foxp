@@ -252,7 +252,26 @@ export const lambdaWrap = <
 , a0, a1, a2, a3
 , quotedFn extends LambdaReturnExt<FoxFnTypeExt | FoxTypeExt>
 > (
-anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn : narg extends N2 ? (w: a0, x:a1) => quotedFn : narg extends N3 ? (w: a0, x:a1, y:a2) => quotedFn : (w: a0, x:a1, y:a2, z:a3) => quotedFn
+  // anonfn:
+  //   narg extends N0
+  //     ? () => quotedFn
+  //   : narg extends N1
+  //     ? (w: a0) => quotedFn
+  //   : narg extends N2
+  //     ? (w: a0, x:a1) => quotedFn
+  //   : narg extends N3
+  //     ? (w: a0, x:a1, y:a2) => quotedFn
+  //   : (w: a0, x:a1, y:a2, z:a3) => quotedFn
+  anonfn:
+    narg extends N0
+      ? () => quotedFn
+    : narg extends N1
+      ? (w: a0) => quotedFn
+    : narg extends N2
+      ? (w: a0, x:a1) => quotedFn
+    : narg extends N3
+      ? (w: a0, x:a1, y:a2) => quotedFn
+    : (w: a0, x:a1, y:a2, z:a3) => quotedFn
   ) => <
   Pre extends string = DefaultPre
 , Env extends string = ''
@@ -281,6 +300,8 @@ anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn
 , ReturnEnv  extends `${Env extends '' ? '' : `${Env} `}${Args} ${FS<FutureArg0[c.SexprKey]>}`
 , ReturnFnFlag extends IsQuote
 , ReturnLeafFlag extends (quotedFn extends {[c.FnFlagKey]: boolean} ? quotedFn[c.FnFlagKey] : false)
+, ReturnSexpr extends `(fn [${Args}] ${quotedFnSexpr})`
+, ReturnDebug extends quotedFn
 
 , PreCheckWithFnCont extends Cion.Lisp<FnCont> extends LispFalsy ? false : true
 >
@@ -292,12 +313,12 @@ anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn
                    , [c.PreKey]: Pre}
   , env: ReturnEnv
   , leafflag: ReturnLeafFlag
-  , [c.SexprKey] : any
+  , [c.SexprKey] : ReturnSexpr
   , [c.FnFlagKey]: ReturnFnFlag
 //  , [c.ContKey]  : FnCont} =>
   , [c.ContKey]  : ReturnCont} =>
 (
-{ [c.SexprKey]: ''
+{ [c.SexprKey]: '' as ReturnSexpr
 , env: '' as ReturnEnv
 , leafflag: null as unknown as ReturnLeafFlag
 , [c.FnFlagKey]: null as unknown as ReturnFnFlag
