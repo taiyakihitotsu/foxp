@@ -243,6 +243,8 @@ anonfn: narg extends N0 ? () => quotedFn : narg extends N1 ? (w: a0) => quotedFn
   , [c.ValueKey]: quotedFn
   , [c.FnFlagKey]: IsQuote})
 
+
+
 export const lambdaWrap = <
   Args extends string
 , DefaultPre extends string
@@ -332,6 +334,54 @@ export const lambdaWrap = <
         (n, anonfn, futurearg0 as FoxWith<a0, FutureArg0>, futurearg1 as FoxWith<a1, FutureArg1>, futurearg2 as FoxWith<a2, FutureArg2>, futurearg3 as FoxWith<a3, FutureArg3>))
   }}
 )
+
+
+
+
+
+
+
+
+
+export const lambdaMap = <
+  Args extends string
+, DefaultPre extends string
+, narg extends N4 = pre.countArgs<`(fn [${Args}])`>>(
+  n: narg) =>
+  < Cont, a0, a1, a2, a3, quotedFn extends FoxFnTypeExt | FoxTypeExt >
+  (anonfn:
+    narg extends N0
+      ? () => quotedFn
+    : narg extends N1
+      ? (w: a0) => quotedFn
+    : narg extends N2
+      ? (w: a0, x:a1) => quotedFn
+    : narg extends N3
+      ? (w: a0, x:a1, y:a2) => quotedFn
+    : (w: a0, x:a1, y:a2, z:a3) => quotedFn
+  ) => ({
+  [c.SexprKey]: '' as `(fn [${Args}] ${quotedFn[c.SexprKey]})`
+, [c.ContKey]:'' as unknown as quotedFn[c.ContKey]
+, [c.FnFlagKey]: '' as unknown as quotedFn[c.FnFlagKey]
+// , 'args': 
+, [c.ValueKey]:
+    { [c.PreKey]: '' as DefaultPre
+    , [c.FnKey]:
+      < FutureArg0 extends FoxWith<true extends IsSymbol<FutureArg0> ? Symbol : narg extends N0 ? never : a0, FutureArg0>
+      , FutureArg1 extends FoxWith<true extends IsSymbol<FutureArg1> ? Symbol : narg extends N1 ? never : a1, FutureArg1>
+      , FutureArg2 extends FoxWith<true extends IsSymbol<FutureArg2> ? Symbol : narg extends N2 ? never : a2, FutureArg2>
+      , FutureArg3 extends FoxWith<true extends IsSymbol<FutureArg3> ? Symbol : narg extends N3 ? never : a3, FutureArg3>
+      , IsQuote extends [GetFlag<FutureArg0>, GetFlag<FutureArg1>, GetFlag<FutureArg2>, GetFlag<FutureArg3>] extends [false, false, false, false] ? false : true
+      , PreCheckSexpr extends `(${DefaultPre} ${FS<FutureArg0[c.SexprKey]>})`
+>( futurearg0?: true extends IsQuote ? FutureArg0 : FutureArg0 extends (Cion.Lisp<PreCheckSexpr> extends LispFalsy ? never : FutureArg0) ? FutureArg0 : {error: PreCheckSexpr}
+ , futurearg1?: FutureArg1
+ , futurearg2?: FutureArg2
+ , futurearg3?: FutureArg3) =>
+      ( runFn
+        <narg, a0, a1, a2, a3, quotedFn>
+        ()
+        (n, anonfn, futurearg0 as FoxWith<a0, FutureArg0>, futurearg1 as FoxWith<a1, FutureArg1>, futurearg2 as FoxWith<a2, FutureArg2>, futurearg3 as FoxWith<a3, FutureArg3>))
+    }})
 
 
 

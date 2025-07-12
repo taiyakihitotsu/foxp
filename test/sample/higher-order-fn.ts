@@ -1,4 +1,4 @@
-import { lambda, lambdaWrap, add, sub, fn } from '../../src/builtins'
+import { lambda, lambdaWrap, lambdaMap, add, sub, fn } from '../../src/builtins'
 import * as foxp from '../../src/foxp'
 import * as pre  from '../../src/pre'
 import * as c    from '../../src/const'
@@ -50,22 +50,6 @@ const e_failure6 =
 
 
 
-type StripGenerics<T> =
-  T extends (...args: any[]) => infer R
-    ? (...args: any[]) => StripGenerics<R>
-    : T;
-
-// 判定
-type IsDoubleFunctionToString<T> =
-  T extends (...args: any[]) => (...args:any[]) => unknown ? true : false;
-
-declare const fn: <A, D, E>() => <X, Y, Z>() => unknown
-
-type Test = IsDoubleFunctionToString<typeof fn>; // ✅ true
-
-
-
-
 
 
 // hof by hand --- (1)
@@ -78,11 +62,8 @@ const ft =
 
 const ft_result0 = ft()(foxp.putPrim(1))
 
-// todo
-const ft_result0_debug: typeof ft_result0['debug'] = false
-
 const ft_result0_isquote: typeof ft_result0[c.FnFlagKey] = false
-const ft_result0_sexpr: typeof ft_result0[c.SexprKey] = '(fn [m] (fn [n] (+ n m)))'
+// const ft_result0_sexpr: typeof ft_result0[c.SexprKey] = '(fn [m] (fn [n] (+ n m)))'
 const ft_result0_env: typeof ft_result0['env'] = 'm 1'
 const ft_result0_leafflag: typeof ft_result0['leafflag']  = false
 const ft_result0_cont: typeof ft_result0[c.ContKey] = ''
@@ -105,6 +86,55 @@ const ft_result1_value_pre: typeof ft_result1[c.ValueKey][c.PreKey] = 'number?'
 const ft_result2 = ft_result0.value.fn()(foxp.putPrim(2)).value.fn
 
 
+
+// doing this --- 2025/07/12
+// hof by hand --- (1)
+
+const jkd =
+  lambdaMap<'m', 'pos-int?'>(1)(
+     (m:number) => (
+      lambdaMap<'n', 'number?'>(1)(
+        (n: number) =>
+          add()(foxp.putSym('n', n), foxp.putSym('m', m)))))
+
+const jkd_result0 = jkd
+
+// const jkd_result0_isquote: typeof jkd_result0[c.FnFlagKey] = false
+// [note]
+// we should pick this as a whole sexpr of higher-order-function.
+const jkd_result0_sexpr: typeof jkd_result0[c.SexprKey] = '(fn [m] (fn [n] (+ n m)))'
+// const jkd_result0_env: typeof jkd_result0['env'] = 'm 1'
+// const jkd_result0_leafflag: typeof jkd_result0['leafflag']  = false
+// [note]
+// This picks the deepest lambda.
+const jkd_result0_cont: typeof jkd_result0[c.ContKey] = '(if (and (every? some? [n m]) ((fn [x y] (and (number? x) (number? y))) n m)) (+ n m) nil)'
+const jkd_result0_value_pre: typeof jkd_result0[c.ValueKey][c.PreKey] = 'pos-int?'
+const jkd_result0_value_fn: typeof jkd_result0[c.ValueKey][c.FnKey] = jkd_result0.value.fn
+
+// the last of curry.
+const jkd_result1 = jkd_result0_value_fn(foxp.putPrim(2))
+const jkd_result1_fail = jkd_result0_value_fn(
+// @ts-expect-error:
+  foxp.putPrim(-2))
+
+//const jkd_result1_isquote:  typeof jkd_result1[c.FnFlagKey] = false
+// [todo] true if it's the deepest lambda.
+//const jkd_result1_leafflag: typeof jkd_result1['leafflag']  = true
+const jkd_result1_sexpr: typeof jkd_result1[c.SexprKey] = "(fn [n] (+ n m))"
+// [todo] this is sym env.
+//const jkd_result1_env: typeof jkd_result1['env'] = 'm 1 n 2'
+// [note]
+// 
+// This picks the deepest lambda.
+const jkd_result1_cxont: typeof jkd_result1[c.ContKey] = '(if (and (every? some? [n m]) ((fn [x y] (and (number? x) (number? y))) n m)) (+ n m) nil)'
+const jkd_result1_value_pre: typeof jkd_result1[c.ValueKey][c.PreKey] = 'number?'
+const jkd_result1_value_fn: typeof jkd_result1[c.ValueKey][c.FnKey] = jkd_result1.value.fn
+
+const fin = jkd_result1_value_fn(foxp.putPrim(1))
+const fin_fail = jkd_result1_value_fn(
+// @ts-expect-error:
+  foxp.putPrim('asb'))
+
 // -- vitest
 
 describe('hof', () => {
@@ -112,4 +142,5 @@ it('', () => { expect(a_success0.value).toBe(2) })
 it('', () => { expect(d_success3.value).toBe(2) })
 it('', () => { expect(e_success5.value).toBe(2) })
 it('', () => { expect(ft_result2.value).toBe(3) })
+it('', () => { expect(fin.value).toBe(3) })
 })
