@@ -83,6 +83,21 @@ export type countArgs<
 // -- merge
 // ----------
 
+type _MergeTuple<
+  Fns extends T4
+, Args extends string[] = ['a', 'b', 'c', 'd', 'e', 'f']
+, Used extends string = ''
+, SS extends string = ''> =
+  Fns extends [infer F extends string, ...infer R extends T4]
+    ? Args extends [infer AF extends string, ...infer AR extends string[]]
+      ? _MergeTuple<R, AR, `${Used}${Used extends '' ? '' : ' '}${AF}`, `${SS} (${F} ${AF})`>
+    : never
+  : [] extends Fns
+    ? `(fn [${Used}] (and${SS}))`
+  : never
+
+export type MergeTuple<Fns extends T4> = _MergeTuple<Fns>
+
 export type MergePreStr<XPre extends string, YPre extends string> = _MergePreStr<XPre, YPre>
 export type _MergePreStr<
   XPre extends string
@@ -118,6 +133,9 @@ export type Vect<N extends PreNum> = `(fn [n] (= ${N} (count n)))`
 export type Grater<N extends PreNum> = `(fn [n] (< ${N} n))`
 export type Less<N extends PreNum> = `(fn [n] (> ${N} n))`
 
+export type PosInt = 'pos-int?'
+export type NegInt = 'neg-int?'
+export type Num = 'number?'
 
 export type EmailRegex = `'(([^<>()[\\].,;: @"]+(\\.[^<>()[\\].,;: @"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}))'`
 export type Email = `(fn [n] (let [r (re-find ${EmailRegex} n)] (not (= '' r))))`

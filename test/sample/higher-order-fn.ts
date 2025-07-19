@@ -1,11 +1,19 @@
-import { hof, add, sub, runHof, fn, lambda, HofTypeExt } from '../../src/builtins'
-import * as foxp from '../../src/foxp'
+import * as foxp from '../../src/index'
 import * as pre  from '../../src/pre'
 import * as c    from '../../src/const'
 import * as ut   from '../../src/type-util'
 import * as m from '../../src/merge'
 import type Cion from '@taiyakihitotsu/cion'
 import { describe, it, expect } from 'vitest'
+
+
+
+const hof = foxp.bi.hof
+const add = foxp.bi.add
+const sub = foxp.bi.sub
+const runHof = foxp.bi.runHof
+
+
 
 // ----------------------
 // -- simple pattern
@@ -93,7 +101,7 @@ const subtest_value: ut.Equal<number, (typeof subtest)['value']> = true
 const subtest_pre_s: (typeof subtest)['cont'] = '(if (and (every? some? [1 (+ 1 m)]) ((fn [x y] (and (number? x) (number? y))) 1 (if (and (every? some? [1 m]) ((fn [x y] (and (number? x) (number? y))) 1 m)) (+ 1 m) nil))) (- 1 (+ 1 m)) nil)'
 const subtest_pre: ut.Equal<(typeof subtest)['cont'], typeof subtest_pre_s> = true
 
-const addmerge = add<m.MergeTuple<[pre.Grater<5>, pre.Grater<9>]>>()(foxp.putPrim(6), foxp.putPrim(20))
+const addmerge = add<foxp.pre.MergeTuple<[pre.Grater<5>, pre.Grater<9>]>>()(foxp.putPrim(6), foxp.putPrim(20))
 
 const define_hof2_return_no =
    define_hof2
@@ -157,14 +165,26 @@ const runHof1_r0_no = runHof()(define_hof2_value_fn(
   foxp.putPrim(1)))
 
 
+
+// --------------
+// -- runHof 3
+// --------------
+
 const define_hof3 =
-  hof<'o', 'neg-int?'>(1)(
+  hof<'o', foxp.pre.NegInt>(1)(
     (o: number) =>
-      hof<'m', 'pos-int?'>(1)(
+      hof<'m', foxp.pre.PosInt>(1)(
         (m:number) => (
-          hof<'n', 'number?'>(1)(
+          hof<'n', foxp.pre.Num>(1)(
             (n: number) =>
-              (sub()(foxp.putSym('o', o), add<m.MergeTuple<[pre.Grater<5>, pre.Grater<9>]>>()(foxp.putSym('m', m), foxp.putSym('n', n))))))))
+              ( sub
+                  ()
+                  (foxp.putSym('o', o)
+                , add
+                    <foxp.pre.MergeTuple<[pre.Grater<5>, pre.Grater<9>]>>
+                    ()
+                    ( foxp.putSym('m', m)
+                    , foxp.putSym('n', n))))))))
 
 const runHof2_value_r0 = define_hof3.value.fn(foxp.putPrim(-1))
 const runHof2_value_r1 = runHof2_value_r0.value.fn(foxp.putPrim(6))
@@ -174,6 +194,8 @@ const runHof2_engine   = runHof()
 const runHof2_engine_r0 = runHof2_engine(runHof2_value_r0)
 const runHof2_engine_r1 = runHof2_engine_r0(runHof2_value_r1)
 const runHof2_engine_r2 = runHof2_engine_r1(runHof2_value_r2)
+
+
 
 // [note]
 // legacy test of `runHof2_engine_r2`.
@@ -186,6 +208,8 @@ const __tsfess: Cion.Lisp<`(if 1 1 1)`> = '1'
 const __tsfess1: Cion.Lisp<`(and true (if 1 1 1))`> = 'true'
 const __tsfess2: Cion.Lisp<`(and true 1)`> = 'true'
 const __jkxead: Cion.Lisp<`((fn [x y] (and (number? x) (number? y))) 1 (if 1 1 1))`> = 'true'
+
+
 
 describe('hof', () => {
 it('hof1', () => { expect(fin.value).toBe(3) })

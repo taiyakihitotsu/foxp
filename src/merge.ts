@@ -93,21 +93,6 @@ export type ArrToVec<
     : ArrToVec<Rest, `${RS} ${F}`>
   : never
 
-type _MergeTuple<
-  Fns extends T4
-, Args extends string[] = ['a', 'b', 'c', 'd', 'e', 'f']
-, Used extends string = ''
-, SS extends string = ''> =
-  Fns extends [infer F extends string, ...infer R extends T4]
-    ? Args extends [infer AF extends string, ...infer AR extends string[]]
-      ? _MergeTuple<R, AR, `${Used}${Used extends '' ? '' : ' '}${AF}`, `${SS} (${F} ${AF})`>
-    : never
-  : [] extends Fns
-    ? `(fn [${Used}] (and${SS}))`
-  : never
-
-export type MergeTuple<Fns extends T4> = _MergeTuple<Fns>
-
 export type ForceVec<V extends string | string[]> = V extends string[] ? V : [V]
 export const ForceVec = <
   S

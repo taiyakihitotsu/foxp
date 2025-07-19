@@ -1,5 +1,6 @@
 import { lambda, add } from '../../src/builtins'
 import * as foxp from '../../src/foxp'
+import * as pre from '../../src/pre'
 import { describe, it, expect } from 'vitest'
 
 // -- types
@@ -28,7 +29,7 @@ const lambdatestr1nf =
     (1)
     (lambdatest0)
     ()
-// @ts-expect-error
+// @ts-expect-error:
     (foxp.putPrim(1))
 
 const lambdatestr1 = 

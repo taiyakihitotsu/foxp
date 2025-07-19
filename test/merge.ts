@@ -73,6 +73,3 @@ const bb:  ['a', 'b'] =  merge.ForceVec(['a', 'b'] as const)
 const bba = merge.ForceVec(
 // @ts-expect-error:
   ['a', 'b'])
-
-
-const mergetuple_test0: ut.Equal<merge.MergeTuple<['number?', 'number?']>, '(fn [a b] (and (number? a) (number? b)))'> = true

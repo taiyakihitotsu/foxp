@@ -19,8 +19,6 @@ const divtest0: {
      ( foxp.putPrim(3)
      , foxp.putPrim(2))
 
-
-
 const divtest0_str: {
   [c.SexprKey]: '3/2'
 , [c.ValueKey]: number} =

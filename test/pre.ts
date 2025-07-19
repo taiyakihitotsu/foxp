@@ -55,3 +55,5 @@ const redpre_bug_test0: Cion.Lisp<`(let [a 0 redpartf (fn [v] (reduce (fn [r i] 
 const redpre_bug_test1: Cion.Lisp<`(let [a 0 redpartf (fn [v] (reduce (fn [r i] (+ r i)) a v))] (redpartf [1]))`> = '1'
 
 const redpre_test05: Cion.Lisp<`(${pre.bi.reduce} (fn [r i] (+ r i)) 0 [0 1 2 3])`> = `['number' 'number' 'number' 'number']`
+
+const mergetuple_test0: ut.Equal<pre.MergeTuple<['number?', 'number?']>, '(fn [a b] (and (number? a) (number? b)))'> = true

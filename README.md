@@ -3,20 +3,6 @@
 
 Enabling pseudo Dependent Types --- foxp🦊 does type-check [div-by-zero](#basic-example), [type-safe get/upd](#lens), [range-of-number](#range), [sized-array](#vect), [email-with-regex](#regex) and [more](#defining-your-own-precondition) you want.
 
-## What is foxp🦊?
-TypeScript's type system cannot natively express certain dependent-type-like guarantees, such as:
-
-- Detection division-by-zero errors at compile time
-- Lenght-indexed vectors (like `Vect n` in Idris)
-- Safer get/set operations (similar to Lenses)
-- Regex validation at the type level
-
-While theoretically possible, implementing these from scratch in TypeScript requires complex Peano-number encodings or other heavy machinery.
-
-Foxp🦊 solves this by embedding a Lisp interpreter at the TypeScript type level, called [Cion](https://github.com/taiyakihitotsu/cion) Lisp, inspired by Clojure.
-
-It provides built-in functions with preconditions, allowing you to enforce these constraints at compile time and even combine or customize them.
-
 ## Installation
 ```sh
 npm install --save-dev @taiyakihitotsu/foxp
@@ -27,62 +13,142 @@ npm install --save-dev @taiyakihitotsu/foxp
 import foxp from '@taiyakihitotsu/foxp'
 ```
 ### Basic Example
-All built-in functions are higher-order and accept optional pre-conditions. If you don't provide any, defaults are used.
+[test/doc/basic-example.ts](https://github.com/taiyakihitotsu/foxp/tree/main/test/doc/basic-example.ts)
+
+All built-in functions are higher-order and accept optional pre-conditions. If you provide nothing, defaults are used.
+
+And values must be wraped with `put*`. Pick its value via `.value` key.
 
 ```typescript
 const div = foxp.bi.div()
 
-const t0 = div(foxp.putPrim(3)
-              , foxp.putPrim(2)).value // => 3/2
+// => 3/2
+const t0 =
+  div(
+    foxp.putPrim(3)
+  , foxp.putPrim(2)).value
 
+// => Error but success to catch at the type-check.
 try {
-div(foxp.putPrim(3)
-  // @ts-expect-error:
+  div(
+// @ts-expect-error:
+    foxp.putPrim(3)
   , foxp.putPrim(0)).value
 } catch {}
 ```
 
 ### Merging Pre-conditions
-You can merge pre-conditions using tuples of the same length as function arguments. Use empty strings '' to skip merging for an argument.
+[test/doc/merging-pre-conditions.ts](https://github.com/taiyakihitotsu/foxp/tree/main/test/doc/merging-pre-conditions.ts)
+
+You can merge pre-conditions using tuples of the same length as function arguments. Use empty strings `''` to skip merging for an argument.
 
 ```typescript
-type aaa = foxp.MergePreTuple<foxp.pre.div, ['', 'neg-int?']>
+// NOTE: To keep a default pre, see `t3` pattern.
+type Merged = foxp.pre.MergeTuple<[foxp.pre.Grater<2>, foxp.pre.Less<4>]>
+const div = foxp.bi.div<Merged>()
 
-const div2 = foxp.bi.div<aaa>()
-  div2(foxp.putPrim(3)
+// => 3/3
+const t0 =
+  div(
+    foxp.putPrim(3)
+  , foxp.putPrim(3)).value
+
+const t1 =
+  div(
 // @ts-expect-error:
-     , foxp.putPrim(2)).value
+    foxp.putPrim(3)
+  , foxp.putPrim(9)).value
 
 try {
-  div2(foxp.putPrim(3)
-// @ts-expect-error:
-     , foxp.putPrim(0)).value
+const t2 = 
+  div(
+    foxp.putPrim(3)
+  , foxp.putPrim(0)).value
 } catch {}
-
-const t2 =
-  div2(foxp.putPrim(3)
-     , foxp.putPrim(-2)).value // => -3/2
 ```
 
-### Defining your own precondition
-You can define custom preconditions as Lisp S-expressions.
+If you want to keep a default, get it with `foxp.pre.bi.*` and then merge them.
 
 ```typescript
-const inc = foxp.putFn1<'neg-int?', 'inc'>()((n: number):number => 1 + n)
+type NewMerged = foxp.pre.MergePreStr<Merged, foxp.pre.bi.div>
+const newdiv = foxp.bi.div<NewMerged>()
 
-const one = foxp.putPrim(1) // {sexpr: 'inc', value: {pre: 'neg-int?', fn: Function}}
-
-const negone = foxp.putPrim(-1) // {sexpr: '-1', value: -1}
+try {
+const t3 = 
+  newdiv(
 // @ts-expect-error:
-foxp.tap1(inc, one)
-const pzero = foxp.tap1(inc, negone) // {sexpr: 0, value: 0}
-pzero.value // => 0
+    foxp.putPrim(3)
+  , foxp.putPrim(0)).value
+} catch {}
+
+```
+
+### Lambda
+[test/builtins/lambda.ts](https://github.com/taiyakihitotsu/foxp/tree/main/test/builtins/lambda.ts)
+
+The first unary fn takes a number of arguments.
+The second needs anonymous function, with `foxp.putSym`.
+The third and fourth are the same constructure of built-ins.
+
+You can define custom preconditions as Lisp S-expressions in this situation.
+
+```typescript
+const lambdatest0 = (n: number) => add()(foxp.putPrim(1), foxp.putSym('n', n))
+
+const lambdatestr0n  = lambda<'n', 'neg-int?'>(1)(lambdatest0)()(foxp.putPrim(-1))
+
+const lambdatestr1nf =
+  lambda<'n', 'neg-int?'>
+    (1)
+    (lambdatest0)
+    ()
+// @ts-expect-error:
+    (foxp.putPrim(1))
+```
+
+### Higher order function
+[test/sample/higher-order-fn.ts](https://github.com/taiyakihitotsu/foxp/tree/main/test/sample/higher-order-fn.ts)
+
+This is a bit of hard. You should call `runHof`, a type-level closure to earn env, and push every results into it.
+
+```typescript
+const hof = foxp.bi.hof
+const add = foxp.bi.add
+const sub = foxp.bi.sub
+const runHof = foxp.bi.runHof
+
+const define_hof3 =
+  hof<'o', foxp.pre.NegInt>(1)(
+    (o: number) =>
+      hof<'m', foxp.pre.PosInt>(1)(
+        (m:number) => (
+          hof<'n', foxp.pre.Num>(1)(
+            (n: number) =>
+              ( sub
+                  ()
+                  (foxp.putSym('o', o)
+                , add
+                    <foxp.pre.MergeTuple<[pre.Grater<5>, pre.Grater<9>]>>
+                    ()
+                    ( foxp.putSym('m', m)
+                    , foxp.putSym('n', n))))))))
+
+const runHof2_value_r0 = define_hof3.value.fn(foxp.putPrim(-1))
+const runHof2_value_r1 = runHof2_value_r0.value.fn(foxp.putPrim(6))
+const runHof2_value_r2 = runHof2_value_r1.value.fn(foxp.putPrim(10))
+
+const runHof2_engine   = runHof()
+const runHof2_engine_r0 = runHof2_engine(runHof2_value_r0)
+const runHof2_engine_r1 = runHof2_engine_r0(runHof2_value_r1)
+const runHof2_engine_r2 = runHof2_engine_r1(runHof2_value_r2)
 ```
 
 ## Other Sample
 See [test/sample](https://github.com/taiyakihitotsu/foxp/tree/main/test/sample)
 
 ### Lens
+[test/builtins/get-in.ts](https://github.com/taiyakihitotsu/foxp/blob/main/test/builtins/get-in.ts)
+
 You should `foxp.ro` if you want to use nested data.
 
 ```typescript
@@ -103,58 +169,42 @@ try {
      , foxp.putVec([':c'] as const))
    } catch {}
 ```
-from [test/builtins/get-in.ts](https://github.com/taiyakihitotsu/foxp/blob/main/test/builtins/get-in.ts)
-
 
 ### Range
+[test/sample/numrange.ts](https://github.com/taiyakihitotsu/foxp/blob/main/test/sample/numrange.ts)
+
 ```typescript
-const testnumran0
-  = foxp.putFn1<'(fn [n] (and (< n 10) (< 0 n)))', '(fn [n] (* n 4))'>()((n: number) => n * 4)
- 
-const testnumran1
-  = foxp.tap1(
-      testnumran0
-      , foxp.putPrim(1))
- 
-const testnumran2
-  = foxp.tap1(
-      testnumran0
-      , testnumran1 )
- 
-const testnumran3
-  = foxp.tap1(
-      testnumran0
+const tested_num = foxp.putPrim(3)
+type tested_pre = pre.Range<0,10>
+
+const testnum0_success = bi.inc<tested_pre>()(tested_num)
+
+const testnum0_ffailure =
+  bi.inc
+    <tested_pre>
+    ()
 // @ts-expect-error:
-      , testnumran2 )
+    (foxp.putPrim(20))
 ```
-from [test/sample/numrange.ts](https://github.com/taiyakihitotsu/foxp/blob/main/test/sample/numrange.ts)
 
 ### Vect
-```typescript
-type testpre = '(fn [n] (= 3 (count n)))'
-const testvect0
-  = foxp.putFn1<
-    testpre
-    , '(fn [n] n)'>
-    ()
-    ((n: unknown): unknown => n)
-const testvect1 = foxp.putVec([1, 2, 3] as const)
-const testvect1b = foxp.putVec([1,2,3,4] as const)
+[test/sample/vect.ts](https://github.com/taiyakihitotsu/foxp/blob/main/test/sample/vect.ts)
 
-const testvect2
-  = foxp.tap1(
-      testvect0
-      , testvect1)
- 
-const testvect2b
-  = foxp.tap1(
-      testvect0
+```typescript
+const tested_vec = foxp.putVec(foxp.ro([0, 1, 2] as const))
+
+const testvect0 = bi.first<pre.VectN<3>>()(tested_vec)
+const testvect0_ffailure =
+  bi.first
+    <pre.VectN<3>>
+    ()
 // @ts-expect-error:
-      , testvect1b)
+    (foxp.putVec(foxp.ro([0, 1] as const)))
 ```
-from [test/sample/vect.ts](https://github.com/taiyakihitotsu/foxp/blob/main/test/sample/vect.ts)
 
 ### Regex
+[test/sample/email.ts](https://github.com/taiyakihitotsu/foxp/blob/main/test/sample/email.ts)
+
 ```typescript
 type email = `'(([^<>()[\\].,;: @"]+(\\.[^<>()[\\].,;: @"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}))'`
 const test_refind0 : Cion.Lisp<`(re-find ${email} 'zzz.zzz@testmailreg.com')`> = `'zzz.zzz@testmailreg.com'`
@@ -167,10 +217,7 @@ const email = foxp.tid<foxp.pre.IsEmail>()(email_str)
 const notemail = foxp.tid<foxp.pre.IsEmail>()(not_email_str)
 ```
 
-from [test/sample/email.ts](https://github.com/taiyakihitotsu/foxp/blob/main/test/sample/email.ts)
-
 ## Core concept
-
 As we see above, every values wrapped by foxp🦊 is an object with two keys:
 
 - `sexpr` : a lisp-sexpr acting like a singleton type.
@@ -189,16 +236,17 @@ Important: This doesn't automatically track type transitions of functions at the
 
 ## builtins
 **Core API**: `foxp`
- - `putPrim` — wrap primitive values
- - `putVec` — wrap vectors
- - `putRecord` — wrap records
- - `putFn1` — wrap unary functions
- - `tid` — identity with checking
- - `tap1` — apply unary function with checking
- - `ro` — readonly for nested data.
- - `MergePreStr`, `MergePreTuple` — merge preconditions
+ - `putPrim` --- wrap primitive values
+ - `putVec` --- wrap vectors
+ - `putRecord` --- wrap records
+ - `putFn1` --- wrap unary functions
+ - `putSym` --- used only with `lambda` / `hof`
+ - `tid` --- identity with checking
+ - `tap1` --- apply unary function with checking
+ - `ro` --- readonly for nested data.
 
 **Builtin Functions**: `foxp.bi`
+ - `fn`, `lambda`, `hof`
  - Arithmetic : add, sub, mul, div
  - Data : assoc, assoc-in, update, update-in, get, get-in
  - Compare : gt (`>`), lt (`<`), eq (`=`), gte (`>=`), lte (`<=`)
@@ -206,6 +254,10 @@ Important: This doesn't automatically track type transitions of functions at the
 **Pre-conditiond**: `foxp.pre`
  - Eq, Vect, NotZero, Greater, Less, Interval, EmailRegex
  - assocLax, assoc (for update/assoc-in/update-in too)
+ - `MergePreStr`, `MergePreTuple` --- merge preconditions
+ 
+**Pre-conditiond**: `foxp.pre.bi`
+ - Pre-conditions for `foxp.bi`
  
 More builtins and preconditions are planned.
 
