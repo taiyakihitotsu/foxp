@@ -2,24 +2,39 @@ import * as foxp from '../src/foxp'
 import { const as c } from '../src/const'
 import * as ut from '../src/type-util'
 
-// test
 const test_lispwrapprim0: {[c.SexprKey]: '1', [c.ValueKey]: 1} = foxp.putPrim(1)
 const test_lispwrapprim1: {[c.SexprKey]: 'true', [c.ValueKey]: true} = foxp.putPrim(true)
 const test_lispwrapprim2: {[c.SexprKey]: `'teststr'`, [c.ValueKey]: 'teststr'} = foxp.putPrim('teststr')
 const test_lispwrapmap0:  {[c.SexprKey]: '[0 1 2]', [c.ValueKey]: unknown} = foxp.putVec([0,1,2] as const)
 
+const test_fraction0: {[c.SexprKey]: '1/3', [c.ValueKey]: number} = foxp.putPrim('1/3')
+const test_fraction1: {[c.SexprKey]: '-1/3', [c.ValueKey]: number} = foxp.putPrim('-1/3')
+const test_fraction2: {[c.SexprKey]: '3', [c.ValueKey]: number} = foxp.putPrim('3')
+const test_fraction3: {[c.SexprKey]: '-3', [c.ValueKey]: number} = foxp.putPrim('-3')
+
+// ------------------
+// -- symbol search
+// ------------------
+const deepsym_test0 : foxp.DeeplySymSearch<[1,2,3]> = false
+const deepsym_test1 : foxp.DeeplySymSearch<[1,2,{[c.FnFlagKey]: true}]> = true
+const deepsym_test2 : foxp.DeeplySymSearch<[1,2,[3, 4, {[c.FnFlagKey]: true}]]> = true
+const deepsym_test3 : foxp.DeeplySymSearch<{a: [1,2,[3, 4, {[c.FnFlagKey]: true}]]}> = true
+const deepsym_test4 : foxp.DeeplySymSearch<{a: [1,2,[3, 4, 5]]}> = false
+const deepsym_test5 : foxp.DeeplySymSearch<{a: {b: {c: {[c.FnFlagKey]: true}}}, x: [0, 1]}> = true
+
+
 // ----------
 // -- put
 // ----------
 const testvec = foxp.putVec([0, 1, 2] as const)
-const testvect: typeof testvec = {sexpr: '[0 1 2]', value: [0, 1, 2]}
+const testvect: typeof testvec = {sexpr: '[0 1 2]', value: [0, 1, 2], [c.ContKey]: '[0 1 2]', [c.FnFlagKey]: false, [c.HofFlag]: false}
 const __readonlyv = [0, 1, 2] as const
 // @ts-expect-error:
 const testvec_f = foxp.putVec([0, 1, 2])
 // @ts-expect-error:
-const testvec_ft: typeof testvec_f = {sexpr: '[0 1 2]', value: [0, 1, 2]}
+const testvec_ft: typeof testvec_f = {sexpr: '[0 1 2]', value: [0, 1, 2], [c.ContKey]: '[0 1 2]', [c.FnFlagKey]: false}
 const testvec_ro = foxp.putVec(__readonlyv)
-const testvec_rot: typeof testvec_ro = {sexpr: '[0 1 2]', value: [0, 1, 2]}
+const testvec_rot: typeof testvec_ro = {sexpr: '[0 1 2]', value: [0, 1, 2], [c.ContKey]: '[0 1 2]', [c.FnFlagKey]: false, [c.HofFlag]: false}
 const testvec_rot_malv: typeof testvec_ro = {
   sexpr: '[0 1 2]'
 , value: [ 0
@@ -27,7 +42,7 @@ const testvec_rot_malv: typeof testvec_ro = {
 // @ts-expect-error:
          , 3]}
 const testvec_empty = foxp.putVec([] as const)
-const testvec_emptyt: typeof testvec_empty = {sexpr: '[]', value: []}
+const testvec_emptyt: typeof testvec_empty = {sexpr: '[]', value: [], [c.ContKey]: '[]', [c.FnFlagKey]: false, [c.HofFlag]: false}
 // @ts-expect-error:
 const testvec_empty0 = foxp.putVec([])
 
