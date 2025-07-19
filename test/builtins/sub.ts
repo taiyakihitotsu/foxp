@@ -4,16 +4,17 @@ import { sub } from '../../src/builtins'
 import * as merge from '../../src/merge'
 import * as pre from '../../src/pre'
 import { describe, it, expect } from 'vitest'
-type presub = ['number?', 'number?']
-type prestrict = ['number?', merge.MergePreStr<'number?', 'pos-int?'>]
-type malpre = ['number?', 'string?']
+
+type presub = `(fn [x y] (and (number? x) (number? y)))`
+type prestrict = pre.MergePreStr<pre.bi.sub, `(fn [x y] (and (number? x) (pos-int? y)))`>
+type malpre = `(fn [x y] (and (number? x) (string? y)))`
 
 // --test
 const subtest0: {
   [c.SexprKey]: '0'
 , [c.ValueKey]: number} =
    sub
-     <pre.sub>
+     <pre.bi.sub>
      ()
      ( foxp.putPrim(1)
      , foxp.putPrim(1))
@@ -22,14 +23,14 @@ const subtest0_str: {
   [c.SexprKey]: '0'
 , [c.ValueKey]: number} =
    sub
-     <'(fn [n] (and (number? (first n)) (number? (second n))))'>
+     <'(fn [x y] (and (number? x) (number? y)))'>
      ()
      ( foxp.putPrim(1)
      , foxp.putPrim(1))
 
 
 
-const subtest0_hof = sub<['number?', '']>()
+const subtest0_hof = sub<`(fn [x y] (number? x))`>()
 const subtest0_hof_app =
   subtest0_hof(
     foxp.putPrim(1)
@@ -66,8 +67,8 @@ const subtest0b_strict_failed: {
   sub
     <prestrict>
     ()
-    ( foxp.putPrim(1)
 // @ts-expect-error:
+    ( foxp.putPrim(1)
     , foxp.putPrim(-1))
 
 // @ts-expect-error:
@@ -104,8 +105,8 @@ const subtest1fail_0_1_string: {
        <malpre>
        ()
        (
-       foxp.putPrim(1)
        // @ts-expect-error:
+       foxp.putPrim(1)
        , foxp.putPrim(1))
      , foxp.putPrim(3))
 
@@ -115,12 +116,12 @@ const subtest1fail_1_1_string: {
   sub
     <malpre>
     ()
+    // @ts-expect-error:
     (sub
       <presub>
       ()
       ( foxp.putPrim(1)
       , foxp.putPrim(1))
-     // @ts-expect-error:
      , foxp.putPrim(3))
 
 // @ts-expect-error:

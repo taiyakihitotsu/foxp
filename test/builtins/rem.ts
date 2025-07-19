@@ -1,71 +1,68 @@
 import * as c from '../../src/const'
 import * as foxp from '../../src/foxp'
-import { add, mul, sub, div } from '../../src/builtins'
+import { add, mul, sub, rem } from '../../src/builtins'
 import * as merge from '../../src/merge'
 import * as pre from '../../src/pre'
 import { describe, it, expect } from 'vitest'
 
-type prediv = `(fn [x y] (and (number? x) (number? y)))`
-type prestrict = pre.MergePreStr<pre.bi.div, `(fn [x y] (pos-int? y))`>
+type prerem = `(fn [x y] (and (number? x) (number? y)))`
+type prestrict = pre.MergePreStr<pre.bi.rem, `(fn [x y] (pos-int? y))`>
 type malpre = `(fn [x y] (and (number? x) (string? y)))`
 
 // --test
-const divtest0: {
-  [c.SexprKey]: '3/2'
+const remtest0: {
+  [c.SexprKey]: '1'
 , [c.ValueKey]: number} =
-   div
-     <pre.bi.div>
+   rem
+     <pre.bi.rem>
      ()
      ( foxp.putPrim(3)
      , foxp.putPrim(2))
 
-
-
-const divtest0_str: {
-  [c.SexprKey]: '3/2'
+const remtest0_str: {
+  [c.SexprKey]: '1'
 , [c.ValueKey]: number} =
-   div
+   rem
      <`(fn [x y] (and (number? x) (number? y)))`>
      ()
      ( foxp.putPrim(3)
      , foxp.putPrim(2))
 
-const divtest0_hof = div<`(fn [x y] (number? x))`>()
-const divtest0_hof_app =
-  divtest0_hof(
+const remtest0_hof = rem<`(fn [x y] (number? x))`>()
+const remtest0_hof_app =
+  remtest0_hof(
     foxp.putPrim(1)
 // @ts-expect-error:
     , foxp.putPrim('s'))
 
-const divtest0_hof_app_ok =
-  divtest0_hof(
+const remtest0_hof_app_ok =
+  remtest0_hof(
     foxp.putPrim(1)
     , foxp.putPrim(1))
 
-const divtest0b: {
-  [c.SexprKey]: '3/2'
+const remtest0b: {
+  [c.SexprKey]: '1'
 , [c.ValueKey]: number} =
-  div
-    <prediv>
+  rem
+    <prerem>
     ()
     ( foxp.putPrim(3)
     , foxp.putPrim(2))
 
 
-const divtest0b_strict: {
-  [c.SexprKey]: '3/2'
+const remtest0b_strict: {
+  [c.SexprKey]: '1'
 , [c.ValueKey]: number} =
-  div
+  rem
     <prestrict>
     ()
     ( foxp.putPrim(3)
     , foxp.putPrim(2))
 
-
-const divtest0b_strict_failed: {
-  [c.SexprKey]: '-3/2'
+const remtest0b_strict_failed: {
+  [c.SexprKey]: '1'
 , [c.ValueKey]: number} =
-  div
+  rem
     <prestrict>
     ()
 // @ts-expect-error:
@@ -73,10 +70,9 @@ const divtest0b_strict_failed: {
     , foxp.putPrim(-2))
 
 try {
-const divtest0b_strict_failed =
-// div<pre.bi.div>()( foxp.putPrim(3), foxp.putPrim(0))
-  div
-    <pre.bi.div>
+const remtest0b_strict_failed =
+  rem
+    <pre.bi.rem>
     ()
 // @ts-expect-error:
     ( foxp.putPrim(3)
@@ -84,34 +80,34 @@ const divtest0b_strict_failed =
 } catch {}
 
 // @ts-expect-error:
-const divtest0f_notmatch_sexpr: {
+const remtest0f_notmatch_sexpr: {
   [c.SexprKey]: '3/3'
 , [c.ValueKey]: number} =
-  div
-    <prediv>
+  rem
+    <prerem>
     ()
     ( foxp.putPrim(3)
     , foxp.putPrim(2))
 
 
-const divtest1_pass: {
-  [c.SexprKey]: '3/10'
+const remtest1_pass: {
+  [c.SexprKey]: '1'
 , [c.ValueKey]: number} =
-  div
-    <prediv>
+  rem
+    <prerem>
     ()
-    (div
-      <prediv>
+    (rem
+      <prerem>
       ()
       ( foxp.putPrim(3)
       , foxp.putPrim(2))
       , foxp.putPrim(5))  
 
 try {
-const divtest1_failure_sub_then_zero: {
+const remtest1_failure_sub_then_zero: {
   [c.SexprKey]: 'nil'
 , [c.ValueKey]: number} =
-  div
+  rem
     ()
 // @ts-expect-error:
     ( foxp.putPrim(5)
@@ -122,10 +118,10 @@ const divtest1_failure_sub_then_zero: {
 } catch {}
 
 try {
-const divtest1_failure_add_then_zero: {
+const remtest1_failure_add_then_zero: {
   [c.SexprKey]: 'nil'
 , [c.ValueKey]: number} =
-  div
+  rem
     ()
 // @ts-expect-error:
     ( foxp.putPrim(5)
@@ -136,10 +132,10 @@ const divtest1_failure_add_then_zero: {
 } catch {}
 
 try {
-const divtest1_failure_mul_then_zero: {
+const remtest1_failure_mul_then_zero: {
   [c.SexprKey]: 'nil'
 , [c.ValueKey]: number} =
-  div
+  rem
     ()
 // @ts-expect-error:
     ( foxp.putPrim(5)
@@ -149,13 +145,13 @@ const divtest1_failure_mul_then_zero: {
       , foxp.putPrim(0)))  
 } catch {}
 
-const divtest1fail_0_1_string: {
-  [c.SexprKey]: '3/10'
+const remtest1fail_0_1_string: {
+  [c.SexprKey]: '1'
 , [c.ValueKey]: number} =
-  div
-    <prediv>
+  rem
+    <prerem>
     ()
-    (div
+    (rem
        <malpre>
        ()
        (
@@ -164,29 +160,29 @@ const divtest1fail_0_1_string: {
        , foxp.putPrim(2))
      , foxp.putPrim(5))
 
-const divtest1fail_1_1_string: {
-  [c.SexprKey]: '3/10'
+const remtest1fail_1_1_string: {
+  [c.SexprKey]: '1'
 , [c.ValueKey]: number} =
-  div
+  rem
     <malpre>
     ()
     // @ts-expect-error:
-    (div
-      <prediv>
+    (rem
+      <prerem>
       ()
       ( foxp.putPrim(3)
       , foxp.putPrim(2))
      , foxp.putPrim(5))
 
 // @ts-expect-error:
-const divtest1f_notmatch_sexpr: {
+const remtest1f_notmatch_sexpr: {
   [c.SexprKey]: '3/10'
 , [c.ValueKey]: number} =
-   div
-     <prediv>
+   rem
+     <prerem>
      ()
-     ((div
-       <prediv>
+     ((rem
+       <prerem>
        ()
        (foxp.putPrim(3)
        , foxp.putPrim(2)))
@@ -194,16 +190,16 @@ const divtest1f_notmatch_sexpr: {
 
 try {
 // @ts-expect-error:
-const divtest1f_error_divbyzero: {
-  // [note] LispDivError2
+const remtest1f_error_rembyzero: {
+  // [note] LispRemError2
   [c.SexprKey]: '3/10'
 , [c.ValueKey]: number} =
-   div
-     <pre.bi.div>
+   rem
+     <pre.bi.rem>
      ()
 // @ts-expect-error:
-     ((div
-       <pre.bi.div>
+     ((rem
+       <pre.bi.rem>
        ()
 // @ts-expect-error:
        (foxp.putPrim(3)
@@ -212,24 +208,24 @@ const divtest1f_error_divbyzero: {
 } catch {}
 
 try {
-const divtest1f_error_divbyzero2: {
+const remtest1f_error_rembyzero2: {
   [c.SexprKey]: 'nil'
 , [c.ValueKey]: number} =
-   div
-     <pre.bi.div>
+   rem
+     <pre.bi.rem>
      ()
 // @ts-expect-error:
-     ((div
-       <pre.bi.div>
+     ((rem
+       <pre.bi.rem>
        ()
        (foxp.putPrim(3)
        , foxp.putPrim(1)))
     , foxp.putPrim(0))
 } catch {}
 
-describe('div', () => {
-it('', () => { expect(divtest0.value).toBe(3/2) })
-it('', () => { expect(divtest0b.value).toBe(3/2) })
-it('', () => { expect(divtest0b_strict.value).toBe(3/2) })
-it('', () => { expect(divtest1_pass.value).toBe(3/10) })
+describe('rem', () => {
+it('', () => { expect(remtest0.value).toBe(1) })
+it('', () => { expect(remtest0b.value).toBe(1) })
+it('', () => { expect(remtest0b_strict.value).toBe(1) })
+it('', () => { expect(remtest1_pass.value).toBe(1) })
 })

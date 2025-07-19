@@ -10,9 +10,9 @@ const _arg0 = {a: 1, b: 2} as const // foxp.putRecord({a: 1, b: 2} as const)
 const _arg_p0 = foxp.putRecord(_arg0)
 const _pre0 : Cion.Lisp<`((fn [m] (-> m map?)) ${typeof _arg_p0.sexpr})`> = 'true'
 const _pre1 : Cion.Lisp<`((fn [m] (->> m second (every? keyword?))) [${typeof _arg_p0.sexpr} [:a]])`> = 'true'
-// const ___pre3 : `(${pre.updateIn} [${typeof _arg_p0.sexpr} ${typeof _pk} inc])` = 'true'
-// const _pre3 : Cion.Lisp<`(${pre.updateIn} [${typeof _arg_p0.sexpr} ${typeof _pk} inc])`> = 'true'
-const _pre34 : Cion.Lisp<`(${pre.updateInLax} [{:a 1 :b 2} [:a] inc])`> = 'true'
+// const ___pre3 : `(${pre.bi.updateIn} [${typeof _arg_p0.sexpr} ${typeof _pk} inc])` = 'true'
+// const _pre3 : Cion.Lisp<`(${pre.bi.updateIn} [${typeof _arg_p0.sexpr} ${typeof _pk} inc])`> = 'true'
+const _pre34 : Cion.Lisp<`(${pre.bi.updateInLax} {:a 1 :b 2} [:a] inc)`> = 'true'
 const _pre34upd : Cion.Lisp<`(update-in {:a 1 :b 2} [:a] inc)`> extends '{:b 2 :a 2}' | '{:a 2 :b 2}' ? true : false = true
 const maintest_lisp_3: Cion.Lisp<`(update-in {:a 1 :b 2} [:a] (fn [x] (+ x 99)))`> extends '{:a 100 :b 2}' | '{:b 2 :a 100}' ? true : false = true
 const maintest_lisp_4: Cion.Lisp<`(update-in {:a 1 :b 2} [:a] inc)`> extends '{:b 2 :a 2}' | '{:a 2 :b 2}' ? true : false = true
@@ -26,8 +26,8 @@ const a2 = foxp.putFn1<'number?', 'inc'>()(fnarg)
 const a2_fail = foxp.putFn1<'number?', '(fn [m] "string")'>()(fnarg_fail)
 // [todo] updateIn updateIn.pre and write it down directly to test
 const vsraw0: Cion.Lisp<`((fn [m] (and (fn? (get m 2)))) [${typeof a0.sexpr} ${typeof a1.sexpr} ${typeof a2.sexpr}])`> = 'true'
-const vsraw1: Cion.Lisp<`(${pre.updateInLax} [${typeof a0.sexpr} [${typeof a1.sexpr}] ${typeof a2.sexpr}])`> = 'true'
-const vsraw1st: Cion.Lisp<`(${pre.updateInStrict} [${typeof a0.sexpr} [${typeof a1.sexpr}] ${typeof a2.sexpr}])`> = 'true'
+const vsraw1: Cion.Lisp<`(${pre.bi.updateInLax} ${typeof a0.sexpr} [${typeof a1.sexpr}] ${typeof a2.sexpr})`> = 'true'
+const vsraw1st: Cion.Lisp<`(${pre.bi.updateIn} ${typeof a0.sexpr} [${typeof a1.sexpr}] ${typeof a2.sexpr})`> = 'true'
 const vsraw2: Cion.Lisp<`(get-in ${typeof a0.sexpr} [${typeof a1.sexpr}])`> = '1'
 const vfsrwba3: Cion.Lisp<`((fn [m] (let [r (update-in (get m 0) (get m 1) (get m 2))] r)) [{:b 2 :a 1} [:a] inc])`> extends '{:a 2 :b 2}' | '{:b 2 :a 2}' ? true : false = true 
 
@@ -40,7 +40,7 @@ const ksmiss = [':x'] as const
 
 const map_updateintest0 =
    updateIn
-     <pre.updateInLax>
+     <pre.bi.updateInLax>
      ()
      ( foxp.putRecord(_arg0)
      , foxp.putVec(ks)
@@ -48,7 +48,7 @@ const map_updateintest0 =
 
 const map_updateintest0_pseudofail_valuemiss =
    updateIn
-     <pre.updateInLax>
+     <pre.bi.updateInLax>
      ()
      ( foxp.putRecord(_arg0)
      , foxp.putVec(ks)
@@ -57,7 +57,7 @@ const map_updateintest0_pseudofail_valuemiss =
 try {
 const map_updateintest0_pseudofail_keymiss =
    updateIn
-     <pre.updateInLax>
+     <pre.bi.updateInLax>
      ()
 // @ts-expect-error:
      ( foxp.putRecord(_arg0)
@@ -68,7 +68,7 @@ const map_updateintest0_pseudofail_keymiss =
 try {
 const map_updateintest0_pseudofail_keyprimmiss =
    updateIn
-     <pre.updateInLax>
+     <pre.bi.updateInLax>
      ()
 // @ts-expect-error:
      ( foxp.putRecord(_arg0)
@@ -78,7 +78,7 @@ const map_updateintest0_pseudofail_keyprimmiss =
 
 const map_updateintest1_strict =
    updateIn
-     <pre.updateIn>
+     <pre.bi.updateIn>
      ()
      ( foxp.putRecord(_arg0)
      , foxp.putVec([':a'] as const)
@@ -87,7 +87,7 @@ const map_updateintest1_strict =
 try {
 const map_updateintest1_strict_fail_keymiss =
    updateIn
-     <pre.updateIn>
+     <pre.bi.updateIn>
      ()
 // @ts-expect-error:
      ( foxp.putRecord(_arg0)
@@ -98,7 +98,7 @@ const map_updateintest1_strict_fail_keymiss =
 try {
 const map_updateintest1_fail_returnmiss =
    updateIn
-     <pre.updateIn>
+     <pre.bi.updateIn>
      ()
 // @ts-expect-error:
      ( foxp.putRecord(_arg0)
@@ -120,7 +120,7 @@ const _arg11 = foxp.putPrim(2)
 
 const vec_updateintest0 =
    updateIn
-     <pre.updateIn>
+     <pre.bi.updateIn>
      ()
      ( foxp.putVec(_arg1)
      , foxp.putVec([2] as const)
@@ -129,7 +129,7 @@ const vec_updateintest0 =
 try {
 const vec_updateintest0_fail_keymiss =
    updateIn
-     <pre.updateIn>
+     <pre.bi.updateIn>
      ()
 // @ts-expect-error:
      ( foxp.putVec(_arg1)
@@ -140,7 +140,7 @@ const vec_updateintest0_fail_keymiss =
 try {
 const vec_updateintest0_fail_valuemiss =
    updateIn
-     <pre.updateIn>
+     <pre.bi.updateIn>
      ()
 // @ts-expect-error
      ( foxp.putVec(_arg1)
@@ -150,7 +150,7 @@ const vec_updateintest0_fail_valuemiss =
 
 const vec_updateintest0_pseudofail_valuemiss =
    updateIn
-     <pre.updateInLax>
+     <pre.bi.updateInLax>
      ()
      ( foxp.putVec(_arg1)
      , foxp.putVec([2] as const)
@@ -159,7 +159,7 @@ const vec_updateintest0_pseudofail_valuemiss =
 try {
 const vec_updateintest0_pseudofail_keymiss =
    updateIn
-     <pre.updateInLax>
+     <pre.bi.updateInLax>
      ()
 // @ts-expect-error:
      ( foxp.putVec(_arg1)

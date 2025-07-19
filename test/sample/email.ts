@@ -12,7 +12,7 @@ const test_refind1 : Cion.Lisp<`(re-find ${email} 'https://github.com/taiyakihit
 
 const email_str = foxp.putPrim('zzz.zzz@testmailreg.com')
 const not_email_str = foxp.putPrim('https://github.com/taiyakihitotsu/foxp/tree/main')
-const email = foxp.tid<foxp.pre.IsEmail>()(email_str)
+const email = foxp.tid<foxp.pre.Email>()(email_str)
 // @ts-expect-error:
 const notemail = foxp.tid<foxp.pre.IsEmail>()(not_email_str)
 

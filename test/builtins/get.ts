@@ -13,7 +13,7 @@ import * as ut from '../../src/type-util'
 
 const map_gettest0 =
     get
-    <pre.get>
+    <pre.bi.get>
     ()
   ( foxp.putRecord({a: 1, b: 2} as const)
   , foxp.putPrim(':a'))
@@ -21,14 +21,14 @@ const map_gettest0 =
 const a = {a: 1, b: 2} as const
 const map_gettest0_arg_readonly =
     get
-    <pre.get>
+    <pre.bi.get>
     ()
   ( foxp.putRecord(a)
   , foxp.putPrim(':a'))
 
 const map_gettest0_not_readonly =
     get
-    <pre.get>
+    <pre.bi.get>
     ()
 // @ts-expect-error:
   ( foxp.putRecord({a: 1, b: 2})
@@ -36,14 +36,14 @@ const map_gettest0_not_readonly =
 
 const vec_gettest0_readonly =
     get
-    <pre.get>
+    <pre.bi.get>
     ()
   ( foxp.putVec([0,2,4] as const)
   , foxp.putPrim(0))
 
 const vec_gettest0_not_readonly =
     get
-    <pre.get>
+    <pre.bi.get>
     ()
 // @ts-expect-error:
   ( foxp.putVec([0,2,4])

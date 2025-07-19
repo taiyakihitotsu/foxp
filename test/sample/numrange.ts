@@ -1,33 +1,21 @@
 import * as foxp from '../../src/foxp'
+import * as bi   from '../../src/builtins'
+import * as pre  from '../../src/pre'
 import { describe, it, expect } from 'vitest'
 
-// test : num range
-const testnumran0
-  = foxp.putFn1<'(fn [n] (and (< n 10) (< 0 n)))', '(fn [n] (* n 4))'>()((n: number) => n * 4)
+const tested_num = foxp.putPrim(3)
+type tested_pre = pre.Range<0,10>
 
-const testnumran1
-  = foxp.tap1(
-      testnumran0
-      , foxp.putPrim(1))
+const testnum0_success = bi.inc<tested_pre>()(tested_num)
 
-const testnumran2
-  = foxp.tap1(
-      testnumran0
-      , testnumran1 )
-
-const testnumran3
-  = foxp.tap1(
-      testnumran0
+const testnum0_ffailure =
+  bi.inc
+    <tested_pre>
+    ()
 // @ts-expect-error:
-      , testnumran2 )
+    (foxp.putPrim(20))
 
-const testnumran4
-  = foxp.tap1(
-      testnumran0
-// @ts-expect-error:
-      , foxp.putPrim('test'))
-
-describe("numrange", () => {
-  it("", () => { expect(testnumran1.value).toBe(4) })
-  it("", () => { expect(testnumran2.value).toBe(16) })
+describe("vect", () => {
+  it("", () => { expect(tested_num.value).toEqual(3) })
+  it("", () => { expect(testnum0_success.value).toEqual(4) })
 })
