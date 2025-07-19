@@ -133,4 +133,20 @@ export type DeepReadonly<
 
 export type ForceReadRecord<R extends Record<PropertyKey, unknown>> = Equal<DeepReadonly<R>, R> extends true ? R : never
 
+export type LispFalsy = 'nil' | 'false' | {error: string}
+
+export type N0 = 0
+export type N1 = N0 | 1
+export type N2 = N1 | 2
+export type N3 = N2 | 3
+export type N4 = N3 | 4
+
+export type FlatRec<T> = {[K in keyof T]: T[K]} & {}
+
+export type T4 =
+[] | readonly [] | [string] | readonly [string] |
+[string, string] | readonly [string, string] |
+[string, string, string] | readonly [string, string, string] |
+[string, string, string, string] | readonly [string, string, string, string]
+
 export type * as typeUtil from './type-util'

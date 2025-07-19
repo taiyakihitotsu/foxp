@@ -46,4 +46,7 @@ export const updateIn = ([m,ks,f]: any): any => {
   return assoc([m,key,updateIn([get([m,key]),next,f])])
 }
 
+export const mod = (n: number, m:number): number => ((n % m) + m) % m
+
+
 export * as util from './util'
