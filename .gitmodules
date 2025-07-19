@@ -1,3 +1,10 @@
 [submodule "submodules/condsmith"]
 	path = submodules/condsmith
-	url = https://github.com/taiyakihitotsu/condsmith
+	url = git@github.com:taiyakihitotsu/condsmith.git
+	branch = master
+	ignore = all
+[submodule "submodules/scripts"]
+	path = submodules/scripts
+	url = git@github.com:taiyakihitotsu/condscript.git
+	branch = main
+        ignore = all

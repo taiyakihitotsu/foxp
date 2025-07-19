@@ -15,11 +15,11 @@
     "build": "npx tsc",
     "build:watch": "npx tsc --watch",
     "check": "npx tsc --noEmit",
-    "check:test": "npx tsc --noEmit --project tsconfig.json && vitest run",
-    "check:smith": "sh ./scripts/sandbox-smith.sh && sh ./scripts/check-smith.sh",
+    "check:test": "npx tsc --noEmit --project tsconfig.test.json && vitest run",
+    "check:smith": "sh ./submodules/scripts/sandbox-smith.sh && sh ./submodules/scripts/check-smith.sh",
     "format:smith": "npm --prefix submodules/condsmith run format:smith ../../src",
     "run": "npx ts-node src/index.ts",
-    "precommit": "sh scripts/precommit.sh"
+    "precommit": "sh submodules/scripts/precommit.sh"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
   "devDependencies": {
     "@types/node": "^18.19.22",
     "husky": "^9.1.7",
+    "mathjs": "^14.5.3",
     "ts-node": "^10.9.2",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",
@@ -36,6 +37,6 @@
   "author": "taiyakihitotsu <taiyakihitotsu@proton.me> https://github.com/taiyakihitotsu",
   "license": "3-clause BSD license",
   "dependencies": {
-    "@taiyakihitotsu/cion": "^0.1.0"
+    "@taiyakihitotsu/cion": "^0.2.3"
   }
 }
