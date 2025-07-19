@@ -1,12 +1,14 @@
 ### setup
 ```terminal
-sh scripts/init.sh
+sh init.sh
 ```
 
 ### format
 ```terminal
 npm run format:smith
 ```
+
+NOTE: Due to the homemade and rough formatter, it is recommended to commit your changes before running it.
 
 ### commit
 You must have one of the tags with a commit message: `[add]` `[update]` `[fix]` `[refactor]` `[chore]` `[doc]` `[test]`.
@@ -21,14 +23,16 @@ You must have one of the tags with a commit message: `[add]` `[update]` `[fix]` 
 Important: Use `Cion.Lisp` to test things about record, because union type doesn't save the order of the record, so it doesn't keep the same string S-exprs any time. It requires a new order to keep it with using `map` or similar.
 
 ### code
-the core function is `tap1` in `src/foxp.ts`. all args is expected to be wraped with `put...` functions. it gets the s-exprs from the value via the singleton type. `tap1` uses `Ltc` compiler `src/compiler.ts` to earn the return s-exprs.
+The core codes are placed in `src/builtins.ts` / `src/foxp.ts`.
+ - builtins: defining built-ins, and `fn` / `lambda` / `hof`. 
+ - foxp: defining container to help type-check.
 
-if you want to accept only tuple arg, see `ForceTuple` in `src/type-util.ts`.
+`src/compiler.ts` is used for translating CionLisp value to TS (extended) type.
 
 ### FAQ & more
 Please build an issue casually. I'll try to read and fix it if you put `[bug]` tag.
 
-foxp uses `Cion` deeply, so we need to separate the cases.
+Foxp uses `Cion` deeply, so we need to separate the cases.
 Bugs would happen in foxp if Cion can eval the sexpr normally. if Cion can read it, it would happen in Cion.
 
 ### license
