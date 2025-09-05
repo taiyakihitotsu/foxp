@@ -79,7 +79,8 @@ export type VectorString<
 
 export type VectorToRecord<T extends [PropertyKey, Primitive][]> = {[K in T[number] as K[0]]: K[1]}
 export type VtoR<T extends [PropertyKey, Primitive][]> = VectorToRecord<T>
-export type VtoS<T extends Tuple> = VectorString<T>
+
+export type VtoS<T extends Tuple> = T extends readonly [...infer t] ? VectorString<t> : VectorString<T>
 export type VtoOpenStr<T extends unknown[]> = VectorString<T, true>
 
 
