@@ -218,7 +218,19 @@ const notemail = foxp.tid<foxp.pre.IsEmail>()(not_email_str)
 ```
 
 ## Core concept
-As we see above, every values wrapped by foxp🦊 is an object with two keys:
+This replaces the general type checks of TypeScript with an execute of a type-level script language, [CionLisp](https://github.com/taiyakihitotsu/cion). Foxp🦊 slurps values and detects those unique S-expressions via those singleton types, to pass them as arguments of a function of Cion.
+Pre-conditions themselves are just pred function. So it works as below:
+
+ - We will get types of values.
+ - The types will be processed into sexprs.
+ - The sexprs will be passed as arguments of pre-condition.
+ - Cion will run. If it returns a falsy, it will be seemed that it is failed of type check. If not, the result acts for a return type.
+ 
+In the other words, foxp🦊 is just a wraper of Type Level Lisp for TypeScript.
+ 
+
+
+As we see above examples, every values wrapped by foxp🦊 is an object with two keys:
 
 - `sexpr` : a lisp-sexpr acting like a singleton type.
 - `value` : the original value.
@@ -236,6 +248,9 @@ Important: This doesn't automatically track type transitions of functions at the
 
 ## builtins
 **Core API**: `foxp`
+
+`put*` and `ro` is used for general values to pass into a function of `foxp.bi`.
+
  - `putPrim` --- wrap primitive values
  - `putVec` --- wrap vectors
  - `putRecord` --- wrap records
@@ -246,14 +261,23 @@ Important: This doesn't automatically track type transitions of functions at the
  - `ro` --- readonly for nested data.
 
 **Builtin Functions**: `foxp.bi`
+
+They all are almost copied from Clojure Core Builtins.
+
  - `fn`, `lambda`, `hof`
- - Arithmetic : add, sub, mul, div
+ - Arithmetic : add(`+`), sub(`-`), mul(`*`), div(`/`)
  - Data : assoc, assoc-in, update, update-in, get, get-in
  - Compare : gt (`>`), lt (`<`), eq (`=`), gte (`>=`), lte (`<=`)
 
 **Pre-conditiond**: `foxp.pre`
- - Eq, Vect, NotZero, Greater, Less, Interval, EmailRegex
- - assocLax, assoc (for update/assoc-in/update-in too)
+
+They are pre-conditions or Type Function to generate them.
+
+Types starting with a lower-case are pre-condition.
+With a upper-case, they are type function to return a pre-condition type.
+
+- Eq, Vect, NotZero, Greater, Less, Interval, EmailRegex
+ - assocLax, assoc (for `update` / `assoc-in` / `update-in` too.)
  - `MergePreStr`, `MergePreTuple` --- merge preconditions
  
 **Pre-conditiond**: `foxp.pre.bi`
