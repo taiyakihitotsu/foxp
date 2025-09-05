@@ -200,7 +200,10 @@ checkPreMap<{
   , 'map?': checkOne
   , 'fn?': checkOne
   , 'ifn?': checkOne
-  , 'nat-int?': checkOne
+  , 'int?': checkOne
+  , 'pos?': checkOne
+  , 'neg?': checkOne
+  , 'nat?': checkOne
   , 'pos-int?': checkOne
   , 'neg-int?': checkOne
   , 'odd?': checkOne
@@ -210,11 +213,28 @@ checkPreMap<{
   , 'empty?': checkOne 
   , 'boolean?': checkOne
   , 'type': checkOne
-  , 'every?': checkOne
-  , 'some': checkOne
-  , 'nil?': checkOne
   , 'some?': checkOne
+  , 'nil?': checkOne
   , 'any?': checkOne
+}>
+
+// ----------------
+// -- string
+// ----------------
+
+type checkPrim = `(fn [x] (or (number? x) (string? x) (boolean? x)))`
+type isstr2 = `(fn [x y] (string? x) (string? y))`
+type isstr3 = `(fn [x y z] (string? x) (string? y) (string? z))`
+type stringf =
+checkPreMap<
+  { str1: checkPrim
+  , str2: `(fn [x y] (and (${checkPrim} x) (${checkPrim} y)))`
+  , str3: `(fn [x y z] (and (${checkPrim} x) (${checkPrim} y) (${checkPrim} z)))`
+  , refind: isstr2
+  , split: isstr2
+  , subs: `(fn [x y z] (and (string? x) (number? y) (number? z) (> y z)))`
+  , replace: isstr3
+  , join: `(fn [x y] (and (string? x) (vector? y) (every? prim? y)))`
 }>
 
 // ----------------
@@ -238,7 +258,7 @@ checkPreMap<{
 // ----------------
 
 type _getIn = `(fn [x y] (some? (get-in x y)))`
-type fmap = `(fn [x y] (and (fn? x) (vector? y)))`
+type checkFmap = `(fn [x y] (and (fn? x) (vector? y)))`
 
 type data =
 checkPreMap<
@@ -251,11 +271,22 @@ checkPreMap<
   , last  :  `(fn [m] (-> m last some?))`
   , butlast: `(fn [m] (-> m count dec zero?))`
 
-  , mapLax   : fmap
+  , mapLax   : checkFmap
   , reduceLax: `(fn [x y z] (and (fn? x) (vector? z)))`
   , map: `(fn [x y] (let [v y tf (fn [v] (map type v))] (= (tf v) (tf (map x v)))))`
-  , filter: fmap
-  , remove: fmap
+  , filter: checkFmap
+  , remove: checkFmap
+  , 'every?': checkFmap
+  , some: checkFmap
+
+  , count: 'vector?'
+  , drop : `(fn [n v] (and (pos-int? n) (vector? v)))`
+  , take : `(fn [n v] (and (pos-int? n) (vector? v)))`
+  , reverse: 'vector?'
+  , conj   : `(fn [v e] (vector? v))`
+  , concat : `(fn [vv vv] (and (vector? v) (vector? vv)))`
+  , interleave: `(fn [v vv] (and (vector? v) (vector? vv)))`
+
   , reduce: `(fn [f init vs] (let [letf f a init rvs (map (fn [n] (take n vs)) (range 1 (inc (count vs)))) redpartf (fn [v] (reduce letf a v))] (->> rvs (map redpartf) (map type) )))`
   , assocLax:    `(fn [x y z] (not (and (vector? x) (keyword? y))))`
   , updateLax:   `(fn [x y z] (and (${data['assocLax']} x y z) (fn? z)))`
@@ -276,7 +307,7 @@ checkPreMap<
   , 'update-in': MergePreStr<data['updateInLax'], _updateInStrict>
 }>
 
-export type bi = arithmetic & signs & checker & logical & data & dataStrict
+export type bi = arithmetic & signs & checker & logical & data & dataStrict & stringf
 
 export namespace bi {
   export type add = bi['add']
@@ -302,7 +333,10 @@ export namespace bi {
   export type ismap = bi['map?']
   export type isfn  = bi['fn?']
   export type ififn = bi['ifn?']
-  export type isnatint = bi['nat-int?']
+  export type isint = bi['int?']
+  export type ispos = bi['pos?']
+  export type isneg = bi['neg?']
+  export type isnat = bi['nat?']
   export type isposint = bi['pos-int?']
   export type isnegint = bi['neg-int?']
   export type isodd = bi['odd?']
@@ -344,6 +378,22 @@ export namespace bi {
   export type filter = bi['filter']
   export type remove = bi['remove']
   export type reduce = bi['reduce']
+  export type count = bi['count']
+  export type drop  = bi['drop']
+  export type take  = bi['take']
+  export type reverse = bi['reverse']
+  export type conj    = bi['conj']
+  export type concat  = bi['concat']
+  export type interleave = bi['interleave']
+
+  export type str1 = bi['str1']
+  export type str2 = bi['str2']
+  export type str3 = bi['str3']
+  export type refind = bi['refind']
+  export type split  = bi['split']
+  export type subs   = bi['subs']
+  export type replace = bi['replace']
+  export type join    = bi['join']
 }
 
 // [note]
