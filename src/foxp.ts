@@ -145,6 +145,19 @@ export const putSym = <
 , [c.ValueKey]: v as Symbol
   , [c.HofFlag]: false})
 
+export const putNil = <
+  N extends (null | undefined)>(n: N):
+  { [c.SexprKey]: 'nil'
+  , [c.ContKey] : 'nil'
+  , [c.FnFlagKey]: false
+  , [c.ValueKey]: N
+  , [c.HofFlag]: false} => (
+  { [c.SexprKey]: '' as 'nil'
+  , [c.ContKey] : '' as 'nil'
+  , [c.FnFlagKey]: false
+  , [c.ValueKey]: n
+  , [c.HofFlag]: false})
+
 
 
 // --------------------------
