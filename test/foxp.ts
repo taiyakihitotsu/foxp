@@ -101,4 +101,8 @@ const mrot2 = foxp.ro({x: [0,1,2,[4,5],{a: 1, b: 2}]} as const)
 const tmrot2: ut.Equal<typeof mrot2, {readonly x: readonly [0, 1, 2, readonly [4, 5], {readonly a: 1, readonly b: 2}]}> = true
 const mrot3 = foxp.ro({x: [0,1,2,[4,5, {y: 9, z: 19}], {a: 1, b: 2, c: [6, 7]}]} as const)
 const tmrot3: ut.Equal<typeof mrot3, {readonly x: readonly [0, 1, 2, readonly [4, 5, {readonly y: 9, readonly z: 19}], {readonly a: 1, readonly b: 2, readonly c: readonly [6, 7]}]}> = true
+const mrot4 = foxp.ro([] as const)
+const tmrot4: ut.Equal<typeof mrot4, readonly []> = true
 
+const mrot4_putvec = foxp.putVec(mrot4)
+const mrot4_putvec_raw = foxp.putVec(foxp.ro([] as const))
