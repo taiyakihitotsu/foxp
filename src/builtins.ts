@@ -2,6 +2,7 @@ import * as c from './const'
 import * as foxp from './foxp'
 import type Cion from '@taiyakihitotsu/cion'
 import * as u from './util'
+import * as bb from './builtins-bodies'
 import type * as ut from './type-util'
 // import { ut.LispFalsy, ut.N0, ut.N1, ut.N2, ut.N3, ut.N4 } from './type-util'
 import * as pre from './pre'
@@ -406,7 +407,7 @@ export const getIn = fn<'get-in', pre.bi.getIn>(2)((m,k) => u.getIn([m,k]))
 export const first  = fn<'first', pre.bi.first>(1)((m) => u.get([m,0]))
 export const second = fn<'second', pre.bi.second>(1)((m) => u.get([m,1]))
 export const third = fn<'third', pre.bi.third>(1)((m) => u.get([m,2]))
-export const last = fn<'last', pre.bi.last>(1)((m: unknown[]) => u.get([m,m.length]))
+export const last = fn<'last', pre.bi.last>(1)((m: (unknown[] | readonly unknown[])) => u.get([m, (m.length - 1)]))
 
 // ---------------------------
 // -- builtins: comparation
@@ -452,38 +453,57 @@ export const reduce = fn<'reduce', pre.bi.reduce>(3)((f: {fn: (x:unknown) => unk
 // -- check
 // -----------------------
 
-// number?, string?, vector?, map?, fn?, ifn?, nat-int?, pos-int?, neg-int?, odd?, even?, zero?, keyword?, empty?, boolean?, type, every?, some, nil?, some?
+// [todo] all of pre.bi is temporary, to rewrite them.
+export const isnum    = fn<'number?', pre.bi.isnum>(1)(bb.isnum)
+export const isint    = fn<'int?', pre.bi.isint>(1)(bb.isint)
+export const isstr    = fn<'string?', pre.bi.isstr>(1)(bb.isstr)
+export const isvec    = fn<'vector?', pre.bi.isvec>(1)(bb.isvec)
+export const ismap    = fn<'map?', pre.bi.ismap>(1)(bb.ismap)
+export const isfn     = fn<'fn?', pre.bi.isfn>(1)(bb.isfn)
+export const isnat = fn<'nat?', pre.bi.isnat>(1)(bb.isnat)
+export const isposint = fn<'pos-int?', pre.bi.isposint>(1)(bb.isposint)
+export const isnegint = fn<'neg-int?', pre.bi.isnegint>(1)(bb.isnegint)
+export const ispos    = fn<'pos?', pre.bi.ispos>(1)(bb.ispos) 
+export const isneg    = fn<'neg?', pre.bi.isneg>(1)(bb.isneg)
+export const isodd    = fn<'odd?', pre.bi.isodd>(1)(bb.isodd)
+export const iseven   = fn<'even?', pre.bi.iseven>(1)(bb.iseven)
+export const iszero   = fn<'zero?', pre.bi.iszero>(1)(bb.iszero)
+// [note] I think it's useless.
+// export const iskey    = fn<'keyword?', pre.bi.iskey>(1)(bb.iskey)
+export const isempty  = fn<'empty?', pre.bi.isempty>(1)(bb.isempty)
+export const isbool   = fn<'boolean?', pre.bi.isbool>(1)(bb.isbool)
+export const isevery  = fn<'every?', pre.bi.isevery>(2)(bb.isevery)
+// [todo] write test
+export const some     = fn<'some', pre.bi.some>(2)(bb.some)
+export const isnil    = fn<'nil?', pre.bi.isnil>(1)(bb.isnil)
+export const issome   = fn<'some?', pre.bi.issome>(1)(bb.issome)
 
 // ----------------------
-// -- string
+// -- builtins: string
 // -----------------------
+
+export const str1    = fn<'str', pre.bi.str1>(1)(bb.str1)
+export const str2    = fn<'str', pre.bi.str2>(2)(bb.str2)
+export const str3    = fn<'str', pre.bi.str3>(3)(bb.str3)
+export const refind  = fn<'re-find', pre.bi.refind>(2)(bb.refind)
+export const split   = fn<'split', pre.bi.split>(2)(bb.split)
+export const subs    = fn<'subs', pre.bi.subs>(3)(bb.subs)
+export const replace = fn<'replace', pre.bi.replace>(3)(bb.replace)
+export const join    = fn<'join', pre.bi.join>(2)(bb.join)
 
 // ----------------------
 // -- builtins: data
 // ----------------------
 
 // export const keys
-// export const count
-// export const drop
-// export const take
-// export const reverse
-// export const conj
-// export const concat
-// export const interleave
+export const count   = fn<'count', pre.bi.count>(1)(bb.count)
+export const drop    = fn<'drop', pre.bi.drop>(2)(bb.drop)
+export const take    = fn<'take', pre.bi.take>(2)(bb.take)
+export const reverse = fn<'reverse', pre.bi.reverse>(1)(bb.reverse)
+export const conj    = fn<'conj', pre.bi.conj>(2)(bb.conj)
+export const concat  = fn<'concat', pre.bi.concat>(2)(bb.concat)
+export const interleave = fn<'interleave', pre.bi.interleave>(2)(bb.interleave)
 
 
 
 export * as builtins from './builtins'
-
-
-
-
-
-
-
-
-
-
-
-
-
