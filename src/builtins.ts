@@ -37,11 +37,14 @@ export type AssignSym<
       , [c.HofFlag]: false }
   : never
 
+// [note] Symbol may have (null | undefined) unintentionally.
 export type IsSymbol<
   Data> =
   Data extends FoxTypeExt
-    ? Symbol extends Data[c.ValueKey]
-      ? true
+    ? ut.Equal<Symbol, Data[c.ValueKey]> extends true
+      ? ut.Equal<Data[c.SexprKey], 'nil'> extends true
+        ? false
+      : true
     : false
   : never
 
@@ -59,12 +62,14 @@ export type ForceAssign<
 // 
 // [note]
 // [c.FnFlagKey]: ut.Equal<Symbol, P> <- this is buggy.
+// This makes that updated object has {[c.FnFlagKey]: false} and object[c.FnFlayKey] is true at the same time on the type level, in TypeScript:v5.8.3.
+// It should be considered more deeply.
 export type FoxWith<
   P
 , N> =
 { [c.SexprKey]: (N extends FoxTypeExt ? N : never)[c.SexprKey]
     , [c.ContKey]: (N extends FoxTypeExt ? N : never)[c.ContKey]
-    , [c.FnFlagKey]: ut.Equal<(N extends FoxTypeExt ? N : never)[c.FnFlagKey], true> extends true ? true : ut.Equal<Symbol,P> extends true ? true : false
+    , [c.FnFlagKey]: ut.Equal<(N extends FoxTypeExt ? N : never)[c.FnFlagKey], true> extends true ? true : ut.Equal<Symbol,P> extends true ? ut.Equal<(N extends FoxTypeExt ? N : never)[c.SexprKey], 'nil'> extends true ? false : true : false
     , [c.ValueKey]: P
     , [c.HofFlag]: false }
 
@@ -106,6 +111,7 @@ export type UnrollArgsStr<
 
 export type ExpandPre<narg extends ut.N4> = (narg extends ut.N0 ? '' : narg extends ut.N1 ? ([string] | readonly [string]) : narg extends ut.N2 ? ([string, string] | readonly [string, string]) : ([string, string, string] | readonly [string, string, string])) | string
 
+// [note] `IsSymbol<A>` returns true even if it's null | undefined.
 export type GetFlag<A> = A extends FoxTypeExt ? ut.Equal<A[c.FnFlagKey], true> extends true ? true : IsSymbol<A> extends true ? true : false : false
 
 const runFn = <
