@@ -6,24 +6,22 @@ import * as pre from '../../src/pre'
 
 // [todo] move.
 const pinc = foxp.putFn1<pre.bi.inc, 'inc'>()(inc())
+const ptest = foxp.putFn1<pre.bi.inc, 'inc'>()((w: number) => ({value: 1}))
 
 const map_test_ok_0:
   {[c.SexprKey]: '[1 2 3]'
   ,[c.ValueKey]: unknown[]} =
   map
     ()
-//    (pinc, foxp.putVec(foxp.ro([0, 1, 2] as const)))
-    (foxp.putFn1<pre.bi.inc, 'inc'>()((w: unknown) => ({value: 1})), foxp.putVec(foxp.ro([0, 1, 2] as const)))
+    (pinc, foxp.putVec(foxp.ro([0, 1, 2] as const)))
 
-try {
-const map_test_no_0:
+// [todo] this should be an error
+const map_test_ok_1:
   {[c.SexprKey]: '[1 2 3]'
   ,[c.ValueKey]: unknown[]} =
   map
     ()
-    // [todo] it may be fixed later.
     (pinc, foxp.putVec(foxp.ro(['0', '1', '2'] as const)))
-} catch {}
 
 try {
 const map_test_no_1:

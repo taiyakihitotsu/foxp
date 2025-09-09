@@ -63,5 +63,16 @@ export const conj    = (v: unknown[], e: unknown) => [...v, e]
 export const concat  = (v: unknown[], vv: unknown[]) => [...v, ...vv]
 export const interleave = (v: unknown[], vv: unknown[]) => v.map((e, idx) => [e, vv[idx]]).flat()
 
+// ----------------------
+// -- builtins: fmap
+// ----------------------
+
+export const map =
+  (f: unknown, m: unknown) => (m as unknown[])
+    .map(i => ({value: i}))
+    .map((f as {[c.FnKey]: (i: {value: unknown}) => {value: unknown}})![c.FnKey])
+    .map((i: {value: unknown}) => i.value)
  
 export * as util from './builtins-bodies'
+
+

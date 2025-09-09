@@ -443,10 +443,19 @@ export const If  = fn<'if', pre.bi.If>(3)((x,y,z) => x ? y : z)
 // -----------------------
 // -- builtins: fmap
 // -----------------------
-export const map = fn<'map', pre.bi.map>(2)((f: {fn: (w: unknown) => {value: unknown}}, m: (unknown[] | readonly unknown[])) => m.map(i => ({value: i})).map(f![c.FnKey]).map((i: {value: unknown}) => i.value))
+
+// [note]
+// This is an easy way to fix `44ea12d9b72c6953fb4faeef432a5d4f1b840bd2`.
+// See Editor section in `DEV.md` .
+export const map =
+  fn<'map', pre.bi.map>
+    (2)
+    (bb.map)
+
 export const filter = fn<'filter', pre.bi.filter>(2)((f: {fn: (x:unknown) => unknown}, m:unknown[]) => m.filter(f![c.FnKey]))
+
 export const remove = fn<'remove', pre.bi.remove>(2)((f: {fn: (x:unknown) => unknown}, m:unknown[]) => m.filter((a) => !(f![c.FnKey](a))))
-// reduce
+
 export const reduce = fn<'reduce', pre.bi.reduce>(3)((f: {fn: (x:unknown) => unknown}, i: unknown, m:unknown[]) => m.reduce(f![c.FnKey], i))
 
 // -----------------------
