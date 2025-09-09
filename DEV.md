@@ -36,9 +36,9 @@ The core codes are placed in `src/builtins.ts` / `src/foxp.ts`.
 To translate TypeScript values to CionLisp's values, in the other words, values to types, it's written in `compiler.ts`. Wrappes of `foxp.ts` use it to decide a value of [c.SexprKey].
 The code base picks them when doing type-checks via pre-conditions, implemented in `pre.ts`.
  - compiler: This uses `type-util.ts`
- - type-util:
- - pre:
- - merge: uses for pre-conditions.
+ - type-util: Utils and for TypeScript value / type to Cion Sexpr.
+ - pre: Pre-conditions for the alternative type checker. They are strings which are pred functions in Cion.
+ - merge: This is merging strings which expresses pre-condition.
 
 Rational numbers should be passed with string, like `foxp.putPrim('3/2')`. This is implemented with `mathjs`.
  - fraction: a simple utils.
@@ -49,19 +49,19 @@ Rational numbers should be passed with string, like `foxp.putPrim('3/2')`. This 
 # Environment
 ## Editor
 If you use `emacs` with `tide` / `flycheck`, which relies on `tsserver`, you should know that there's a difference.
-You can pick the commit and watch the behavior. In this, `tide` on `emacs` says no error in `test/builtins/map.ts` but `npm run check:test` which executes `tsc` spits an error.
+You can pick the commit ([44ea12d9b72c6953fb4faeef432a5d4f1b840bd2](https://github.com/taiyakihitotsu/foxp/commit/44ea12d9b72c6953fb4faeef432a5d4f1b840bd2)) and watch the behavior. In this, `tide` on `emacs` says no error in `test/builtins/map.ts` but `npm run check:test` which executes `tsc` spits an error.
 
-> test/builtins/map.ts:31:6 - error TS2345: Argument of type 'LispWrapedFnWith<"number?", "inc", <Arg0 extends FoxWith<true extends IsSymbol<Arg0> ? Symbol : number, Arg0>, Arg1 extends FoxWith<true extends IsSymbol<Arg1> ? Symbol : never, Arg1>, Arg2 extends FoxWith<...>, Arg3 extends FoxWith<...>, IsQuote extends [...] extends [...] ? false : true, UnrollArgsStrResult extend...' is not assignable to parameter of type 'FoxWith<{ fn: (w: unknown) => { value: unknown; }; }, LispWrapedFnWith<"number?", "inc", <Arg0 extends FoxWith<true extends IsSymbol<Arg0> ? Symbol : number, Arg0>, Arg1 extends FoxWith<true extends IsSymbol<...> ? Symbol : never, Arg1>, Arg2 extends FoxWith<...>, Arg3 extends FoxWith<...>, IsQuote extends [...] ext...'.
->  The types of '[c.ValueKey].fn' are incompatible between these types.
->    Type '<Arg0 extends FoxWith<true extends IsSymbol<Arg0> ? Symbol : number, Arg0>, Arg1 extends FoxWith<true extends IsSymbol<Arg1> ? Symbol : never, Arg1>, Arg2 extends FoxWith<...>, Arg3 extends FoxWith<...>, IsQuote extends [...] extends [...] ? false : true, UnrollArgsStrResult extends UnrollArgsStr<...>, UnrollContStr...' is not assignable to type '(w: unknown) => { value: unknown; }'.
->      Types of parameters 'w' and 'w' are incompatible.
->        Type 'unknown' is not assignable to type 'undefined'.
->
->31     (pinc, foxp.putVec(foxp.ro(['0', '1', '2'] as const)))
->        ~~~~
->
->
->Found 1 error in test/builtins/map.ts:31
+> test/builtins/map.ts:31:6 - error TS2345: Argument of type 'LispWrapedFnWith<"number?", "inc", <Arg0 extends FoxWith<true extends IsSymbol<Arg0> ? Symbol : number, Arg0>, Arg1 extends FoxWith<true extends IsSymbol<Arg1> ? Symbol : never, Arg1>, Arg2 extends FoxWith<...>, Arg3 extends FoxWith<...>, IsQuote extends [...] extends [...] ? false : true, UnrollArgsStrResult extend...' is not assignable to parameter of type 'FoxWith<{ fn: (w: unknown) => { value: unknown; }; }, LispWrapedFnWith<"number?", "inc", <Arg0 extends FoxWith<true extends IsSymbol<Arg0> ? Symbol : number, Arg0>, Arg1 extends FoxWith<true extends IsSymbol<...> ? Symbol : never, Arg1>, Arg2 extends FoxWith<...>, Arg3 extends FoxWith<...>, IsQuote extends [...] ext...'.  
+>  The types of '[c.ValueKey].fn' are incompatible between these types.  
+>    Type '<Arg0 extends FoxWith<true extends IsSymbol<Arg0> ? Symbol : number, Arg0>, Arg1 extends FoxWith<true extends IsSymbol<Arg1> ? Symbol : never, Arg1>, Arg2 extends FoxWith<...>, Arg3 extends FoxWith<...>, IsQuote extends [...] extends [...] ? false : true, UnrollArgsStrResult extends UnrollArgsStr<...>, UnrollContStr...' is not assignable to type '(w: unknown) => { value: unknown; }'.  
+>      Types of parameters 'w' and 'w' are incompatible.  
+>        Type 'unknown' is not assignable to type 'undefined'.  
+>  
+>31     (pinc, foxp.putVec(foxp.ro(['0', '1', '2'] as const)))  
+>        ~~~~  
+>  
+>  
+>Found 1 error in test/builtins/map.ts:31  
 
 This error is made by the way of implementation of `runFn` in `src/builtins.ts`, but it's enough to see both `tsx` and `tsserver` run in a different way, not need to understand what the error want to say.
 
