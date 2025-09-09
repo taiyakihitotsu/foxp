@@ -443,7 +443,7 @@ export const If  = fn<'if', pre.bi.If>(3)((x,y,z) => x ? y : z)
 // -----------------------
 // -- builtins: fmap
 // -----------------------
-export const map = fn<'map', pre.bi.map>(2)((f: {fn: (x:unknown) => unknown}, m:unknown[]) => m.map(f![c.FnKey]))
+export const map = fn<'map', pre.bi.map>(2)((f: {fn: (w: unknown) => {value: unknown}}, m: (unknown[] | readonly unknown[])) => m.map(i => ({value: i})).map(f![c.FnKey]).map((i: {value: unknown}) => i.value))
 export const filter = fn<'filter', pre.bi.filter>(2)((f: {fn: (x:unknown) => unknown}, m:unknown[]) => m.filter(f![c.FnKey]))
 export const remove = fn<'remove', pre.bi.remove>(2)((f: {fn: (x:unknown) => unknown}, m:unknown[]) => m.filter((a) => !(f![c.FnKey](a))))
 // reduce

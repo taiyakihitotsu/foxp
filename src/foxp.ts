@@ -103,9 +103,11 @@ const _putFn1 = <Pre, F, T>(f:T): LispWrapedFnWith<Pre,F,T> => (
   { [c.SexprKey]: '' as F
   , [c.ContKey]: '' as F
   , [c.FnFlagKey]: false
-  , [c.ValueKey]: {[c.FnKey]: f as T, [c.PreKey]: '' as Pre}
+  , [c.ValueKey]:
+    { [c.FnKey]: f as T
+    , [c.PreKey]: '' as Pre}
   , [c.HofFlag]: false})
-export const putFn1 = <Pre,F>() => <T>(f:T): LispWrapedFnWith<Pre,F,T> => _putFn1<Pre,F,T>(f)
+export const putFn1 = <Pre,F>() => <T>(f: T): LispWrapedFnWith<Pre,F,T> => _putFn1<Pre,F,T>(f)
 
 // -- primitive
 // [note]

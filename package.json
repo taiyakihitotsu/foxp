@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "npx tsc",
-    "build:watch": "npx tsc --watch",
+    "build:watch": "npx tsc --watch --project tsconfig.test.json",
     "check": "npx tsc --noEmit",
     "check:test": "npx tsc --noEmit --project tsconfig.test.json && vitest run",
     "check:smith": "sh ./submodules/scripts/sandbox-smith.sh && sh ./submodules/scripts/check-smith.sh",
