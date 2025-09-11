@@ -60,7 +60,7 @@ export const take    = (n: number, v: unknown[] | readonly unknown []) => v.slic
 export const reverse = (v: unknown[] | readonly unknown[]) => Array.from(v).reverse()
 export const conj    = (v: unknown[] | readonly unknown [], e: unknown) => [...v, e]
 export const concat  = (v: unknown[] | readonly unknown [], vv: unknown[] | readonly unknown []) => [...v, ...vv]
-export const interleave = (v: unknown[] | readonly unknown [], vv: unknown[] | readonly unknown []) => v.map((e, idx) => [e, vv[idx]]).flat()
+export const interleave = (v: unknown[] | readonly unknown [], vv: unknown[] | readonly unknown []) => v.map((e, idx) => idx < vv.length && idx < v.length ? [e, vv[idx]] : []).flat()
 
 // ----------------------
 // -- builtins: fmap
