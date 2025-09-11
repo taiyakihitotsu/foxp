@@ -54,13 +54,13 @@ export const join = (s: string, v: Prim[]) => v.join(s)
 
 // export const keys
 
-export const count   = (v: unknown[]) => isvec(v) ? v.length : undefined
-export const drop    = (n: number, v: unknown[]) => v.slice(n, v.length + 1)
-export const take    = (n: number, v: unknown[]) => v.slice(0, n)
-export const reverse = (v: unknown[]) => v.reverse()
-export const conj    = (v: unknown[], e: unknown) => [...v, e]
-export const concat  = (v: unknown[], vv: unknown[]) => [...v, ...vv]
-export const interleave = (v: unknown[], vv: unknown[]) => v.map((e, idx) => [e, vv[idx]]).flat()
+export const count   = (v: unknown[] | readonly unknown []) => isvec(v) ? v.length : undefined
+export const drop    = (n: number, v: unknown[] | readonly unknown []) => v.slice(n, v.length + 1)
+export const take    = (n: number, v: unknown[] | readonly unknown []) => v.slice(0, n)
+export const reverse = (v: unknown[] | readonly unknown[]) => Array.from(v).reverse()
+export const conj    = (v: unknown[] | readonly unknown [], e: unknown) => [...v, e]
+export const concat  = (v: unknown[] | readonly unknown [], vv: unknown[] | readonly unknown []) => [...v, ...vv]
+export const interleave = (v: unknown[] | readonly unknown [], vv: unknown[] | readonly unknown []) => v.map((e, idx) => [e, vv[idx]]).flat()
 
 // ----------------------
 // -- builtins: fmap
