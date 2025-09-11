@@ -469,6 +469,11 @@ export const reduce =
 
 export const some     = fn<'some', pre.bi.some>(2)(bb.some)
 
+export const apply =
+  fn<'apply', pre.bi.apply>
+    (2)
+    (bb.apply)
+
 // -----------------------
 // -- check
 // -----------------------

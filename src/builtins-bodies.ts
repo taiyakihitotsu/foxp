@@ -105,5 +105,7 @@ export const reduce =
 
 export const some     = (f: unknown, v: unknown[] | readonly unknown []) => isvec(v) && !(v.map(_pure).every((y) => !(_concat((f as _FmapF)![c.FnKey](y)))))
 
+export const apply =
+  (f: unknown, v: unknown[] | readonly unknown[]) => _concat(((f as _FmapF)![c.FnKey] as (...args: {[c.ValueKey]: unknown}[]) => {[c.ValueKey]: unknown})(...((v).map(_pure))))
 
 export * as util from './builtins-bodies'
