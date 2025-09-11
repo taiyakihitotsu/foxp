@@ -474,6 +474,11 @@ export const apply =
     (2)
     (bb.apply)
 
+export const zipmap =
+  fn<'zipmap', pre.bi.zipmap>
+    (2)
+    (bb.zipmap)
+
 // -----------------------
 // -- check
 // -----------------------

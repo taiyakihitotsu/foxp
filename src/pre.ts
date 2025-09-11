@@ -279,6 +279,7 @@ checkPreMap<
   , 'every?': checkFmap
   , some: checkFmap
   , apply: `(fn [f v] (and (vector? v) (fn? f) (apply f v)))`
+  , zipmap: `(fn [v vv] (and (vector? v) (vector? vv)))`
 
   , count: 'vector?'
   , drop : `(fn [n v] (and (pos-int? n) (vector? v)))`
@@ -379,6 +380,7 @@ export namespace bi {
   export type filter = bi['filter']
   export type remove = bi['remove']
   export type apply  = bi['apply']
+  export type zipmap = bi['zipmap']
   export type reduce = bi['reduce']
   export type count = bi['count']
   export type drop  = bi['drop']

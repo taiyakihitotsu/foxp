@@ -108,4 +108,9 @@ export const some     = (f: unknown, v: unknown[] | readonly unknown []) => isve
 export const apply =
   (f: unknown, v: unknown[] | readonly unknown[]) => _concat(((f as _FmapF)![c.FnKey] as (...args: {[c.ValueKey]: unknown}[]) => {[c.ValueKey]: unknown})(...((v).map(_pure))))
 
+const _pickkey = (s: unknown) => typeof s === 'string' && s.startsWith(':') ? s.slice(1) : s
+const _nil = undefined
+
+export const zipmap = (ks: unknown[] | readonly unknown[], vs: unknown[] | readonly unknown[]) => (0 === ks.length) && (0 === vs.length) ? _nil : (Object.fromEntries((ks as string[]).map(_pickkey).slice(0, vs.length).map((k, i) => [k, vs[i]])))
+
 export * as util from './builtins-bodies'
