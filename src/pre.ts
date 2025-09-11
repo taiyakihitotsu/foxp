@@ -223,7 +223,7 @@ checkPreMap<{
 // ----------------
 
 type checkPrim = `(fn [x] (or (number? x) (string? x) (boolean? x)))`
-type isstr2 = `(fn [x y] (string? x) (string? y))`
+type isstr2 = `(fn [x y] (and (string? x) (string? y)))`
 type isstr3 = `(fn [x y z] (string? x) (string? y) (string? z))`
 type stringf =
 checkPreMap<

@@ -44,7 +44,7 @@ export const str3 = (v: Prim, vv: Prim, vvv: Prim) => `${str1(v)}${str1(vv)}${st
 
 export const refind = (re: string, s: string) => {
   const m = new RegExp(re).exec(s)
-  return m ? m.slice(1) : undefined
+  return m ? m[0] : ''
 }
 
 export const split = (s: string, re: string) => s.split(new RegExp(re)).filter((p) => p !== '')
