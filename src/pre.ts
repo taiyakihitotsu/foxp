@@ -232,7 +232,7 @@ checkPreMap<
   , str3: `(fn [x y z] (and (${checkPrim} x) (${checkPrim} y) (${checkPrim} z)))`
   , refind: isstr2
   , split: isstr2
-  , subs: `(fn [x y z] (and (string? x) (number? y) (number? z) (> y z)))`
+  , subs: `(fn [x y z] (and (string? x) (nat? y) (nat? z) (< y z)))`
   , replace: isstr3
   , join: `(fn [x y] (and (string? x) (vector? y) (every? prim? y)))`
 }>
