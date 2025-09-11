@@ -284,7 +284,7 @@ checkPreMap<
   , take : `(fn [n v] (and (pos-int? n) (vector? v)))`
   , reverse: 'vector?'
   , conj   : `(fn [v e] (vector? v))`
-  , concat : `(fn [vv vv] (and (vector? v) (vector? vv)))`
+  , concat : `(fn [v vv] (and (vector? v) (vector? vv)))`
   , interleave: `(fn [v vv] (and (vector? v) (vector? vv)))`
 
   , reduce: `(fn [f init vs] (let [letf f a init rvs (map (fn [n] (take n vs)) (range 1 (inc (count vs)))) redpartf (fn [v] (reduce letf a v))] (->> rvs (map redpartf) (map type) )))`
