@@ -26,7 +26,6 @@ export const isempty  = (v: unknown) => isvec(v) && v.length === 0
 export const isbool   = (v: unknown) => typeof v === 'boolean'
 // [note] we don't need generics here.
 export const isevery  = (f: (x: unknown) => boolean, v: unknown) => isvec(v) && v.every(f)
-export const some     = (f: (x: unknown) => boolean, v: unknown) => isvec(v) && !v.every((y) => !f(y))
 // [note] `nil` doesn't exist in TypeScript.
 export const isnil    = (v: unknown) => v === null || v === undefined
 export const issome   = (v: unknown) => !isnil(v)
@@ -67,12 +66,44 @@ export const interleave = (v: unknown[], vv: unknown[]) => v.map((e, idx) => [e,
 // -- builtins: fmap
 // ----------------------
 
+// [todo]
+// This is not typed properly.
+// I'm slacking off because of type-checks will be replaced with Cion context.
+//
+// This is incovenient for defining new builtins because of lacking a type check of its body.
+// I'll rewrite them.
+
+const _pure = (i: unknown) => ({value: i})
+const _concat = (i: {value: unknown}) => i.value
+type _FmapF = {[c.FnKey]: (i: {value: unknown}) => {value: unknown}}
+
 export const map =
-  (f: unknown, m: unknown) => (m as unknown[])
-    .map(i => ({value: i}))
-    .map((f as {[c.FnKey]: (i: {value: unknown}) => {value: unknown}})![c.FnKey])
-    .map((i: {value: unknown}) => i.value)
- 
+  (f: unknown, m: unknown) =>
+    (m as unknown[])
+    .map(_pure)
+    .map((f as _FmapF)![c.FnKey])
+    .map(_concat)
+
+const _filterf = (f: _FmapF) => (a: unknown) => ((f as _FmapF)![c.FnKey](a as {value: unknown}).value === true)
+
+export const filter =
+  (f: unknown, m: unknown[] | readonly unknown[]) => 
+    (m as unknown[])
+    .map(_pure)
+    .filter(_filterf(f as _FmapF))
+    .map(_concat)
+
+export const remove =
+  (f: unknown, m: unknown | unknown[]) => 
+    (m as unknown[])
+    .map(_pure)
+    .filter((a) => !(_filterf(f as _FmapF))(a))
+    .map(_concat)
+
+export const reduce =
+  ((f: unknown, i: unknown, m:unknown[] | readonly unknown[]) => (_concat( m.map(_pure).reduce((f as {fn: (x:unknown, y: unknown) => unknown})![c.FnKey], _pure(i)) as {value: unknown})))
+
+export const some     = (f: unknown, v: unknown[] | readonly unknown []) => isvec(v) && !(v.map(_pure).every((y) => !(_concat((f as _FmapF)![c.FnKey](y)))))
+
+
 export * as util from './builtins-bodies'
-
-

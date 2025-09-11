@@ -452,11 +452,22 @@ export const map =
     (2)
     (bb.map)
 
-export const filter = fn<'filter', pre.bi.filter>(2)((f: {fn: (x:unknown) => unknown}, m:unknown[]) => m.filter(f![c.FnKey]))
+export const filter = 
+  fn<'filter', pre.bi.filter>
+    (2)
+    (bb.filter)
 
-export const remove = fn<'remove', pre.bi.remove>(2)((f: {fn: (x:unknown) => unknown}, m:unknown[]) => m.filter((a) => !(f![c.FnKey](a))))
+export const remove = 
+  fn<'remove', pre.bi.remove>
+    (2)
+    (bb.remove)
 
-export const reduce = fn<'reduce', pre.bi.reduce>(3)((f: {fn: (x:unknown) => unknown}, i: unknown, m:unknown[]) => m.reduce(f![c.FnKey], i))
+export const reduce =
+  fn<'reduce', pre.bi.reduce>
+    (3)
+    (bb.reduce)
+
+export const some     = fn<'some', pre.bi.some>(2)(bb.some)
 
 // -----------------------
 // -- check
@@ -483,7 +494,6 @@ export const isempty  = fn<'empty?', pre.bi.isempty>(1)(bb.isempty)
 export const isbool   = fn<'boolean?', pre.bi.isbool>(1)(bb.isbool)
 export const isevery  = fn<'every?', pre.bi.isevery>(2)(bb.isevery)
 // [todo] write test
-export const some     = fn<'some', pre.bi.some>(2)(bb.some)
 export const isnil    = fn<'nil?', pre.bi.isnil>(1)(bb.isnil)
 export const issome   = fn<'some?', pre.bi.issome>(1)(bb.issome)
 
