@@ -67,6 +67,7 @@ This error is made by the way of implementation of `runFn` in `src/builtins.ts`,
 
 You can just watch files properly and simply with `npm run build:watch`.
 
+(This is the same: [845126bf833a9caf6ca619262fbbdd929351dcee](https://github.com/taiyakihitotsu/foxp/commit/845126bf833a9caf6ca619262fbbdd929351dcee))
 
 
 
