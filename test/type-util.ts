@@ -31,11 +31,21 @@ const test_rtou3: typeUtil.RtoS<{readonly a: readonly [0, 1], readonly b: 2}> ex
 const test_rtou4: typeUtil.RtoS<{readonly a: readonly [0, {readonly c: 2}], readonly b: 2}> extends '{:b 2 :a [0 {:c 2}]}' | '{:a [0 {:c 2}] :b 2}' ? true : false = true
 
 
-const testvtos0: typeUtil.VtoS<[readonly [1,2,3], '0', 5]> = '[[1 2 3] 0 5]' 
-const testvtos1: typeUtil.VtoS<[[1,2,3], '0', 5]> = '[[1 2 3] 0 5]' 
-const testvtos2: typeUtil.VtoS<[[1,[22,23],3], '0', 5]> = '[[1 [22 23] 3] 0 5]' 
-const testvtos3: typeUtil.VtoS<[[1,[22,23],[31],3], '0', 5]> = '[[1 [22 23] [31] 3] 0 5]' 
+const testvtos0: typeUtil.VtoS<[readonly [1,2,3], '0', 5]> = `[[1 2 3] '0' 5]`
+const testvtos1: typeUtil.VtoS<[[1,2,3], '0', 5]> = `[[1 2 3] '0' 5]`
+const testvtos2: typeUtil.VtoS<[[1,[22,23],3], '0', 5]> = `[[1 [22 23] 3] '0' 5]`
+const testvtos3: typeUtil.VtoS<[[1,[22,23],[31],3], '0', 5]> = `[[1 [22 23] [31] 3] '0' 5]`
 const testvtos4: typeUtil.VtoS<[6, [1, readonly [22, 23, {a: 6}, 5], 5], 5, [31, 32], {readonly z: {zz: [33, 4]}}, {x: {y: {z: {a: 1}}}}]> = '[6 [1 [22 23 {:a 6} 5] 5] 5 [31 32] {:z {:zz [33 4]}} {:x {:y {:z {:a 1}}}}]'
+const testvtos5: typeUtil.VtoS<['1', 2]> = `['1' 2]`
+const testvtos6: typeUtil.VtoS<[':a', 2]> = `[:a 2]`
+
+const forcestr0: typeUtil.ForceStr<'1'> = `'1'`
+const forcestr1: typeUtil.ForceStr<1> = `1`
+const forcestr2: typeUtil.ForceStr<':a'> = `:a`
+const forcestr3: typeUtil.ForceStr<true> = 'true'
+
+
+
 
 const test_ft0 = typeUtil.ForceTuple([1, '1', '1', '1', '1', '1', '1', '2'] as const)
 // @ts-expect-error:

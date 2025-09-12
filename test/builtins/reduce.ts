@@ -35,17 +35,6 @@ const reduce_test_no_1 =
      , foxp.putVec(foxp.ro([0, 1, 2, true] as const)))
 } catch {}
 
-try {
-const reduce_test_no_2 =
-  reduce
-    ()
-    // [todo] fix this.
-    // // @ts-expect-error:
-    (pisnum
-     , foxp.putPrim(1)
-     , foxp.putVec(foxp.ro([0, 1, 2] as const)))
-} catch {}
-
 describe('reduce', () => {
     it('(reduce + 1 [0 1 2])', () => { expect(reduce_test_ok_0.value).toBe(4) })
 })

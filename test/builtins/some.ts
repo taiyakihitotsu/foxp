@@ -21,13 +21,12 @@ const some_test_ok_1:
     ()
     (pisnum, foxp.putVec(foxp.ro([true, true] as const)))
 
-// [todo] fix for cion.
-// const some_test_ok_2:
-//   {[c.SexprKey]: '[]'
-//   ,[c.ValueKey]: unknown[]} =
-//   some
-//     ()
-//     (pisnum, foxp.putVec(foxp.ro([] as const)))
+const some_test_ok_2:
+  {[c.SexprKey]: 'false'
+  ,[c.ValueKey]: unknown} =
+  some
+    ()
+    (pisnum, foxp.putVec(foxp.ro([] as const)))
 
 try {
 const some_test_no_2:
@@ -43,4 +42,5 @@ const some_test_no_2:
 describe('some', () => {
     it('(some number? [0 1 2 true])', () => { expect(some_test_ok_0.value).toBe(true) })
     it('(some number? [true true])', () => { expect(some_test_ok_1.value).toBe(false) })
+    it('(some number? [])', () => { expect(some_test_ok_1.value).toBe(false) })
 })

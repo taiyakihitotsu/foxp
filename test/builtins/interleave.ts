@@ -43,7 +43,7 @@ const interleave_test_4: {
    interleave
      ()
      ( foxp.putVec(foxp.ro([0, 1] as const))
-     , foxp.putVec(foxp.ro(["'x'"] as const)))
+     , foxp.putVec(foxp.ro(['x'] as const)))
 
 try {
 const interleave_test_no_0: {
@@ -72,6 +72,5 @@ describe('interleave', () => {
   it('(interleave [0 1 2 3] [])', () => { expect(interleave_test_1.value).toStrictEqual([]) })
   it('(interleave [] [0 1 2 3])', () => { expect(interleave_test_2.value).toStrictEqual([]) })
   it('(interleave [] [])', () => { expect(interleave_test_3.value).toStrictEqual([]) })
-  // [todo]
-  it('(interleave [0 1] ["x"])', () => { expect(interleave_test_4.value).toStrictEqual([0, "'x'"]) })
+  it('(interleave [0 1] ["x"])', () => { expect(interleave_test_4.value).toStrictEqual([0, 'x']) })
 })

@@ -15,9 +15,7 @@ const third_test_ok1:
 const third_test_no1:
   {sexpr: '3'
    value: number} = 
-   // [todo] why?
-   // @ts-expect-error:
-   third<'(fn [n] (and (vector? n) (every? nat-int? n)))'>()(foxp.putVec(foxp.ro([1,2,3] as const)))
+   third<'(fn [n] (and (vector? n) (every? nat? n)))'>()(foxp.putVec(foxp.ro([1,2,3] as const)))
 
 // [note]
 // In Cion context, `third` returns `nil` if it's empty.

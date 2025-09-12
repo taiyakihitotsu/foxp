@@ -12,12 +12,10 @@ const second_test_ok1:
    value: number} = 
    second<'(fn [n] (and (vector? n) (every? pos-int? n)))'>()(foxp.putVec(foxp.ro([1,2,3] as const)))
 
-const second_test_no1:
+const second_test_ok2:
   {sexpr: '2'
    value: number} = 
-   // [todo] why?
-   // @ts-expect-error:
-   second<'(fn [n] (and (vector? n) (every? nat-int? n)))'>()(foxp.putVec(foxp.ro([1,2,3] as const)))
+   second<'(fn [n] (and (vector? n) (every? nat? n)))'>()(foxp.putVec(foxp.ro([1,2,3] as const)))
 
 // [note]
 // In Cion context, `second` returns `nil` if it's empty.
@@ -40,4 +38,5 @@ const second_test_no3:
 describe("second", () => {
 it('', () => { expect(second_test_ok0.value).toBe(2) })
 it('', () => { expect(second_test_ok1.value).toBe(2) })
+it('', () => { expect(second_test_ok2.value).toBe(2) })
 })

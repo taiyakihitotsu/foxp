@@ -15,13 +15,15 @@ const map_test_ok_0:
     ()
     (pinc, foxp.putVec(foxp.ro([0, 1, 2] as const)))
 
-// [todo] this should be an error
+try {
 const map_test_ok_1:
-  {[c.SexprKey]: '[1 2 3]'
+  {[c.SexprKey]: {ast: unknown}
   ,[c.ValueKey]: unknown[]} =
   map
     ()
+    // @ts-expect-error
     (pinc, foxp.putVec(foxp.ro(['0', '1', '2'] as const)))
+} catch {}
 
 try {
 const map_test_no_1:

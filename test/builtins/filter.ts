@@ -43,6 +43,6 @@ const filter_test_no_2:
 describe('filter', () => {
     it('(filter number? [0 1 2 true])', () => { expect(filter_test_ok_0.value).toStrictEqual([0,1,2]) })
     it('(filter number? [true true])', () => { expect(filter_test_ok_1.value).toStrictEqual([]) })
-//   it('(filter number? [0 1 2 true])', () => { expect(filter_test_ok_0.value).toStrictEqual([0,1,2]) })
+   it('(filter number? [])', () => { expect(filter_test_ok_2.value).toStrictEqual([]) })
     
 })

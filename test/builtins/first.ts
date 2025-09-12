@@ -15,9 +15,7 @@ const first_test_ok1:
 const first_test_no1:
   {sexpr: '1'
    value: number} = 
-   // [todo] why?
-   // @ts-expect-error:
-   first<'(fn [n] (and (vector? n) (every? nat-int? n)))'>()(foxp.putVec(foxp.ro([1,2,3] as const)))
+   first<'(fn [n] (and (vector? n) (every? nat? n)))'>()(foxp.putVec(foxp.ro([1,2,3] as const)))
 
 // [note]
 // In Cion context, `first` returns `nil` if it's empty.

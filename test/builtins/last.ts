@@ -13,12 +13,10 @@ const last_test_ok1:
    value: number} = 
    last<'(fn [n] (and (vector? n) (every? pos-int? n)))'>()(foxp.putVec(foxp.ro([1,2,3] as const)))
 
-const last_test_no1:
+const last_test_ok2:
   {sexpr: '3'
    value: number} = 
-   // [todo] why?
-   // @ts-expect-error:
-   last<'(fn [n] (and (vector? n) (every? nat-int? n)))'>()(foxp.putVec(foxp.ro([1,2,3] as const)))
+   last<'(fn [n] (and (vector? n) (every? nat? n)))'>()(foxp.putVec(foxp.ro([1,2,3] as const)))
 
 // [note]
 // In Cion context, `last` returns `nil` if it's empty.
@@ -43,4 +41,5 @@ const last_test_no3:
 describe("last", () => {
 it('', () => { expect(last_test_ok0.value).toBe(3) })
 it('', () => { expect(last_test_ok1.value).toBe(3) })
+it('', () => { expect(last_test_ok2.value).toBe(3) })
 })

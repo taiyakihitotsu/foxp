@@ -21,13 +21,12 @@ const remove_test_ok_1:
     ()
     (pisnum, foxp.putVec(foxp.ro([true, true] as const)))
 
-// [todo] fix for cion.
-// const remove_test_ok_2:
-//   {[c.SexprKey]: '[]'
-//   ,[c.ValueKey]: unknown[]} =
-//   remove
-//     ()
-//     (pisnum, foxp.putVec(foxp.ro([] as const)))
+const remove_test_ok_2:
+  {[c.SexprKey]: '[]'
+  ,[c.ValueKey]: unknown[]} =
+  remove
+    ()
+    (pisnum, foxp.putVec(foxp.ro([] as const)))
 
 try {
 const remove_test_no_2:
@@ -43,6 +42,5 @@ const remove_test_no_2:
 describe('remove', () => {
     it('(remove number? [0 1 2 true])', () => { expect(remove_test_ok_0.value).toStrictEqual([true]) })
     it('(remove number? [true true])', () => { expect(remove_test_ok_1.value).toStrictEqual([true, true]) })
-//   it('(remove number? [0 1 2 true])', () => { expect(remove_test_ok_0.value).toStrictEqual([0,1,2]) })
-    
+    it('(remove number? [])', () => { expect(remove_test_ok_2.value).toStrictEqual([]) })
 })
