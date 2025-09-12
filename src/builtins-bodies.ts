@@ -1,5 +1,10 @@
 import * as c from './const'
 
+// arithmetic
+export const trunc = (i: number) => {
+  const r = Math.trunc(i)
+  return r === -0 ? 0 : r}
+
 // builtins
 export const isnum = (v: unknown) => typeof v === 'number' && isFinite(v)
 export const isint = (v: unknown) => isnum(v) && Number.isInteger(v)
