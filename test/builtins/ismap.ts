@@ -53,8 +53,7 @@ const ismaptest_ok_5: {
     , [c.ValueKey]: boolean } = 
     ismap
 ()
-// [todo] preliminary
-(foxp.putFn1<pre.bi.ismap, 'int?'>()(ismap))
+(foxp.putFn1<pre.bi.ismap, 'map?'>()(ismap))
 
 describe('add', () => {
     it('', () => { expect(ismaptest_ok_0.value).toBe(false) })

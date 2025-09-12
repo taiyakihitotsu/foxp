@@ -42,7 +42,6 @@ const issometest_ok_0modd: {
 (foxp.putPrim(-1))
 
 
-// [todo] fix cion
 const issometest_ok_01: {
     [c.SexprKey]: 'true'
     , [c.ValueKey]: boolean } = 
@@ -58,7 +57,6 @@ const issometest_ok_0x: {
 (foxp.putPrim(-1))
 
 
-// [todo] fix cion
 const issometest_ok_01x: {
     [c.SexprKey]: 'true'
     , [c.ValueKey]: boolean } = 
@@ -66,7 +64,6 @@ const issometest_ok_01x: {
 ()
 (foxp.putPrim('-1/2'))
 
-// [todo] fix cion
 const issometest_ok_1: {
     [c.SexprKey]: 'true'
     , [c.ValueKey]: boolean } = 
@@ -108,8 +105,7 @@ const issometest_ok_5: {
     , [c.ValueKey]: boolean } = 
     issome
 ()
-// [todo] preliminary
-(foxp.putFn1<pre.bi.issome, 'int?'>()(issome))
+(foxp.putFn1<pre.bi.issome, 'some?'>()(issome))
 
 const issometest_ok_undefined: {
     [c.SexprKey]: 'false'

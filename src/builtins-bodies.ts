@@ -71,13 +71,12 @@ export const interleave = (v: unknown[] | readonly unknown [], vv: unknown[] | r
 // -- builtins: fmap
 // ----------------------
 
-// [todo]
+// [note]
 // This is not typed properly.
 // I'm slacking off because of type-checks will be replaced with Cion context.
 //
 // This is incovenient for defining new builtins because of lacking a type check of its body.
 // I'll rewrite them.
-
 const _pure = (i: unknown) => ({value: i})
 const _concat = (i: {value: unknown}) => i.value
 type _FmapF = {[c.FnKey]: (i: {value: unknown}) => {value: unknown}}

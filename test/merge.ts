@@ -66,7 +66,6 @@ const test_mergefox0: {
 // - test tap of the mergefox return.
 // const test_tapmerged: {sexpr: '3', value: number} = foxp.tap1(test_mergefox0, foxp.putPrim(1))
 
-
 // [todo] util, only used for `makeAnyPres`
 const aaa: ['stri'] = merge.ForceVec('stri')
 const bb:  ['a', 'b'] =  merge.ForceVec(['a', 'b'] as const)

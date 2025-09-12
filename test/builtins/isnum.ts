@@ -53,10 +53,9 @@ const isnumtest_ok_5: {
 , [c.ValueKey]: boolean } = 
   isnum
     ()
-    // [todo] preliminary
-    (foxp.putFn1<pre.bi.isnum, '+'>()(isnum))
+    (foxp.putFn1<pre.bi.isnum, 'number?'>()(isnum))
 
-describe('add', () => {
+describe('number?', () => {
 it('', () => { expect(isnumtest_ok_0.value).toBe(true) })
 it('', () => { expect(isnumtest_ok_01.value).toBe(true) })
 it('', () => { expect(isnumtest_ok_1.value).toBe(false) })

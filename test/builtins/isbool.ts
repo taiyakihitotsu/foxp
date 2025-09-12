@@ -41,8 +41,6 @@ const isbooltest_ok_0modd: {
 ()
 (foxp.putPrim(-1))
 
-
-// [todo] fix cion
 const isbooltest_ok_01: {
     [c.SexprKey]: 'false'
     , [c.ValueKey]: boolean } = 
@@ -57,8 +55,6 @@ const isbooltest_ok_0x: {
 ()
 (foxp.putPrim(-1))
 
-
-// [todo] fix cion
 const isbooltest_ok_01x: {
     [c.SexprKey]: 'false'
     , [c.ValueKey]: boolean } = 
@@ -66,7 +62,6 @@ const isbooltest_ok_01x: {
 ()
 (foxp.putPrim('-1/2'))
 
-// [todo] fix cion
 const isbooltest_ok_1: {
     [c.SexprKey]: 'false'
     , [c.ValueKey]: boolean } = 
@@ -115,8 +110,7 @@ const isbooltest_ok_5: {
     , [c.ValueKey]: boolean } = 
     isbool
 ()
-// [todo] preliminary
-(foxp.putFn1<pre.bi.isbool, 'int?'>()(isbool))
+(foxp.putFn1<pre.bi.isbool, 'boolean?'>()(isbool))
 
 const isbooltest_ok_undefined: {
     [c.SexprKey]: 'false'
@@ -135,7 +129,7 @@ const isbooltest_ok_null: {
 (foxp.putNil(null))
 
 
-describe('add', () => {
+describe('boolean?', () => {
     it('', () => { expect(isbooltest_ok_0.value).toBe(false) })
     it('', () => { expect(isbooltest_ok_zero.value).toBe(false) })
     it('', () => { expect(isbooltest_ok_0even.value).toBe(false) })

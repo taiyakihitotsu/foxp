@@ -11,7 +11,6 @@ try {
   , foxp.putPrim(0)).value
 } catch {}
 
-// todo false
 type aaa = foxp.pre.MergePreStr<foxp.pre.bi.div, `(fn [x y] (neg-int? y))`>
 const div2 = foxp.bi.div<aaa>()
   div2(

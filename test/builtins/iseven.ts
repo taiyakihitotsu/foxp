@@ -34,8 +34,6 @@ const iseventest_ok_0modd: {
 ()
 (foxp.putPrim(-1))
 
-
-// [todo] fix cion
 const iseventest_ok_01: {
     [c.SexprKey]: 'false'
     , [c.ValueKey]: boolean } = 
@@ -50,8 +48,6 @@ const iseventest_ok_0x: {
 ()
 (foxp.putPrim(-1))
 
-
-// [todo] fix cion
 const iseventest_ok_01x: {
     [c.SexprKey]: 'false'
     , [c.ValueKey]: boolean } = 
@@ -92,10 +88,9 @@ const iseventest_ok_5: {
     , [c.ValueKey]: boolean } = 
     iseven
 ()
-// [todo] preliminary
-(foxp.putFn1<pre.bi.iseven, 'int?'>()(iseven))
+(foxp.putFn1<pre.bi.iseven, 'even?'>()(iseven))
 
-describe('add', () => {
+describe('even?', () => {
     it('', () => { expect(iseventest_ok_0.value).toBe(false) })
     it('', () => { expect(iseventest_ok_0even.value).toBe(true) })
     it('', () => { expect(iseventest_ok_0meven.value).toBe(true) })

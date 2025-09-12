@@ -67,10 +67,9 @@ const isneginttest_ok_5: {
     , [c.ValueKey]: boolean } = 
     isnegint
 ()
-// [todo] preliminary
-(foxp.putFn1<pre.bi.isnegint, 'int?'>()(isnegint))
+(foxp.putFn1<pre.bi.isnegint, 'neg-int?'>()(isnegint))
 
-describe('add', () => {
+describe('neg-int?', () => {
     it('', () => { expect(isneginttest_ok_0.value).toBe(false) })
     it('', () => { expect(isneginttest_ok_01.value).toBe(false) })
     it('', () => { expect(isneginttest_ok_0x.value).toBe(true) })

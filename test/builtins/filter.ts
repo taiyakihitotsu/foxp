@@ -21,13 +21,12 @@ const filter_test_ok_1:
     ()
     (pisnum, foxp.putVec(foxp.ro([true, true] as const)))
 
-// [todo] fix for cion.
-// const filter_test_ok_2:
-//   {[c.SexprKey]: '[]'
-//   ,[c.ValueKey]: unknown[]} =
-//   filter
-//     ()
-//     (pisnum, foxp.putVec(foxp.ro([] as const)))
+const filter_test_ok_2:
+  {[c.SexprKey]: '[]'
+  ,[c.ValueKey]: unknown[]} =
+  filter
+    ()
+    (pisnum, foxp.putVec(foxp.ro([] as const)))
 
 try {
 const filter_test_no_2:

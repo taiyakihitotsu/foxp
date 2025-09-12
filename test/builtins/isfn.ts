@@ -53,10 +53,9 @@ const isfntest_ok_5: {
     , [c.ValueKey]: boolean } = 
     isfn
 ()
-// [todo] preliminary
-(foxp.putFn1<pre.bi.isfn, 'int?'>()(isfn))
+(foxp.putFn1<pre.bi.isfn, 'fn?'>()(isfn))
 
-describe('add', () => {
+describe('fn?', () => {
     it('', () => { expect(isfntest_ok_0.value).toBe(false) })
     it('', () => { expect(isfntest_ok_01.value).toBe(false) })
     it('', () => { expect(isfntest_ok_1.value).toBe(false) })

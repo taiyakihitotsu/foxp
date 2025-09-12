@@ -53,8 +53,7 @@ const isstrtest_ok_5: {
     , [c.ValueKey]: boolean } = 
     isstr
 ()
-// [todo] preliminary
-(foxp.putFn1<pre.bi.isstr, 'int?'>()(isstr))
+(foxp.putFn1<pre.bi.isstr, 'string?'>()(isstr))
 
 describe('add', () => {
     it('', () => { expect(isstrtest_ok_0.value).toBe(false) })

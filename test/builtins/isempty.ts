@@ -41,8 +41,6 @@ const isemptytest_ok_0modd: {
 ()
 (foxp.putPrim(-1))
 
-
-// [todo] fix cion
 const isemptytest_ok_01: {
     [c.SexprKey]: 'false'
     , [c.ValueKey]: boolean } = 
@@ -57,8 +55,6 @@ const isemptytest_ok_0x: {
 ()
 (foxp.putPrim(-1))
 
-
-// [todo] fix cion
 const isemptytest_ok_01x: {
     [c.SexprKey]: 'false'
     , [c.ValueKey]: boolean } = 
@@ -66,7 +62,6 @@ const isemptytest_ok_01x: {
 ()
 (foxp.putPrim('-1/2'))
 
-// [todo] fix cion
 const isemptytest_ok_1: {
     [c.SexprKey]: 'false'
     , [c.ValueKey]: boolean } = 
@@ -101,8 +96,6 @@ const isemptytest_ok_empty1: {
     isempty
 ()
 (foxp.putVec(foxp.ro([] as const)))
-// [todo] fix ro
-// (foxp.putVec(foxp.ro([] as const)))
 
 const isemptytest_ok_4: {
     [c.SexprKey]: 'false'
@@ -116,10 +109,9 @@ const isemptytest_ok_5: {
     , [c.ValueKey]: boolean } = 
     isempty
 ()
-// [todo] preliminary
-(foxp.putFn1<pre.bi.isempty, 'int?'>()(isempty))
+(foxp.putFn1<pre.bi.isempty, 'empty?'>()(isempty))
 
-describe('add', () => {
+describe('empty?', () => {
     it('', () => { expect(isemptytest_ok_0.value).toBe(false) })
     it('0', () => { expect(isemptytest_ok_zero.value).toBe(false) })
     it('', () => { expect(isemptytest_ok_0even.value).toBe(false) })

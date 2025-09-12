@@ -394,10 +394,10 @@ export const dec = fn<'dec', pre.bi.dec>(1)((n: number) => n - 1)
 // ---------------------
 
 export const assoc = fn<'assoc', pre.bi.assoc, 3>(3)((m,k,v) => u.assoc([m,k,v]))
-// [todo]
+
 export const update = fn<'update', pre.bi.update>(3)((m,k,f: {fn: unknown}) => u.update([m,k,f![c.FnKey]]))
 export const assocIn = fn<'assoc-in', pre.bi.assocIn>(3)((m,k,v) => u.assocIn([m,k,v]))
-// [todo]
+
 export const updateIn = fn<'update-in', pre.bi.updateIn>(3)((m,k,f: {fn: unknown}) => u.updateIn([m,k,f![c.FnKey]]))
 export const get = fn<'get', pre.bi.get>(2)((m,k) => u.get([m,k]))
 export const getIn = fn<'get-in', pre.bi.getIn>(2)((m,k) => u.getIn([m,k]))
@@ -483,7 +483,6 @@ export const zipmap =
 // -- check
 // -----------------------
 
-// [todo] all of pre.bi is temporary, to rewrite them.
 export const isnum    = fn<'number?', pre.bi.isnum>(1)(bb.isnum)
 export const isint    = fn<'int?', pre.bi.isint>(1)(bb.isint)
 export const isstr    = fn<'string?', pre.bi.isstr>(1)(bb.isstr)
@@ -503,7 +502,6 @@ export const iszero   = fn<'zero?', pre.bi.iszero>(1)(bb.iszero)
 export const isempty  = fn<'empty?', pre.bi.isempty>(1)(bb.isempty)
 export const isbool   = fn<'boolean?', pre.bi.isbool>(1)(bb.isbool)
 export const isevery  = fn<'every?', pre.bi.isevery>(2)(bb.isevery)
-// [todo] write test
 export const isnil    = fn<'nil?', pre.bi.isnil>(1)(bb.isnil)
 export const issome   = fn<'some?', pre.bi.issome>(1)(bb.issome)
 

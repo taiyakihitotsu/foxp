@@ -67,8 +67,7 @@ const isnegtest_ok_5: {
     , [c.ValueKey]: boolean } = 
     isneg
 ()
-// [todo] preliminary
-(foxp.putFn1<pre.bi.isneg, 'int?'>()(isneg))
+(foxp.putFn1<pre.bi.isneg, 'neg?'>()(isneg))
 
 describe('add', () => {
     it('', () => { expect(isnegtest_ok_0.value).toBe(false) })

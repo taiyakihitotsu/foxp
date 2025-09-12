@@ -67,10 +67,9 @@ const ispostest_ok_5: {
     , [c.ValueKey]: boolean } = 
     ispos
 ()
-// [todo] preliminary
-(foxp.putFn1<pre.bi.ispos, 'int?'>()(ispos))
+(foxp.putFn1<pre.bi.ispos, 'pos?'>()(ispos))
 
-describe('add', () => {
+describe('pos?', () => {
     it('', () => { expect(ispostest_ok_0.value).toBe(true) })
     it('', () => { expect(ispostest_ok_01.value).toBe(true) })
     it('', () => { expect(ispostest_ok_0x.value).toBe(false) })

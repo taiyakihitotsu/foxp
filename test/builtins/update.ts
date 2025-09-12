@@ -25,6 +25,7 @@ const a0 = foxp.putRecord(_arg0)
 const a1 = foxp.putPrim(':a')
 const a2 = foxp.putFn1<'number?', 'inc'>()(fnarg)
 const a2_fail = foxp.putFn1<'number?', '(fn [m] "string")'>()(fnarg_fail)
+
 // [todo] update update.pre and write it down directly to test
 const vsraw0: Cion.Lisp<`((fn [m] (and (fn? (get m 2)))) [${typeof a0.sexpr} ${typeof a1.sexpr} ${typeof a2.sexpr}])`> = 'true'
 const vsraw1: Cion.Lisp<`(${pre.bi.updateLax} ${typeof a0.sexpr} ${typeof a1.sexpr} ${typeof a2.sexpr})`> = 'true'

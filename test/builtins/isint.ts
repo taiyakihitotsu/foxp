@@ -53,7 +53,6 @@ const isinttest_ok_5: {
     , [c.ValueKey]: boolean } = 
     isint
 ()
-// [todo] preliminary
 (foxp.putFn1<pre.bi.isint, 'int?'>()(isint))
 
 describe('add', () => {

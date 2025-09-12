@@ -53,10 +53,9 @@ const isvectest_ok_5: {
     , [c.ValueKey]: boolean } = 
     isvec
 ()
-// [todo] preliminary
-(foxp.putFn1<pre.bi.isvec, 'int?'>()(isvec))
+(foxp.putFn1<pre.bi.isvec, 'vector?'>()(isvec))
 
-describe('add', () => {
+describe('vector?', () => {
     it('', () => { expect(isvectest_ok_0.value).toBe(false) })
     it('', () => { expect(isvectest_ok_01.value).toBe(false) })
     it('', () => { expect(isvectest_ok_1.value).toBe(false) })

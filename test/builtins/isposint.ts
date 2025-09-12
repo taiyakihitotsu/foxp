@@ -67,10 +67,9 @@ const isposinttest_ok_5: {
     , [c.ValueKey]: boolean } = 
     isposint
 ()
-// [todo] preliminary
-(foxp.putFn1<pre.bi.isposint, 'int?'>()(isposint))
+(foxp.putFn1<pre.bi.isposint, 'pos-int?'>()(isposint))
 
-describe('add', () => {
+describe('pos-int?', () => {
     it('', () => { expect(isposinttest_ok_0.value).toBe(true) })
     it('', () => { expect(isposinttest_ok_01.value).toBe(false) })
     it('', () => { expect(isposinttest_ok_0x.value).toBe(false) })

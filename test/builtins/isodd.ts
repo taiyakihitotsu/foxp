@@ -81,10 +81,9 @@ const isoddtest_ok_5: {
     , [c.ValueKey]: boolean } = 
     isodd
 ()
-// [todo] preliminary
-(foxp.putFn1<pre.bi.isodd, 'int?'>()(isodd))
+(foxp.putFn1<pre.bi.isodd, 'odd?'>()(isodd))
 
-describe('odd', () => {
+describe('odd?', () => {
     it('', () => { expect(isoddtest_ok_0.value).toBe(true) })
     it('', () => { expect(isoddtest_ok_0even.value).toBe(false) })
     it('', () => { expect(isoddtest_ok_0meven.value).toBe(false) })
