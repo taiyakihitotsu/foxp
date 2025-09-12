@@ -55,7 +55,7 @@ export const refind = (re: string, s: string) => {
 export const split = (s: string, re: string) => s.split(new RegExp(re)).filter((p) => p !== '')
 export const subs  = (s: string, start: number, end: number) => s.substring(start, end)
 export const replace = (s: string, re: string, rep: string) => s.replace(new RegExp(re), rep)
-export const join = (s: string, v: Prim[]) => v.join(s)
+export const join = (s: string, v: Prim[] | readonly Prim[]) => v.join(s)
 
 // export const keys
 

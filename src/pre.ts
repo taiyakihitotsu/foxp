@@ -234,6 +234,7 @@ checkPreMap<
   , split: isstr2
   , subs: `(fn [x y z] (and (string? x) (nat? y) (nat? z) (< y z)))`
   , replace: isstr3
+  // [note] join on Cion accepts empty vector but foxp doesn't.
   , join: `(fn [x y] (and (string? x) (vector? y) (every? prim? y)))`
 }>
 
