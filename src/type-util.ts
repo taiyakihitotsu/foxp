@@ -58,6 +58,19 @@ export type PutSpace<B extends boolean> = B extends true ? ' ' : ''
 export type _Tuple = [] | [unknown] | [unknown, unknown] | [unknown,unknown,unknown] | [unknown,unknown,unknown,unknown] | [unknown,unknown,unknown,unknown,unknown] | [unknown,unknown,unknown,unknown,unknown,unknown] | [unknown,unknown,unknown,unknown,unknown,unknown,unknown] | [unknown,unknown,unknown,unknown,unknown,unknown,unknown,unknown]
 export type Tuple = _Tuple | Readonly<_Tuple>
 
+// [note]
+// Cion expresses its strings as `'string'`.
+// If not using this, '0' and 0 means the same on Cion.
+// 
+// And keys are ':key', which detected as string type if you don't care.
+export type ForceStr<
+  S extends Primitive> =
+  S extends `:${infer __}`
+    ? S
+  : S extends string
+    ? `'${S}'`
+  : `${S}`
+
 // TS Array Const -> Sexpr String.
 export type VectorString<
   T extends unknown[] | readonly unknown[]
@@ -67,7 +80,7 @@ export type VectorString<
     ? `[${S}]`
   : T extends [infer Fst, ...infer Rest] | readonly [infer Fst, ...infer Rest]
     ? Fst extends Primitive
-      ? VectorString<Rest, true, `${S}${PutSpace<IsRest>}${Fst}`>
+      ? VectorString<Rest, true, `${S}${PutSpace<IsRest>}${ForceStr<Fst>}`>
     : Fst extends Record<PropertyKey, unknown>
       ? VectorString<Rest, false, `${S}${PutSpace<IsRest>}${RtoS<Fst>}${Rest extends [] ? '' : ' '}`>
     : Fst extends unknown[]
