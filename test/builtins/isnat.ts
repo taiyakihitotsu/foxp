@@ -1,10 +1,8 @@
 import * as c from '../../src/const'
 import * as foxp from '../../src/foxp'
 import { isnat } from '../../src/builtins'
-// import * as merge from '../../src/merge'
 import { describe, it, expect } from 'vitest'
 import * as pre from '../../src/pre'
-// import type Cion from '@taiyakihitotsu/cion'
 
 const isnattest_ok_0: {
     [c.SexprKey]: 'true'
@@ -67,10 +65,9 @@ const isnattest_ok_5: {
     , [c.ValueKey]: boolean } = 
     isnat
 ()
-// [todo] preliminary
-(foxp.putFn1<pre.bi.isnat, 'int?'>()(isnat))
+(foxp.putFn1<pre.bi.isnat, 'nat?'>()(isnat))
 
-describe('add', () => {
+describe('nat?', () => {
     it('1', () => { expect(isnattest_ok_0.value).toBe(true) })
     it('', () => { expect(isnattest_ok_01.value).toBe(false) })
     it('', () => { expect(isnattest_ok_0x.value).toBe(false) })
