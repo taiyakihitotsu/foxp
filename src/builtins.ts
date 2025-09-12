@@ -420,7 +420,7 @@ export const gte = fn<'>=', pre.bi.gte>(2)((x:number,y:number) => x >= y)
 export const lte = fn<'<=', pre.bi.lte>(2)((x:number,y:number) => x <= y)
 export const mod = fn<'mod', pre.bi.mod>(2)(u.mod)
 export const rem = fn<'rem', pre.bi.rem>(2)((x:number,y:number) => x % y)
-export const trunc = fn<'trunc', pre.bi.trunc>(1)(Math.trunc) 
+export const trunc = fn<'trunc', pre.bi.trunc>(1)(bb.trunc) 
 export const floor = fn<'floor', pre.bi.floor>(1)(Math.floor)
 export const abs = fn<'abs', pre.bi.abs>(1)(Math.abs)
 
