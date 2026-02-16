@@ -1,7 +1,6 @@
 import * as c from '../../src/const'
 import * as foxp from '../../src/foxp'
 import { add, mul, sub, div } from '../../src/builtins'
-import * as merge from '../../src/merge'
 import * as pre from '../../src/pre'
 import { describe, it, expect } from 'vitest'
 

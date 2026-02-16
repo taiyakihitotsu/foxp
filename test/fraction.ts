@@ -21,13 +21,24 @@ const someFraction_test2 = fr.someFraction('-2')
 const someFraction_test3 = fr.someFraction('-2/10')
 const someFraction_test4 = fr.someFraction('0')
 const someFraction_test5 = fr.someFraction('-2/+1')
-const someFraction_test6 = fr.someFraction('string')
-const someFraction_test7 = fr.someFraction('8/')
-const someFraction_test8 = fr.someFraction('/8')
-const someFraction_test9 = fr.someFraction('8//')
-// const someFraction_test10: fr.someFraction('-/8')
-
-// export const someFraction: (s: unknown) => number = (s) => typeof s === 'string' && math.isFraction(s) ? math.evaluate(s) : s
+const someFraction_test6 =
+  // @ts-expect-error:
+  fr.someFraction('string')
+const someFraction_test7 =
+  // @ts-expect-error:
+  fr.someFraction('8/')
+const someFraction_test8 =
+  // @ts-expect-error:
+  fr.someFraction('/8')
+const someFraction_test9 =
+  // @ts-expect-error:
+  fr.someFraction('8//')
+const someFraction_test10 =
+  // @ts-expect-error:
+  fr.someFraction('-/8')
+const someFraction_test11 =
+  // @ts-expect-error:
+  fr.someFraction('')
 
 describe("evaluate", () => {
 it('3/2',   () => { expect(someFraction_test0).toBe(math.evaluate('3/2')) })
@@ -36,8 +47,13 @@ it('-2',    () => { expect(someFraction_test2).toBe(math.evaluate('-2')) })
 it('-2/10', () => { expect(someFraction_test3).toBe(math.evaluate('-2/10')) })
 it('0',     () => { expect(someFraction_test4).toBe(math.evaluate('0')) })
 it('-2/+1', () => { expect(someFraction_test5).toBe(math.evaluate('-2/+1')) })
+})
+
+describe("evalute (abnormal cases)", () => {
 it('string',() => { expect(someFraction_test6).toBe('string') })
 it('8/',    () => { expect(someFraction_test7).toBe('8/') })
 it('/8',    () => { expect(someFraction_test8).toBe('/8') })
 it('8//',   () => { expect(someFraction_test9).toBe('8//') })
+it('-/8',   () => { expect(someFraction_test10).toBe('-/8') })
+it('',   () => { expect(someFraction_test11).toBe('') })
 })

@@ -1,8 +1,6 @@
 import * as foxp from '../../src/foxp'
 import { assoc } from '../../src/builtins'
-import * as merge from '../../src/merge'
 import * as pre from '../../src/pre'
-import { strict as assert } from 'assert'
 import { describe, it, expect } from 'vitest'
 import type Cion from '@taiyakihitotsu/cion'
 import * as ut from '../../src/type-util'

@@ -1,6 +1,6 @@
 import type Cion from '@taiyakihitotsu/cion'
 import * as typeUtil from './type-util'
-import type { LispFalsy, N0, N1, N2, N3, N4 } from './type-util'
+import type { LispFalsy } from './type-util'
 import * as compiler from './compiler'
 import { const as c } from './const'
 import * as ut from './type-util'
@@ -128,7 +128,7 @@ export const putPrim = <
 ({[c.SexprKey] : '' as ToLispString<V>
 , [c.ContKey]  : '' as ToLispString<V>
 , [c.FnFlagKey]: null as unknown as IsFnForm<V>
-, [c.ValueKey] : fraction.someFraction(v) as R
+, [c.ValueKey] : fraction.unsafeSomeFraction(v) as R
   , [c.HofFlag]: false})
 
 export const putSym = <

@@ -4,7 +4,6 @@ import type * as foxpT from './foxp'
 import type Cion from '@taiyakihitotsu/cion'
 import * as c from './const'
 import * as ut from './type-util'
-import { T4 } from './type-util'
 import { MergePreStr } from './pre'
 
 // ----------------

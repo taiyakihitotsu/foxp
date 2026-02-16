@@ -1,8 +1,6 @@
-import * as m from './merge'
 import * as ut from './type-util'
 import { N4, T4 } from './type-util'
 import type Cion from '@taiyakihitotsu/cion'
-import * as compiler from './compiler'
 
 // -----------
 // -- merge

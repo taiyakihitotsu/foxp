@@ -2,8 +2,6 @@ import type Cion from '@taiyakihitotsu/cion'
 import * as c from '../src/compiler'
 import * as ut from '../src/type-util'
 
-// const test_vtom0: ut.Equal<c.VtoLispM<[':a', 'true', 'c', '-1']>, {a: boolean, c: number}> = true 
-
 const test_vtom0: ut.Equal<c.VtoLispM<[':a', 'true', 'c', '-1']>, {a: boolean, c: number}> = true
 const test_vtom1: ut.Equal<c.VtoLispM<[':a', 'true', 'c', ['d', '-1']]>, {a: boolean, c: ['d', '-1']}> = true
 
@@ -34,5 +32,3 @@ const test_renam1: c.Str<c.RenameLet<Cion.CionParser<`(fn [n] (str 'note' n))`>,
 
 const test_rename0a: c.Str<c.RenameLet<Cion.CionParser<`(fn [n] (+ n 1))`>, 'n', 'm', true>> = '(fn [nm] (+ nm 1))'
 const test_renam1a: c.Str<c.RenameLet<Cion.CionParser<`(fn [n] (str 'note' n))`>, 'n', 'm', true>> = `(fn [nm] (str 'note' nm))`
-
-

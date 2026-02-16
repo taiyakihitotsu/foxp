@@ -1,17 +1,15 @@
 import * as c from '../../src/const'
 import * as foxp from '../../src/foxp'
 import { add } from '../../src/builtins'
-import * as merge from '../../src/merge'
-import { describe, it, expect } from 'vitest'
 import * as pre from '../../src/pre'
-import type Cion from '@taiyakihitotsu/cion'
+import { describe, it, expect } from 'vitest'
+import { expectType } from 'tsd'
 
 type pre = ['number?', 'number?']
 type prestrict = pre.MergePreStr<pre.bi.add, `(fn [x y] (and (number? x) (pos-int? y)))`>
 type malpre = `(fn [x y] (and (number? x) (string? y)))`
 type partialPre = `(fn [x y] (number? x))`
 
-// --test
 const addtest0: {
   [c.SexprKey]: '2'
 , [c.ContKey] : '(if (and (every? some? [1 1]) ((fn [x y] (number? x)) 1 1)) (+ 1 1) nil)'
@@ -22,6 +20,16 @@ const addtest0: {
      ()
      ( foxp.putPrim(1)
      , foxp.putPrim(1))
+expectType<{
+  [c.SexprKey]: '2'
+, [c.ContKey] : '(if (and (every? some? [1 1]) ((fn [x y] (number? x)) 1 1)) (+ 1 1) nil)'
+, [c.ValueKey]: number
+, [c.FnFlagKey]: false}>(
+  add
+    <partialPre>
+    ()
+    ( foxp.putPrim(1)
+    , foxp.putPrim(1)))
 
 const addtest0_str: {
   [c.SexprKey]: '2'
@@ -31,6 +39,14 @@ const addtest0_str: {
      ()
      ( foxp.putPrim(1)
      , foxp.putPrim(1))
+expectType<{
+  [c.SexprKey]: '2'
+, [c.ValueKey]: number}>(
+  add
+    <'(fn [x y] (and (number? x) (number? y)))'>
+    ()
+    ( foxp.putPrim(1)
+    , foxp.putPrim(1)))
 
 const addtest0_hof = add<partialPre>()
 const addtest0_hof_app =
@@ -43,6 +59,13 @@ const addtest0_hof_app_ok =
   addtest0_hof(
     foxp.putPrim(1)
     , foxp.putPrim(1))
+expectType<
+  {[c.SexprKey]: '2',
+   [c.ContKey]: '(if (and (every? some? [1 1]) ((fn [x y] (number? x)) 1 1)) (+ 1 1) nil)'}
+>(
+  addtest0_hof(
+    foxp.putPrim(1)
+    , foxp.putPrim(1)))
 
 const addtest0b: {
   [c.SexprKey]: '2'
@@ -53,6 +76,15 @@ const addtest0b: {
     ()
     ( foxp.putPrim(1)
     , foxp.putPrim(1))
+expectType<{
+  [c.SexprKey]: '2'
+, [c.FnFlagKey]: false
+, [c.ValueKey]: number}>(
+  add
+    <pre.bi.add>
+    ()
+    ( foxp.putPrim(1)
+    , foxp.putPrim(1)))
 
 type prestrict_miss = pre.MergePreStr<'number?', 'pos-int?'>
 const addtest0b_strict: {
@@ -63,6 +95,14 @@ const addtest0b_strict: {
     ()
     ( foxp.putPrim(1)
     , foxp.putPrim(1))
+expectType<{
+  [c.SexprKey]: {error: "PreCountFailure"}
+, [c.ValueKey]: number}>(
+  add
+    <prestrict_miss>
+    ()
+    ( foxp.putPrim(1)
+    , foxp.putPrim(1)))
 
 const addtest0b_default: {
   [c.SexprKey]: '0'
@@ -71,6 +111,13 @@ const addtest0b_default: {
     ()
     ( foxp.putPrim(1)
     , foxp.putPrim(-1))
+expectType<{
+  [c.SexprKey]: '0'
+, [c.ValueKey]: number}>(
+  add
+    ()
+    ( foxp.putPrim(1)
+    , foxp.putPrim(-1)))
 
 // @ts-expect-error:
 const addtest0b_default_failure: {
@@ -136,6 +183,18 @@ const addtest1_pass: {
       ( foxp.putPrim(1)
       , foxp.putPrim(1))
       , foxp.putPrim(3))  
+expectType<{
+  [c.SexprKey]: '5'
+, [c.ValueKey]: number}>(
+  add
+    <pre.bi.add>
+    ()
+    (add
+      <pre.bi.add>
+      ()
+      ( foxp.putPrim(1)
+      , foxp.putPrim(1))
+      , foxp.putPrim(3))) 
 
 const addtest1fail_0_1_string: {
   [c.SexprKey]: '5'
@@ -195,6 +254,22 @@ const addtest1_success_return_neg: {
         ( foxp.putPrim(1)
         , foxp.putPrim(-2))
         , foxp.putPrim(4)) ) 
+expectType<{
+  [c.SexprKey]: '-5'
+, [c.ValueKey]: number}>(
+  add
+    ()
+    (add
+      ()
+      ( foxp.putPrim(8)
+      , foxp.putPrim(-16))
+    , add
+      ()
+      (add
+        ()
+        ( foxp.putPrim(1)
+        , foxp.putPrim(-2))
+        , foxp.putPrim(4))))
 
 describe('add', () => {
 it('', () => { expect(addtest0.value).toBe(2) })

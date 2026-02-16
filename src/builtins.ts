@@ -1,14 +1,9 @@
 import * as c from './const'
-import * as foxp from './foxp'
 import type Cion from '@taiyakihitotsu/cion'
 import * as u from './util'
 import * as bb from './builtins-bodies'
 import type * as ut from './type-util'
-// import { ut.LispFalsy, ut.N0, ut.N1, ut.N2, ut.N3, ut.N4 } from './type-util'
 import * as pre from './pre'
-import * as merge from './merge'
-import * as compiler from './compiler'
-
 
 // ----------------
 // -- util part

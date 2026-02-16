@@ -1,8 +1,9 @@
 import * as c from '../../src/const'
 import * as foxp from '../../src/foxp'
+import * as pre from '../../src/pre'
 import { apply, add } from '../../src/builtins'
 import { describe, it, expect } from 'vitest'
-import * as pre from '../../src/pre'
+import { expectType } from 'tsd'
 
 // [todo] move.
 const padd = foxp.putFn1<pre.bi.add, '+'>()(add())
@@ -13,6 +14,11 @@ const apply_test_ok_0:
   apply
     ()
     (padd, foxp.putVec(foxp.ro([1, 2] as const)))
+expectType<{[c.SexprKey]: '3'
+  ,[c.ValueKey]: unknown}>(
+  apply
+    ()
+    (padd, foxp.putVec(foxp.ro([1, 2] as const))))
 
 try {
 const apply_test_no_0:
