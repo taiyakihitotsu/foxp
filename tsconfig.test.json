@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
+    "types": ["node"],
     "target": "es2020",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "outDir": "./dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

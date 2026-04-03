@@ -16,28 +16,33 @@ jobs:
         with:
           submodules: true
 
-      - name: Use Node.js
-        uses: actions/setup-node@v3
+      - uses: pnpm/action-setup@v4
         with:
-          node-version: '18'
+          version: 10
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Init submodules and dependencies
         run: sh init.sh
 
       - name: Check TypeScript version
-        run: npx tsc -v
+        run: pnpm exec tsc -v
 
       - name: Run check
-        run: npm run check
+        run: pnpm check
 
       - name: Run check:test
-        run: npm run check:test
+        run: pnpm check:test
 
       - name: Run check:smith
-        run: npm run check:smith
+        run: pnpm check:smith
 
       - name: Build
-        run: npm run build --if-present
+        run: pnpm build

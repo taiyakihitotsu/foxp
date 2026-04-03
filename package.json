@@ -12,14 +12,14 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npx tsc",
-    "build:watch": "npx tsc --watch --project tsconfig.test.json",
+    "build": "tsc",
+    "build:watch": "tsc --watch --project tsconfig.test.json",
     "test": "vitest run",
-    "check": "npx tsc --noEmit",
-    "check:test": "npx tsc --noEmit --project tsconfig.test.json && npm run test",
+    "check": "tsc --noEmit",
+    "check:test": "tsc --noEmit --project tsconfig.test.json && pnpm test",
     "check:smith": "sh ./submodules/scripts/sandbox-smith.sh && sh ./submodules/scripts/check-smith.sh",
-    "format:smith": "npm --prefix submodules/condsmith run format:smith ../../src",
-    "run": "npx ts-node src/index.ts",
+    "format:smith": "pnpm --prefix submodules/condsmith run format:smith ../../src",
+    "run": "ts-node src/index.ts",
     "precommit": "sh submodules/scripts/precommit.sh"
   },
   "repository": {
@@ -27,18 +27,18 @@
     "url": "git+https://github.com/taiyakihitotsu/foxp.git"
   },
   "devDependencies": {
-    "@types/node": "^24.3.0",
-    "husky": "^9.1.7",
-    "mathjs": "^14.6.0",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.20.4",
-    "typescript": "^5.9.2",
-    "vitest": "^3.2.4"
+    "@types/node": "25.5.2",
+    "husky": "9.1.7",
+    "mathjs": "15.1.1",
+    "ts-node": "10.9.2",
+    "tsx": "4.21.0",
+    "typescript": "6.0.2",
+    "vitest": "4.1.2"
   },
   "author": "taiyakihitotsu <taiyakihitotsu@proton.me> https://github.com/taiyakihitotsu",
   "license": "3-clause BSD license",
   "dependencies": {
-    "@taiyakihitotsu/cion": "^0.2.7",
+    "@taiyakihitotsu/cion": "^0.3.1",
     "tsd": "^0.33.0"
   }
 }
