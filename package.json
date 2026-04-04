@@ -27,6 +27,7 @@
     "url": "git+https://github.com/taiyakihitotsu/foxp.git"
   },
   "devDependencies": {
+    "@taiyakihitotsu/cion": "^0.3.1",
     "@types/node": "25.5.2",
     "husky": "9.1.7",
     "mathjs": "15.1.1",
@@ -38,7 +39,6 @@
   "author": "taiyakihitotsu <taiyakihitotsu@proton.me> https://github.com/taiyakihitotsu",
   "license": "3-clause BSD license",
   "dependencies": {
-    "@taiyakihitotsu/cion": "^0.3.1",
     "tsd": "^0.33.0"
   }
 }

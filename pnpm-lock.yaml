@@ -8,13 +8,13 @@ importers:
 
   .:
     dependencies:
-      '@taiyakihitotsu/cion':
-        specifier: ^0.3.1
-        version: 0.3.1
       tsd:
         specifier: ^0.33.0
         version: 0.33.0
     devDependencies:
+      '@taiyakihitotsu/cion':
+        specifier: ^0.3.1
+        version: 0.3.1
       '@types/node':
         specifier: 25.5.2
         version: 25.5.2
