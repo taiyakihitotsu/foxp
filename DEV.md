@@ -1,55 +1,37 @@
-# Commands
+# Development
+## Toolchain
+This project uses `pnpm`.
+## Workflow
+### Setup
+1. Initialize: `sh init.sh`
+2. Format: `pnpm format:smith`
+3. Lint & Type Check:
+   - `pnpm check`: Validates the `src` directory.
+   - `pnpm check:test`: Validates the `test` directory.
+   - `pnpm check:smith`: Verifies formatting compliance.
 
+**Note**: Due to the homemade and rough formatter, it is recommended to commit your changes before running it, then `--amend` if success.
+### Commit Convention
+Commit messages must be prefixed with one of the following tags:  
+`[add]` | `[update]` | `[fix]` | `[refactor]` | `[chore]` | `[doc]` | `[test]`
+## Testing Note
+### Map Equality
+**Important**  
+Use `Cion.Lisp` to test map-object types, **NOT directly comparing literals** generated from a map-object, because union type doesn't ensure the order of the record.  
+The Foxp compiler internally uses union types to lift TypeScript values up to Cion S-expressions as singleton types.  
+This means that any order of map-object doesn't keep on Cion Layer.
 
+See also [Map Equality]( https://github.com/taiyakihitotsu/cion/blob/main/DEV.md#map-equality ) in [DEV.md]( https://github.com/taiyakihitotsu/cion/blob/main/DEV.md ) in Cion.
+### Debugging & Error Handling
+Any errors in foxp would be caused by Cion, not foxp itself.  
+Foxp uses `Cion` deeply, so we need to separate the cases.  
 
-## setup
-```terminal
-sh init.sh
-```
-
-## format
-```terminal
-npm run format:smith
-```
-
-**NOTE**: Due to the homemade and rough formatter, it is recommended to commit your changes before running it, then `--amend` if success.
-
-## commit
-You must have one of the tags with a commit message: `[add]` `[update]` `[fix]` `[refactor]` `[chore]` `[doc]` `[test]`.
-
-`husky` runs when you commit it with the 3 command below.
-
-## test
-- ```npm run check``` for `src` dir.
-- ```npm run check:test``` for `test` dir (This makes tsx run as well).
-- ```npm run check:smith``` for `src` dir (to see whether it's formatted well).
-
-**Important**: Use `Cion.Lisp` to test things about record, because union type doesn't save the order of the record, so it doesn't keep the same string S-exprs any time. It requires a new order to keep it with using `map` or similar.
-
-
-
-# Code
-The core codes are placed in `src/builtins.ts` / `src/foxp.ts`.
- - builtins: defining built-ins, and `fn` / `lambda` / `hof`. 
- - foxp: defining container to help type-check.
-
-To translate TypeScript values to CionLisp's values, in the other words, values to types, it's written in `compiler.ts`. Wrappes of `foxp.ts` use it to decide a value of [c.SexprKey].
-The code base picks them when doing type-checks via pre-conditions, implemented in `pre.ts`.
- - compiler: This uses `type-util.ts`
- - type-util: Utils and for TypeScript value / type to Cion Sexpr.
- - pre: Pre-conditions for the alternative type checker. They are strings which are pred functions in Cion.
- - merge: This is merging strings which expresses pre-condition.
-
-Rational numbers should be passed with string, like `foxp.putPrim('3/2')`. This is implemented with `mathjs`.
- - fraction: a simple utils.
-
-`src/compiler.ts` is used for translating CionLisp value to TS (extended) type.
-
-
-# Environment
-## Editor
+Bugs occur in foxp only if Cion can evaluate the sexpr normally; otherwise, the bug originates in Cion.  
+For example, a type mismatch detected at compile-time in foxp is usually due to Cion’s evaluation rules.
+### Error depending on server/editor
 If you use `emacs` with `tide` / `flycheck`, which relies on `tsserver`, you should know that there's a difference.
-You can pick the commit ([44ea12d9b72c6953fb4faeef432a5d4f1b840bd2](https://github.com/taiyakihitotsu/foxp/commit/44ea12d9b72c6953fb4faeef432a5d4f1b840bd2)) and watch the behavior. In this, `tide` on `emacs` says no error in `test/builtins/map.ts` but `npm run check:test` which executes `tsc` spits an error.
+
+You can pick the commit ([44ea12d9b72c6953fb4faeef432a5d4f1b840bd2](https://github.com/taiyakihitotsu/foxp/commit/44ea12d9b72c6953fb4faeef432a5d4f1b840bd2)) and watch the behavior. In this, `tide` on `emacs` says no error in `test/builtins/map.ts` but `pnpm check:test` which executes `tsc` spits an error.
 
 > test/builtins/map.ts:31:6 - error TS2345: Argument of type 'LispWrapedFnWith<"number?", "inc", <Arg0 extends FoxWith<true extends IsSymbol<Arg0> ? Symbol : number, Arg0>, Arg1 extends FoxWith<true extends IsSymbol<Arg1> ? Symbol : never, Arg1>, Arg2 extends FoxWith<...>, Arg3 extends FoxWith<...>, IsQuote extends [...] extends [...] ? false : true, UnrollArgsStrResult extend...' is not assignable to parameter of type 'FoxWith<{ fn: (w: unknown) => { value: unknown; }; }, LispWrapedFnWith<"number?", "inc", <Arg0 extends FoxWith<true extends IsSymbol<Arg0> ? Symbol : number, Arg0>, Arg1 extends FoxWith<true extends IsSymbol<...> ? Symbol : never, Arg1>, Arg2 extends FoxWith<...>, Arg3 extends FoxWith<...>, IsQuote extends [...] ext...'.  
 >  The types of '[c.ValueKey].fn' are incompatible between these types.  
@@ -65,30 +47,87 @@ You can pick the commit ([44ea12d9b72c6953fb4faeef432a5d4f1b840bd2](https://gith
 
 This error is made by the way of implementation of `runFn` in `src/builtins.ts`, but it's enough to see both `tsx` and `tsserver` run in a different way, not need to understand what the error want to say.
 
-You can just watch files properly and simply with `npm run build:watch`.
+You can just watch files properly and simply with `pnpm build:watch`.
 
 (This is the same: [845126bf833a9caf6ca619262fbbdd929351dcee](https://github.com/taiyakihitotsu/foxp/commit/845126bf833a9caf6ca619262fbbdd929351dcee))
 
+Please correct me if I'm missing something.
 
+# Core concept
+This replaces the general type checks of TypeScript with an execution of a type-level scripting language, [CionLisp](https://github.com/taiyakihitotsu/cion). Foxp🦊 slurps values and tracks their unique S-expressions via singleton types, to pass them as arguments of a function of Cion.
+Pre-conditions themselves are just pred function. So it works as below:
 
-# Policy
- - Foxp is written as a Functionl Programming Library. So we don't touch and add what it has side-effect. 
- - Foxp has clearly overhead because the type checker uses object as wraper to earn its sexpr. You would know about Branded Type to solve it but we'll not adopt it because of [this issue](https://github.com/microsoft/TypeScript/issues/42557) . Moreover, `'string' & {__tag: "tag"}` is able to expand in Template Literal Type even if you don't want. We accept the overheads as a trade-off. (I'll write an article about them.)
+ - We will get types of values.
+ - The types will be processed into sexprs.
+ - The sexprs will be passed as arguments of pre-condition.
+ - Cion will run. If it returns a falsy, it will be seemed that it is failed of type check. If not, the result acts for a return type.
+ 
+In the other words, foxp🦊 is just a wraper of Type Level Lisp for TypeScript.
 
+As we see above examples, every values wrapped by foxp🦊 is an object with two keys:
 
+- `sexpr` : a lisp-sexpr acting like a singleton type.
+- `value` : the original value.
 
+If the value is a function, it contains:
+
+- `value.pre` : the pre-condition used for type checking.
+- `value.fn`  : original function implementation.
+
+You can call with `.value.fn` directly if you want to bypass foxp🦊's checker.
+
+The TypeScript type of value is passed via the compiler, which transfers the sexpr to the corresponding TypeScript type.
+
+Important: This doesn't automatically track type transitions of functions at the type level; thus, its type is inferred as Function. You either use only the builtins or write them yourself. You should be aware of this when writing first-class functions and/or higher-order functions.
+
+# Code
+## Core Overview
+The core implementation is centered around two main modules: `src/builtins.ts` and `src/foxp.ts`.
+
+This layer is responsible for translating between TypeScript values and Cion Lisp representations.  
+In other words, it translates values into types via singleton types.
+
+1. Values are lifted via `foxp.put*` functions into foxp expression in value layer, with Cion Lisp S-expression in type layer.
+2. Built-in functions take these processed foxp values (and return a foxp value).
+3. Preconditions stored in the type layer are checked, relying on Cion Lisp.
+4. If they pass, built-ins operate in value layer and return new foxp objects.
+   - If they fail, a type error occurs at **compile time**, NOT at runtime.
+5. The resulting foxp objects can be passed into subsequent built-in functions, or used in user-defined functions via `lambda` or `higher-order functions` provided by `foxp/builtins.ts`.
+6. Finally, you can unwrap the result to obtain a plain value using the `.value` method (e.g., `the_object.value`).
+
+**Flow of data and type checking**  
+The lifecycle of a value can be summarized as:  
+`TS value → foxp value → Cion (type layer) → pre-check → eval (value layer) → foxp value → TS value`  
+This shows how TypeScript values are lifted, checked, evaluated, and unwrapped back.
+## Modules
+### Builtins
+ - `src/builtins.ts`: Defines built-in functions, exported as foxp API, including [lambda]( https://github.com/taiyakihitotsu/foxp?tab=readme-ov-file#lambda ) and [higher-order function utilities]( https://github.com/taiyakihitotsu/foxp?tab=readme-ov-file#lambda ).
+ - `src/builtins-bodies.ts` : Value layer functions for `src/builtins.ts`.
+### Foxp
+ - `src/foxp.ts` : Provides wrapper objects used to assist type-checking and hold Cion S-expressions.
+### Type Checking Layer
+ - `src/pre.ts`: Defines pre-conditions as strings, works by adding types via Cion List S-expression. (For clojure-users, `pre` is named from Clojure's pre/post conditions.)
+ - `src/merge.ts` : Combines multiple pre-conditions expressions into a single condition.
+### Numeric Handling
+Rational numbers must be passed as string:
+```typescript
+foxp.putPrim('3/2')
+```
+
+- Value layer is implemented using `mathjs`.
+
+And `src/fractions.ts` provides small helper utilities.
+### Compilation from Cion Lisp
+- `src/compiler.ts` : Also supports translating Cion Lisp values back into extended TypeScript types.
+### Utilities & Constants
+ - `src/type-util.ts` : Utility types used during the conversion process.
+ - `src/const.ts` : Wrappers defined in `foxp.ts` rely on this layer to determine the value of `[c.SexprKey]`.
+
+## Policy
+### Not todo
+- We do not introduce side-effects; Foxp is purely functional.
+So we don't modify or add anything with side effects.
+### Using object and its overhead style
+Foxp uses objects to store sexprs with values, which introduces some overhead. Branded types could reduce overhead, but we do not adopt them because behavior is hard to predict (e.g., [TS issue #42557](https://github.com/microsoft/TypeScript/issues/42557)). We accept this small cost to simplify implementation.
 # FAQ & more
-Please build an issue casually. I'll try to read and fix it if you put `[bug]` tag.
-
-Foxp uses `Cion` deeply, so we need to separate the cases.
-Bugs would happen in foxp if Cion can eval the sexpr normally. if Cion can read it, it would happen in Cion.
-
-
-
-### license
-3-Clause BSD
-
-
-
-### Author
-taiyakihitotsu
+Feel free to open issues casually. Issues with the `[bug]` tag will be prioritized.

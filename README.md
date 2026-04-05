@@ -1,8 +1,10 @@
 # Foxp
 [![npm](https://img.shields.io/npm/v/@taiyakihitotsu/foxp)](https://www.npmjs.com/package/@taiyakihitotsu/foxp) ![license](https://img.shields.io/npm/l/@taiyakihitotsu/foxp) [![build](https://github.com/taiyakihitotsu/foxp/actions/workflows/node.js.yml/badge.svg)](https://github.com/taiyakihitotsu/foxp/actions)
 
-Enabling pseudo Dependent Types --- foxp🦊 does type-check [div-by-zero](#basic-example), [type-safe get/upd](#lens), [range-of-number](#range), [sized-array](#vect), [email-with-regex](#regex) and [more](#defining-your-own-precondition) you want.
+Enabling pseudo Dependent Types --- foxp🦊 does type-check [div-by-zero](#basic-example), [type-safe get/upd](#lens), [range-of-number](#range), [sized-array](#vect), [email-with-regex](#regex) and [more](#defining-your-own-precondition), ...and more, as needed.
 
+Try it:  
+[Playground]( https://www.typescriptlang.org/play/?#code/JYWwDg9gTgLgBAbzgMwgDzHAviqERwDkAAjAIbACeZA1sABbAwQwDOArgPSoaEBQfTgCo4AE2AA3ALQAjSlIBeAUzxwhnAQGMIAO1bxxEuAF4U6MADoZwC4YAUASi279YyQH0INE3zhuJdr5+ZhgWYOwwAApQoHYAzA4ANEF+PJbhUTEgdgBMTn4OFhJkADbsSs56Bh4qUD5+9kGcnHCkrFJKGEqaMB1QeFAAXCkh6RHRsQnJwaNh41l2AAz5cIXFZRWCIlBkOgDmSmoafDCUYIcASrsHi8wAjIsms2BQShZX+0oAPIuJcA8APkqrh2n083mMQTSVhswB0mi+Hxu90WAMcgRm0IyE2yAFYVk4+NoqnBQQd3LV6rNrBY4QikUpbhBAeimi02h0uj0+gNhpjzHNMrEcssgoTiSDrkp3CA4RT+lToTS6YipUyWQ4MXBmq02JzztzatA+cEsfNYlI7gSBMI4AdenCjkSXPAQGQwO57QBJHQwJT6dw6f0wdwAdyY9HceHcJSUZGQioFNO9OkcIzszwiF260FEdmheDsCDIgzgAG1fjkALp-GSlnI4MisOASmAOFZ+P5mmAANW6djLhEGZEIfzuVbgTZbLvbwNd7s9ShgPr9AaDAYgEU8yHcMk3OlEj0hqSTNhTab8Oo5nQNvSNQ3TmZg2e0UDzBYgRZL5crNbgdbgBtJ2bVtZxmLsBQyPtNAHIdNEICcp1AwlbRAFQDidE4zkOABZdClFEJ4sVeCw8KgA4ABV2DAWMvjLYi3gAcR2P0oC+HIAQg0IXjeAAZf1WC+AAWAEqyBVs4HYVgVAAEUkIjT1sSQvjIg5RDRFCWmMAE4DiTg4mdEkpNkjx1mAQjj0k6SoDkgIRm7HF4hWLixiFbIEjWUpyjnKyTIkdw4TMiygmMmzJECK89Rvbo736Y17Mg813Ocp9HIATnbIovKUIA ) | [Source]( https://github.com/taiyakihitotsu/foxp/blob/main/test/playground.ts )
 ## Installation
 ```sh
 npm install --save-dev @taiyakihitotsu/foxp
@@ -10,14 +12,14 @@ npm install --save-dev @taiyakihitotsu/foxp
 
 ## Usage
 ```typescript
-import foxp from '@taiyakihitotsu/foxp'
+import { foxp } from '@taiyakihitotsu/foxp'
 ```
 ### Basic Example
 [test/doc/basic-example.ts](https://github.com/taiyakihitotsu/foxp/tree/main/test/doc/basic-example.ts)
 
 All built-in functions are higher-order and accept optional pre-conditions. If you provide nothing, defaults are used.
 
-And values must be wraped with `put*`. Pick its value via `.value` key.
+And values must be wrapped with `put*`. Pick its value via the `.value` property.
 
 ```typescript
 const div = foxp.bi.div()
@@ -44,7 +46,7 @@ You can merge pre-conditions using tuples of the same length as function argumen
 
 ```typescript
 // NOTE: To keep a default pre, see `t3` pattern.
-type Merged = foxp.pre.MergeTuple<[foxp.pre.Grater<2>, foxp.pre.Less<4>]>
+type Merged = foxp.pre.MergeTuple<[foxp.pre.Greater<2>, foxp.pre.Less<4>]>
 const div = foxp.bi.div<Merged>()
 
 // => 3/3
@@ -86,9 +88,9 @@ const t3 =
 ### Lambda
 [test/builtins/lambda.ts](https://github.com/taiyakihitotsu/foxp/tree/main/test/builtins/lambda.ts)
 
-The first unary fn takes a number of arguments.
-The second needs anonymous function, with `foxp.putSym`.
-The third and fourth are the same constructure of built-ins.
+The first function is unary.  
+The second needs anonymous function, with `foxp.putSym`.  
+The third and fourth are the same structure of built-ins.
 
 You can define custom preconditions as Lisp S-expressions in this situation.
 
@@ -109,7 +111,7 @@ const lambdatestr1nf =
 ### Higher order function
 [test/sample/higher-order-fn.ts](https://github.com/taiyakihitotsu/foxp/tree/main/test/sample/higher-order-fn.ts)
 
-This is a bit of hard. You should call `runHof`, a type-level closure to earn env, and push every results into it.
+This is somewhat tricky. You should call `runHof`, a type-level closure to earn env, and push every results into it.
 
 ```typescript
 const hof = foxp.bi.hof
@@ -128,7 +130,7 @@ const define_hof3 =
                   ()
                   (foxp.putSym('o', o)
                 , add
-                    <foxp.pre.MergeTuple<[pre.Grater<5>, pre.Grater<9>]>>
+                    <foxp.pre.MergeTuple<[pre.Greater<5>, pre.Greater<9>]>>
                     ()
                     ( foxp.putSym('m', m)
                     , foxp.putSym('n', n))))))))
@@ -153,21 +155,15 @@ You should `foxp.ro` if you want to use nested data.
 
 ```typescript
 const map_getIntest_nest_with_ro_leaf =
-       getIn
-       <pre.getIn>
-       ()
-     ( foxp.putRecord(foxp.ro({a: [0,2], b: 2} as const))
-     , foxp.putVec([':a', 1] as const))
+  getIn<pre.getIn>()
+    ( foxp.putRecord(foxp.ro({a: [0,2], b: 2} as const))
+    , foxp.putVec([':a', 1] as const))
 
-try {
-   const map_getIntest_nest_out_of_bound0 =
-       getIn
-       <pre.getIn>
-       ()
-   // @ts-expect-error:
-     ( foxp.putRecord(foxp.ro({a: [0,2], b: 2} as const))
-     , foxp.putVec([':c'] as const))
-   } catch {}
+const map_getIntest_nest_out_of_bound0 =
+  getIn<pre.getIn>()
+// @ts-expect-error:
+    ( foxp.putRecord(foxp.ro({a: [0,2], b: 2} as const))
+    , foxp.putVec([':c'] as const))
 ```
 
 ### Range
@@ -177,12 +173,10 @@ try {
 const tested_num = foxp.putPrim(3)
 type tested_pre = pre.Range<0,10>
 
-const testnum0_success = bi.inc<tested_pre>()(tested_num)
+const testnum0_ok = bi.inc<tested_pre>()(tested_num)
 
 const testnum0_ffailure =
-  bi.inc
-    <tested_pre>
-    ()
+  bi.inc<tested_pre>()
 // @ts-expect-error:
     (foxp.putPrim(20))
 ```
@@ -195,9 +189,7 @@ const tested_vec = foxp.putVec(foxp.ro([0, 1, 2] as const))
 
 const testvect0 = bi.first<pre.VectN<3>>()(tested_vec)
 const testvect0_ffailure =
-  bi.first
-    <pre.VectN<3>>
-    ()
+  bi.first<pre.VectN<3>>()
 // @ts-expect-error:
     (foxp.putVec(foxp.ro([0, 1] as const)))
 ```
@@ -212,39 +204,18 @@ const test_refind1 : Cion.Lisp<`(re-find ${email} 'https://github.com/taiyakihit
 
 const email_str = foxp.putPrim('zzz.zzz@testmailreg.com')
 const not_email_str = foxp.putPrim('https://github.com/taiyakihitotsu/foxp/tree/main')
+// identity function usable for type checking
 const email = foxp.tid<foxp.pre.IsEmail>()(email_str)
 // @ts-expect-error:
 const notemail = foxp.tid<foxp.pre.IsEmail>()(not_email_str)
 ```
 
-## Core concept
-This replaces the general type checks of TypeScript with an execute of a type-level script language, [CionLisp](https://github.com/taiyakihitotsu/cion). Foxp🦊 slurps values and detects those unique S-expressions via those singleton types, to pass them as arguments of a function of Cion.
-Pre-conditions themselves are just pred function. So it works as below:
+## Core Concept
 
- - We will get types of values.
- - The types will be processed into sexprs.
- - The sexprs will be passed as arguments of pre-condition.
- - Cion will run. If it returns a falsy, it will be seemed that it is failed of type check. If not, the result acts for a return type.
- 
-In the other words, foxp🦊 is just a wraper of Type Level Lisp for TypeScript.
- 
+Foxp🦊 wraps values into objects that carry both the value and a type-level representation (S-expression).  
+Pre-conditions are executed using CionLisp to perform type checks at compile time.  
 
-
-As we see above examples, every values wrapped by foxp🦊 is an object with two keys:
-
-- `sexpr` : a lisp-sexpr acting like a singleton type.
-- `value` : the original value.
-
-If the value is a function, it contains:
-
-- `value.pre` : the pre-condition used for type checking.
-- `value.fn`  : original function implementation.
-
-You can call with `.value.fn` directly if you want to bypass foxp🦊's checker.
-
-The TypeScript type of value is passed via the compiler, which transfers the sexpr to the corresponding TypeScript type.
-
-Important: This doesn't automatically track type transitions of functions at the type level; thus, its type is inferred as Function. You either use only the builtins or write them yourself. You should be aware of this when writing first-class functions and/or higher-order functions.
+For a detailed explanation of how Foxp🦊 lifts TypeScript values to Cion Lisp and checks types, see [DEV.md]( https://github.com/taiyakihitotsu/foxp/blob/main/DEV.md ).
 
 ## builtins
 **Core API**: `foxp`
@@ -269,7 +240,7 @@ They all are almost copied from Clojure Core Builtins.
  - Data : assoc, assoc-in, update, update-in, get, get-in
  - Compare : gt (`>`), lt (`<`), eq (`=`), gte (`>=`), lte (`<=`)
 
-**Pre-conditiond**: `foxp.pre`
+**Pre-conditions**: `foxp.pre`
 
 They are pre-conditions or Type Function to generate them.
 
@@ -280,7 +251,7 @@ With a upper-case, they are type function to return a pre-condition type.
  - assocLax, assoc (for `update` / `assoc-in` / `update-in` too.)
  - `MergePreStr`, `MergePreTuple` --- merge preconditions
  
-**Pre-conditiond**: `foxp.pre.bi`
+**Pre-conditions**: `foxp.pre.bi`
  - Pre-conditions for `foxp.bi`
  
 More builtins and preconditions are planned.
