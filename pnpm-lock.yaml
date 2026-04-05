@@ -13,8 +13,8 @@ importers:
         version: 0.33.0
     devDependencies:
       '@taiyakihitotsu/cion':
-        specifier: ^0.3.1
-        version: 0.3.1
+        specifier: ^0.3.2
+        version: 0.3.2
       '@types/node':
         specifier: 25.5.2
         version: 25.5.2
@@ -359,8 +359,8 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
-  '@taiyakihitotsu/cion@0.3.1':
-    resolution: {integrity: sha512-yi52tg/uZIlfD+92MtN32uiABdDfM/6AqHwMT9YtL0vjvBW/P8yoRgWJWb3tepGqvGokptokD1mWgH1NuGbsIw==}
+  '@taiyakihitotsu/cion@0.3.2':
+    resolution: {integrity: sha512-EpOtREDo7INYapvygCYofJ0775w5NQ2hQ+n8PCuDopNQWCEEDw6YQP0f7XNmpeyxVmbFd/1xKrKyguG7GxtqkQ==}
 
   '@tsconfig/node10@1.0.12':
     resolution: {integrity: sha512-UCYBaeFvM11aU2y3YPZ//O5Rhj+xKyzy7mvcIoAjASbigy8mHMryP5cK7dgjlz2hWxh1g5pLw084E0a/wlUSFQ==}
@@ -1386,7 +1386,7 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@taiyakihitotsu/cion@0.3.1': {}
+  '@taiyakihitotsu/cion@0.3.2': {}
 
   '@tsconfig/node10@1.0.12': {}
 
