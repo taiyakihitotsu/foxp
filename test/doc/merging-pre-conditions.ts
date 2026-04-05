@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest'
 
 
 // NOTE: To keep a default pre, see `t3` pattern.
-type Merged = foxp.pre.MergeTuple<[foxp.pre.Grater<2>, foxp.pre.Less<4>]>
+type Merged = foxp.pre.MergeTuple<[foxp.pre.Greater<2>, foxp.pre.Less<4>]>
 const div = foxp.bi.div<Merged>()
 
 // => 3/3

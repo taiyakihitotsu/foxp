@@ -128,7 +128,7 @@ export type VectN<N extends PreNum> = `(fn [n] (and (vector? n) (= ${N} (count n
 export type Range<N extends PreNum, M extends PreNum> = `(fn [n] (< ${N} n ${M}))`
 export type Eq<N extends Primitive> = `(fn [n] (= ${N} n))`
 export type Vect<N extends PreNum> = `(fn [n] (= ${N} (count n)))`
-export type Grater<N extends PreNum> = `(fn [n] (< ${N} n))`
+export type Greater<N extends PreNum> = `(fn [n] (< ${N} n))`
 export type Less<N extends PreNum> = `(fn [n] (> ${N} n))`
 
 export type PosInt = 'pos-int?'

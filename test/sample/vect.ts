@@ -7,7 +7,7 @@ import { describe, it, expect } from 'vitest'
 const tested_vec = foxp.putVec(foxp.ro([0, 1, 2] as const))
 
 const testvect0 = bi.first<pre.VectN<3>>()(tested_vec)
-const testvect0_ffailure =
+const testvect0_failure =
   bi.first
     <pre.VectN<3>>
     ()

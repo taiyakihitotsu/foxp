@@ -8,7 +8,7 @@ type tested_pre = pre.Range<0,10>
 
 const testnum0_success = bi.inc<tested_pre>()(tested_num)
 
-const testnum0_ffailure =
+const testnum0_failure =
   bi.inc
     <tested_pre>
     ()

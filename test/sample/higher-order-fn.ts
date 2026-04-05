@@ -71,7 +71,7 @@ const fin_fail = hof_result1_value_fn(
 //         (m:number) => (
 //           hof<'n', 'number?'>(1)(
 //             (n: number) =>
-//               (sub()(foxp.putSym('o', o), add<m.MergeTuple<[pre.Grater<5>, pre.Grater<9>]>>()(foxp.putSym('n', n), foxp.putSym('m', m))))))))
+//               (sub()(foxp.putSym('o', o), add<m.MergeTuple<[pre.Greater<5>, pre.Greater<9>]>>()(foxp.putSym('n', n), foxp.putSym('m', m))))))))
 
 const define_hof2 =
   hof<'o', 'neg-int?'>(1)(
@@ -101,7 +101,7 @@ const subtest_value: ut.Equal<number, (typeof subtest)['value']> = true
 const subtest_pre_s: (typeof subtest)['cont'] = '(if (and (every? some? [1 (+ 1 m)]) ((fn [x y] (and (number? x) (number? y))) 1 (if (and (every? some? [1 m]) ((fn [x y] (and (number? x) (number? y))) 1 m)) (+ 1 m) nil))) (- 1 (+ 1 m)) nil)'
 const subtest_pre: ut.Equal<(typeof subtest)['cont'], typeof subtest_pre_s> = true
 
-const addmerge = add<foxp.pre.MergeTuple<[pre.Grater<5>, pre.Grater<9>]>>()(foxp.putPrim(6), foxp.putPrim(20))
+const addmerge = add<foxp.pre.MergeTuple<[pre.Greater<5>, pre.Greater<9>]>>()(foxp.putPrim(6), foxp.putPrim(20))
 
 const define_hof2_return_no =
    define_hof2
@@ -181,7 +181,7 @@ const define_hof3 =
                   ()
                   (foxp.putSym('o', o)
                 , add
-                    <foxp.pre.MergeTuple<[pre.Grater<5>, pre.Grater<9>]>>
+                    <foxp.pre.MergeTuple<[pre.Greater<5>, pre.Greater<9>]>>
                     ()
                     ( foxp.putSym('m', m)
                     , foxp.putSym('n', n))))))))
