@@ -6,10 +6,8 @@ Enabling pseudo Dependent Types --- foxp🦊 does type-check [div-by-zero](#basi
 Try it:  
 [Playground]( https://www.typescriptlang.org/play/?#code/JYWwDg9gTgLgBAbzgMwgDzHAviqERwDkAAjAIbACeZA1sABbAwQwDOArgPSoaEBQfTgCo4AE2AA3ALQAjSlIBeAUzxwhnAQGMIAO1bxxEuAF4U6MADoZwC4YAUASi279YyQH0INE3zhuJdr5+ZhgWYOwwAApQoHYAzA4ANEF+PJbhUTEgdgBMTn4OFhJkADbsSs56Bh4qUD5+9kGcnHCkrFJKGEqaMB1QeFAAXCkh6RHRsQnJwaNh41l2AAz5cIXFZRWCIlBkOgDmSmoafDCUYIcASrsHi8wAjIsms2BQShZX+0oAPIuJcA8APkqrh2n083mMQTSVhswB0mi+Hxu90WAMcgRm0IyE2yAFYVk4+NoqnBQQd3LV6rNrBY4QikUpbhBAeimi02h0uj0+gNhpjzHNMrEcssgoTiSDrkp3CA4RT+lToTS6YipUyWQ4MXBmq02JzztzatA+cEsfNYlI7gSBMI4AdenCjkSXPAQGQwO57QBJHQwJT6dw6f0wdwAdyY9HceHcJSUZGQioFNO9OkcIzszwiF260FEdmheDsCDIgzgAG1fjkALp-GSlnI4MisOASmAOFZ+P5mmAANW6djLhEGZEIfzuVbgTZbLvbwNd7s9ShgPr9AaDAYgEU8yHcMk3OlEj0hqSTNhTab8Oo5nQNvSNQ3TmZg2e0UDzBYgRZL5crNbgdbgBtJ2bVtZxmLsBQyPtNAHIdNEICcp1AwlbRAFQDidE4zkOABZdClFEJ4sVeCw8KgA4ABV2DAWMvjLYi3gAcR2P0oC+HIAQg0IXjeAAZf1WC+AAWAEqyBVs4HYVgVAAEUkIjT1sSQvjIg5RDRFCWmMAE4DiTg4mdEkpNkjx1mAQjj0k6SoDkgIRm7HF4hWLixiFbIEjWUpyjnKyTIkdw4TMiygmMmzJECK89Rvbo736Y17Mg813Ocp9HIATnbIovKUIA ) | [Source]( https://github.com/taiyakihitotsu/foxp/blob/main/test/playground.ts )
 ## Installation
-```sh
-npm install --save-dev @taiyakihitotsu/foxp
-```
-
+**pnpm** - `pnpm add @taiyakihitotsu/foxp`  
+**npm** - `npm install @taiyakihitotsu/foxp`
 ## Usage
 ```typescript
 import { foxp } from '@taiyakihitotsu/foxp'
