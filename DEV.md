@@ -79,6 +79,14 @@ You can call with `.value.fn` directly if you want to bypass foxp🦊's checker.
 The TypeScript type of value is passed via the compiler, which transfers the sexpr to the corresponding TypeScript type.
 
 Important: This doesn't automatically track type transitions of functions at the type level; thus, its type is inferred as Function. You either use only the builtins or write them yourself. You should be aware of this when writing first-class functions and/or higher-order functions.
+## Error Representation at Type Level
+When a pre-condition fails, Foxp replaces the 1st argument type with `never` instead of an error object (e.g., `{ error: "..." }`).
+
+Reasoning:
+1. Zero-Runtime Guarantee: By using `never`, we ensure that any subsequent code relying on that value becomes un-callable, effectively halting the compilation.
+2. Avoiding False Positives: Returning an error object type might accidentally satisfy some generic object constraints. Using `never` provides the most rigorous way.
+
+**Note**: This behavior is also part of the Beta specification and may be refined for better error reporting in future versions.
 
 # Code
 ## Core Overview

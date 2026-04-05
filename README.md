@@ -12,6 +12,17 @@ Try it:
 ```typescript
 import { foxp } from '@taiyakihitotsu/foxp'
 ```
+ 
+💡 Philosophical Note: Static-First Design
+
+Foxp focus strictly on compile-time verification.  
+It does **NOT** provide runtime validation logic or error handling.
+
+If it type-checks, it is guaranteed to be safe under the defined preconditions.  
+There is no runtime overhead for checking; the "magic" happens entirely within the TypeScript compiler.
+
+See [DEV.md]( https://github.com/taiyakihitotsu/foxp/blob/main/DEV.md ) if you want to see the details.
+
 ### Basic Example
 [test/doc/basic-example.ts](https://github.com/taiyakihitotsu/foxp/tree/main/test/doc/basic-example.ts)
 
@@ -29,13 +40,14 @@ const t0 =
   , foxp.putPrim(2)).value
 
 // => Error but success to catch at the type-check.
-try {
   div(
 // @ts-expect-error:
     foxp.putPrim(3)
   , foxp.putPrim(0)).value
-} catch {}
 ```
+
+If a value violates a pre-condition, Foxp replaces the argument type with `never` at the type level.  
+This "Type-Level Firewall" ensures that the code will not compile, preventing any potentially unsafe execution.
 
 ### Merging Pre-conditions
 [test/doc/merging-pre-conditions.ts](https://github.com/taiyakihitotsu/foxp/tree/main/test/doc/merging-pre-conditions.ts)
@@ -59,12 +71,10 @@ const t1 =
     foxp.putPrim(3)
   , foxp.putPrim(9)).value
 
-try {
 const t2 = 
   div(
     foxp.putPrim(3)
   , foxp.putPrim(0)).value
-} catch {}
 ```
 
 If you want to keep a default, get it with `foxp.pre.bi.*` and then merge them.
@@ -73,14 +83,11 @@ If you want to keep a default, get it with `foxp.pre.bi.*` and then merge them.
 type NewMerged = foxp.pre.MergePreStr<Merged, foxp.pre.bi.div>
 const newdiv = foxp.bi.div<NewMerged>()
 
-try {
 const t3 = 
   newdiv(
 // @ts-expect-error:
     foxp.putPrim(3)
   , foxp.putPrim(0)).value
-} catch {}
-
 ```
 
 ### Lambda
@@ -108,6 +115,12 @@ const lambdatestr1nf =
 
 ### Higher order function
 [test/sample/higher-order-fn.ts](https://github.com/taiyakihitotsu/foxp/tree/main/test/sample/higher-order-fn.ts)
+
+**⚠️ Beta Notice**:
+This is currently a temporary API designed to remain faithful to TypeScript's behavior where functions are first-class objects.
+
+The HOF (Higher-Order Function) API and some internal type-evaluators are currently in Beta.  
+The syntax (including `runHof`) is subject to change as we explore more ergonomic ways to align with TypeScript's native functional patterns.
 
 This is somewhat tricky. You should call `runHof`, a type-level closure to earn env, and push every results into it.
 
