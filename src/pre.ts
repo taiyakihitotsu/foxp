@@ -137,6 +137,7 @@ export type Num = 'number?'
 
 export type EmailRegex = `'(([^<>()[\\].,;: @"]+(\\.[^<>()[\\].,;: @"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}))'`
 export type Email = `(fn [n] (let [r (re-find ${EmailRegex} n)] (not (= '' r))))`
+export type match = `(fn [a b] (let [x (re-find a b)] (if (not (= '' x)) x nil)))`
 
 // -----------------------------
 // -- pre for builtins
@@ -229,6 +230,7 @@ checkPreMap<
   , str2: `(fn [x y] (and (${checkPrim} x) (${checkPrim} y)))`
   , str3: `(fn [x y z] (and (${checkPrim} x) (${checkPrim} y) (${checkPrim} z)))`
   , refind: isstr2
+  , rematch: isstr2
   , split: isstr2
   , subs: `(fn [x y z] (and (string? x) (nat? y) (nat? z) (< y z)))`
   , replace: isstr3
@@ -393,6 +395,7 @@ export namespace bi {
   export type str2 = bi['str2']
   export type str3 = bi['str3']
   export type refind = bi['refind']
+  export type rematch = bi['rematch']
   export type split  = bi['split']
   export type subs   = bi['subs']
   export type replace = bi['replace']
