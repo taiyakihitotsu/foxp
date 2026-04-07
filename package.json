@@ -27,7 +27,7 @@
     "url": "git+https://github.com/taiyakihitotsu/foxp.git"
   },
   "devDependencies": {
-    "@taiyakihitotsu/cion": "^0.3.2",
+    "@taiyakihitotsu/cion": "0.3.4",
     "@types/node": "25.5.2",
     "husky": "9.1.7",
     "ts-node": "10.9.2",

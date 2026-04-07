@@ -1,10 +1,10 @@
 import type Cion from '@taiyakihitotsu/cion'
-import * as typeUtil from './type-util'
-import type { LispFalsy } from './type-util'
-import * as compiler from './compiler'
-import { const as c } from './const'
-import * as ut from './type-util'
-import * as fraction from './fraction'
+import * as typeUtil from './type-util.js'
+import type { LispFalsy } from './type-util.js'
+import * as compiler from './compiler.js'
+import { const as c } from './const.js'
+import * as ut from './type-util.js'
+import * as fraction from './fraction.js'
 
 
 
@@ -236,4 +236,4 @@ export type Foxfn =
 export type GetPre<S extends Foxfn> = S[c.ValueKey][c.PreKey]
 export type GetFn<S extends Foxfn>  = S[c.SexprKey]
 
-export * as foxp from './foxp'
+export * as foxp from './foxp.js'

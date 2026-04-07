@@ -1,5 +1,5 @@
-import * as ut from './type-util'
-import { N4, T4 } from './type-util'
+import * as ut from './type-util.js'
+import { N4, T4 } from './type-util.js'
 import type Cion from '@taiyakihitotsu/cion'
 
 // -----------
@@ -410,4 +410,4 @@ export type getPre<
     ? bi[S]
   : S
 
-export type * as pre from './pre'
+export type * as pre from './pre.js'

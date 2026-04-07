@@ -1,5 +1,5 @@
 import type Cion from '@taiyakihitotsu/cion'
-import * as ut from './type-util'
+import * as ut from './type-util.js'
 
 // This compiles S-exprs to TS types, ignited in `tap1` & builtins fns.
 //
@@ -145,4 +145,4 @@ export type Str<
 export type Ltc<S extends string> = BracketUnwrap<ltCompiler<Cion.CionParser<BracketWrap<S>>>>
 export type Fgensym<s extends string, n extends string, m extends string> = Str<RenameLet<Cion.CionParser<s>, n, m, true>>
 
-export * as compiler from './compiler'
+export * as compiler from './compiler.js'

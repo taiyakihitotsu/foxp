@@ -1,4 +1,4 @@
-import * as compiler from './compiler'
+import * as compiler from './compiler.js'
 
 // --------------------
 // -- gensym
@@ -29,4 +29,4 @@ export type GensymEnvType = [string, string[]]
 
 export type Done<GensymEnv extends GensymEnvType> = GensymEnv[0]
 
-export * as gensym from './gensym'
+export * as gensym from './gensym.js'

@@ -17,4 +17,4 @@ export type FnFlagKey = 'fnflag'
 export type HofFlag = 'hofflag'
 export type EnvKey  = 'env'
 
-export * as const from './const'
+export * as const from './const.js'

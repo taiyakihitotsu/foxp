@@ -49,4 +49,4 @@ export const updateIn = ([m,ks,f]: any): any => {
 export const mod = (n: number, m:number): number => ((n % m) + m) % m
 
 
-export * as util from './util'
+export * as util from './util.js'

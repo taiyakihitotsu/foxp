@@ -1,5 +1,5 @@
-import { builtins as bi } from "./builtins"
-import { pre } from './pre'
+import { builtins as bi } from "./builtins.js"
+import { pre } from './pre.js'
 import Cion from '@taiyakihitotsu/cion'
 
 /**
@@ -81,4 +81,4 @@ export type HslaRegex = typeof hslaRegex
 export const colorCode = `^#([a-f0-9]{6}|[A-F0-9]{6})$`
 export type ColorCodeRegex = typeof colorCode
 
-export * as regex from './regex'
+export * as regex from './regex.js'

@@ -163,4 +163,4 @@ export type T4 =
 [string, string, string] | readonly [string, string, string] |
 [string, string, string, string] | readonly [string, string, string, string]
 
-export type * as typeUtil from './type-util'
+export type * as typeUtil from './type-util.js'

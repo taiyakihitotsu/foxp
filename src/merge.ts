@@ -1,10 +1,10 @@
-import * as compiler from './compiler'
-import * as gt from './gensym'
-import type * as foxpT from './foxp'
+import * as compiler from './compiler.js'
+import * as gt from './gensym.js'
+import type * as foxpT from './foxp.js'
 import type Cion from '@taiyakihitotsu/cion'
-import * as c from './const'
-import * as ut from './type-util'
-import { MergePreStr } from './pre'
+import * as c from './const.js'
+import * as ut from './type-util.js'
+import { MergePreStr } from './pre.js'
 
 // ----------------
 // -- merge pre
@@ -99,4 +99,4 @@ export const ForceVec = <
 , R  = S extends string ? [S] : S>
 (s: S extends SS ? S : never): R => (typeof s === 'string' ? [s] : s) as R
 
-export * as merge from './merge'
+export * as merge from './merge.js'

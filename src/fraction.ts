@@ -23,4 +23,4 @@ export const unsafeSomeFraction: (s: unknown) => number | string = (s) => (inter
 
 export const someFraction: <T extends unknown>(s: T extends (isRational<T> extends true ? T : never) ? T : never) => number | string = (s) => (internalFraction(s))
 
-export * as fraction from './fraction'
+export * as fraction from './fraction.js'

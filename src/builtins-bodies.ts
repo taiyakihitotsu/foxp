@@ -1,4 +1,4 @@
-import * as c from './const'
+import * as c from './const.js'
 
 // arithmetic
 export const trunc = (i: number) => {
@@ -121,4 +121,4 @@ const _nil = undefined
 
 export const zipmap = (ks: unknown[] | readonly unknown[], vs: unknown[] | readonly unknown[]) => (0 === ks.length) && (0 === vs.length) ? _nil : (Object.fromEntries((ks as string[]).map(_pickkey).slice(0, vs.length).map((k, i) => [k, vs[i]])))
 
-export * as util from './builtins-bodies'
+export * as util from './builtins-bodies.js'

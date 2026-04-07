@@ -1,9 +1,9 @@
-import * as c from './const'
+import * as c from './const.js'
 import type Cion from '@taiyakihitotsu/cion'
-import * as u from './util'
-import * as bb from './builtins-bodies'
-import type * as ut from './type-util'
-import * as pre from './pre'
+import * as u from './util.js'
+import * as bb from './builtins-bodies.js'
+import type * as ut from './type-util.js'
+import * as pre from './pre.js'
 
 // ----------------
 // -- util part
@@ -529,4 +529,4 @@ export const interleave = fn<'interleave', pre.bi.interleave>(2)(bb.interleave)
 
 
 
-export * as builtins from './builtins'
+export * as builtins from './builtins.js'
