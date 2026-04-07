@@ -81,4 +81,4 @@ export type HslaRegex = typeof hslaRegex
 export const colorCode = `^#([a-f0-9]{6}|[A-F0-9]{6})$`
 export type ColorCodeRegex = typeof colorCode
 
-export type * as regex from './regex'
+export * as regex from './regex'
