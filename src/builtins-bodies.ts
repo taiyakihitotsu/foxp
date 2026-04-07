@@ -51,6 +51,10 @@ export const refind = (re: string, s: string) => {
   const m = new RegExp(re).exec(s)
   return m ? m[0] : ''
 }
+export const rematch = (re: string, s: string) => {
+  const m = new RegExp(re).exec(s)
+  return m ? m[0] : undefined
+}
 
 export const split = (s: string, re: string) => s.split(new RegExp(re)).filter((p) => p !== '')
 export const subs  = (s: string, start: number, end: number) => s.substring(start, end)
