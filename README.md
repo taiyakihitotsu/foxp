@@ -278,5 +278,3 @@ taiyakihitotsu
 
 # LICENSE
 3-clause BSD license
-
-This uses [mathjs](https://github.com/josdejong/mathjs?tab=readme-ov-file#license) under Apache 2.0 license, including CParse published under the LGPL-2.1+ license.

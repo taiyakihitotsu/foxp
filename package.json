@@ -37,8 +37,5 @@
     "vitest": "4.1.2"
   },
   "author": "taiyakihitotsu <taiyakihitotsu@proton.me> https://github.com/taiyakihitotsu",
-  "license": "3-clause BSD license",
-  "dependencies": {
-    "mathjs": "15.2.0"
-  }
+  "license": "3-clause BSD license"
 }

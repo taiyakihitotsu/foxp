@@ -75,12 +75,36 @@ const e_failure6 =
 // @ts-expect-error:
     (foxp.putPrim(-1))
 
+// ----------------------------------------------
+// -- Two arguments lambda
+// ----------------------------------------------
 
+const recomposedPre = '(fn [x y] (and (< 0 x) (= 5 y)))' as const
+type RecomposedPre = typeof recomposedPre
 
+const recomposed_add = lambda<'x y', RecomposedPre>(2)((x, y) => add()(foxp.putSym('y', y), foxp.putSym('x', x)))
+const recomposed_add_ok = recomposed_add()(foxp.putPrim(1), foxp.putPrim(5))
+
+const mismatch_recomposed_add = lambda<'m n', RecomposedPre>(2)((x, y) => add()(foxp.putSym('y', y), foxp.putSym('x', x)))
+const mismatch_recomposed_add_err = mismatch_recomposed_add()(
+  // @ts-expect-error:
+  foxp
+    .putPrim(1), foxp.putPrim(5))
+
+const violate_recomposed_add_err_0 = recomposed_add()(
+  // @ts-expect-error:
+  foxp
+    .putPrim(1), foxp.putPrim(4))
+
+const violate_recomposed_add_err_1 = recomposed_add()(
+  // @ts-expect-error:
+  foxp
+    .putPrim(-1), foxp.putPrim(5))
 
 describe('lambda', () => {
 it('', () => { expect(lambdatestr0.value).toBe(2) })
 it('', () => { expect(a_success0.value).toBe(2) })
 it('', () => { expect(d_success3.value).toBe(2) })
 it('', () => { expect(e_success5.value).toBe(2) })
+it(`recomposed add with ${recomposedPre}`, () => { expect(recomposed_add_ok.value).toBe(6) })
 })
