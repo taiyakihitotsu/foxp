@@ -32,6 +32,9 @@ jobs:
       - name: Init submodules and dependencies
         run: sh init.sh
 
+      - name: Audit dependencies
+        run: pnpm audit --prod
+
       - name: Check TypeScript version
         run: pnpm exec tsc -v
 
